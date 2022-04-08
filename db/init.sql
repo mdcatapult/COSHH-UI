@@ -16,7 +16,7 @@ CREATE TYPE hazard AS ENUM(
     'Gas under pressure'
 );
 
-CREATE TABLE coshh
+CREATE TABLE chemical
 (
     cas_number          VARCHAR(255) PRIMARY KEY,
     chemical_name       VARCHAR(255),
@@ -29,9 +29,21 @@ CREATE TABLE coshh
     coshh_link          VARCHAR(255)
 );
 
-CREATE TABLE chemical_to_hazard (chem_id VARCHAR(255),hazard hazard);
+CREATE TABLE chemical_to_hazard (cas_number VARCHAR(255), hazard hazard);
 
-INSERT INTO coshh(
+INSERT INTO chemical_to_hazard (
+    cas_number,
+    hazard
+)
+VALUES (
+    '6020-87-7',
+    'Explosive'
+), (
+    '6020-87-7',
+    'Flammable'
+);
+
+INSERT INTO chemical(
     cas_number,
     chemical_name,
     photo_path,
@@ -64,3 +76,4 @@ VALUES
     'link-to-sds',
     'link-to-cosh'
 );
+

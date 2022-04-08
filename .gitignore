@@ -1,3 +1,3 @@
 ui/node_modules
-ui/.angular
+ui/.angular/cache/*
 .idea
