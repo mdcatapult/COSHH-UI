@@ -52,4 +52,15 @@ VALUES
     '2023-04-08',
     'link-to-sds',
     'link-to-cosh'
+), (
+    
+    '6020-87-8',
+    'creatine monohydrate 222222',
+    'some-path',
+    'solid',
+    '100g',
+    '2022-04-08',
+    '2023-04-08',
+    'link-to-sds',
+    'link-to-cosh'
 );
