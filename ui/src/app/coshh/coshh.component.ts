@@ -18,7 +18,7 @@ export class CoshhComponent implements OnInit {
     columns: Array<string> = columnTypes
 
     ngOnInit(): void {
-        this.http.get<Array<Chemical>>('http://localhost:8080/coshh').subscribe((res: Array<Chemical>) => this.chemicals = res)
+        this.http.get<Array<Chemical>>('http://localhost:8080/chemicals').subscribe((res: Array<Chemical>) => this.chemicals = res)
     }
 
 }
