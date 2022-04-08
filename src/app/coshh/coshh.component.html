@@ -1,0 +1,52 @@
+<p>coshh works!</p>
+
+<table *ngIf="chemicals.length" mat-table [dataSource]="chemicals">
+  <ng-container matColumnDef="casNumber">
+    <th mat-header-cell *matHeaderCellDef> Cas Number </th>
+    <td mat-cell *matCellDef="let chemical"> {{chemical.casNumber}} </td>
+
+  </ng-container><ng-container matColumnDef="chemicalName">
+    <th mat-header-cell *matHeaderCellDef> Chemical Name </th>
+    <td mat-cell *matCellDef="let chemical"> {{chemical.chemicalName}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="photoPath">
+    <th mat-header-cell *matHeaderCellDef> Photo Path </th>
+    <td mat-cell *matCellDef="let chemical"> {{chemical.photoPath}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="matterState">
+    <th mat-header-cell *matHeaderCellDef> Matter State </th>
+    <td mat-cell *matCellDef="let chemical"> {{chemical.matterState}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="quantity">
+    <th mat-header-cell *matHeaderCellDef> Quantity </th>
+    <td mat-cell *matCellDef="let chemical"> {{chemical.quantity}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="added">
+    <th mat-header-cell *matHeaderCellDef> Added </th>
+    <td mat-cell *matCellDef="let chemical"> {{chemical.added}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="expiry">
+    <th mat-header-cell *matHeaderCellDef> Expiry </th>
+    <td mat-cell *matCellDef="let chemical"> {{chemical.expiry}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="safetyDataSheet">
+    <th mat-header-cell *matHeaderCellDef> Saftey Data Sheet </th>
+    <td mat-cell *matCellDef="let chemical"> {{chemical.safetyDataSheet}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="coshhLink">
+    <th mat-header-cell *matHeaderCellDef> Coshh Link </th>
+    <td mat-cell *matCellDef="let chemical"> {{chemical.coshhLink}} </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="columns"></tr>
+  <tr mat-row *matRowDef="let row; columns: columns;"></tr>
+</table>
+
+
