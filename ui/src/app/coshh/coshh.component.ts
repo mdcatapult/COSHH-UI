@@ -1,8 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Chemical, columnTypes} from './types';
-import {keys} from 'ts-transformer-keys';
-import * as moment from "moment";
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
     selector: 'app-coshh',
@@ -14,11 +13,22 @@ export class CoshhComponent implements OnInit {
     constructor(private http: HttpClient) {
     }
 
-    chemicals: Array<Chemical> = []
+    tableData = new MatTableDataSource<Chemical>();
     columns: Array<string> = columnTypes
 
     ngOnInit(): void {
-        this.http.get<Array<Chemical>>('http://localhost:8080/chemicals').subscribe((res: Array<Chemical>) => this.chemicals = res)
+        this.http.get<Array<Chemical>>('http://localhost:8080/chemicals')
+        .subscribe((res: Array<Chemical>) => this.tableData = new MatTableDataSource<Chemical>(res))
     }
 
+    archive(chemical: Chemical): void {
+        chemical.isArchived = true
+        this.http.put('http://localhost:8080/chemical', chemical).subscribe()
+    }
+
+    onChemicalAdded(chemical: Chemical): void {
+        this.http.post('http://localhost:8080/chemical', chemical).subscribe(() => {
+            this.tableData.data = this.tableData.data.concat([chemical])
+        })
+    }
 }

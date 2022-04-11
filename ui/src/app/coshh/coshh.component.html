@@ -1,6 +1,6 @@
-<p>coshh works!</p>
 
-<table *ngIf="chemicals.length" mat-table [dataSource]="chemicals">
+
+<table *ngIf="tableData.data.length" mat-table [dataSource]="tableData">
   <ng-container matColumnDef="casNumber">
     <th mat-header-cell *matHeaderCellDef> Cas Number </th>
     <td mat-cell *matCellDef="let chemical"> {{chemical.casNumber}} </td>
@@ -45,8 +45,41 @@
     <td mat-cell *matCellDef="let chemical"> {{chemical.coshhLink}} </td>
   </ng-container>
 
+  <ng-container matColumnDef="hazards">
+    <th mat-header-cell *matHeaderCellDef> Hazards </th>
+    <td mat-cell *matCellDef="let chemical"> {{chemical.hazards}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="storageTemp">
+    <th mat-header-cell *matHeaderCellDef> Storage Temperature </th>
+    <td mat-cell *matCellDef="let chemical"> {{chemical.storageTemp}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="location">
+    <th mat-header-cell *matHeaderCellDef> Location </th>
+    <td mat-cell *matCellDef="let chemical"> {{chemical.location}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="archive">
+    <th mat-header-cell *matHeaderCellDef> </th>
+    <td mat-cell *matCellDef="let chemical" >  
+      <button
+        mat-icon-button
+        (click)="archive(chemical)"
+      >
+        <mat-icon >delete</mat-icon>
+      </button>
+    </td>
+  </ng-container>
+  
+
   <tr mat-header-row *matHeaderRowDef="columns"></tr>
   <tr mat-row *matRowDef="let row; columns: columns;"></tr>
 </table>
+
+<app-add-chemical
+  (onChemicalAdded)="onChemicalAdded($event)"
+></app-add-chemical>
+
 
 

@@ -16,17 +16,27 @@ CREATE TYPE hazard AS ENUM(
     'Gas under pressure'
 );
 
+CREATE TYPE storage_temp AS ENUM(
+    'Shelf',
+    '+4',
+    '-20',
+    '-80'
+);
+
 CREATE TABLE chemical
 (
     cas_number          VARCHAR(255) PRIMARY KEY,
-    chemical_name       VARCHAR(255),
-    photo_path          VARCHAR(255),
-    matter_state        matter_state,
-    quantity            VARCHAR(255),
+    chemical_name       VARCHAR(255) NOT NULL,
+    photo_path          VARCHAR(255) NOT NULL,
+    matter_state        matter_state NOT NULL,
+    quantity            VARCHAR(255) NOT NULL DEFAULT '0',
     added               DATE,
     expiry              DATE,
-    safety_data_sheet   VARCHAR(255),
-    coshh_link          VARCHAR(255)
+    safety_data_sheet   VARCHAR(255) NOT NULL,
+    coshh_link          VARCHAR(255),
+    lab_location        VARCHAR(255),
+    storage_temp        storage_temp NOT NULL,
+    is_archived         BOOLEAN NOT NULL
 );
 
 CREATE TABLE chemical_to_hazard (cas_number VARCHAR(255), hazard hazard);
@@ -52,7 +62,10 @@ INSERT INTO chemical(
     added,
     expiry,
     safety_data_sheet,
-    coshh_link )
+    coshh_link,
+    lab_location,
+    storage_temp,
+    is_archived )
 VALUES 
 (
     '6020-87-7',
@@ -63,7 +76,10 @@ VALUES
     '2022-04-08',
     '2023-04-08',
     'link-to-sds',
-    'link-to-cosh'
+    'link-to-cosh',
+    'some-location',
+    'Shelf',
+    'false'
 ), (
     
     '6020-87-8',
@@ -74,6 +90,9 @@ VALUES
     '2022-04-08',
     '2023-04-08',
     'link-to-sds',
-    'link-to-cosh'
+    'link-to-cosh',
+    'some-location',
+    'Shelf',
+    'false'
 );
 

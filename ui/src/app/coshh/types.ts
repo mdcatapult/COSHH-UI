@@ -9,7 +9,10 @@ export type Chemical = {
   added: moment.Moment,
   expiry: moment.Moment,
   safetyDataSheet: string,
-  coshhLink: string
+  coshhLink: string,
+  storageTemp: 'Shelf' | '+4' | '-20' | '-80',
+  location: string,
+  isArchived: boolean,
 }
 
 export const columnTypes = ['casNumber',
@@ -20,4 +23,9 @@ export const columnTypes = ['casNumber',
   'added',
   'expiry',
   'safetyDataSheet',
-  'coshhLink']
+  'coshhLink',
+  'hazards',
+  'storageTemp',
+  'location',
+  'archive'
+]
