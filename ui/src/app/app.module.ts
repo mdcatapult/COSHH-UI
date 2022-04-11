@@ -15,6 +15,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule, MAT_DATE_LOCALE } from '@angular/material/core';
+import {MatCheckboxModule} from "@angular/material/checkbox";
 
 @NgModule({
   declarations: [
@@ -36,6 +37,7 @@ import { MatNativeDateModule, MAT_DATE_LOCALE } from '@angular/material/core';
         MatInputModule,
         MatDatepickerModule,
         MatNativeDateModule,
+        MatCheckboxModule,
     ],
   providers: [
     { provide: MAT_DATE_LOCALE, useValue: 'en-GB' }

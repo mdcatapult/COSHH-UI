@@ -5,6 +5,7 @@ CREATE DATABASE coshh;
 
 CREATE TYPE matter_state AS ENUM('liquid', 'solid');
 CREATE TYPE hazard AS ENUM(
+    'None',
     'Explosive',
     'Flammable',
     'Oxidising',
@@ -51,6 +52,9 @@ VALUES (
 ), (
     '6020-87-7',
     'Flammable'
+), (
+    '6020-87-8',
+    'None'
 );
 
 INSERT INTO chemical(
@@ -93,6 +97,6 @@ VALUES
     'link-to-cosh',
     'some-location',
     'Shelf',
-    'false'
+    'true'
 );
 

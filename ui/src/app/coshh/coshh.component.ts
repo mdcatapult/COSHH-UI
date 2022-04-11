@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Chemical, columnTypes} from './types';
 import { MatTableDataSource } from '@angular/material/table';
+import {FormControl} from "@angular/forms";
 
 @Component({
     selector: 'app-coshh',
@@ -15,10 +16,21 @@ export class CoshhComponent implements OnInit {
 
     tableData = new MatTableDataSource<Chemical>();
     columns: Array<string> = columnTypes
+    allChemicals: Chemical[] = []
+    toggleArchiveControl = new FormControl(false)
+
 
     ngOnInit(): void {
         this.http.get<Array<Chemical>>('http://localhost:8080/chemicals')
-        .subscribe((res: Array<Chemical>) => this.tableData = new MatTableDataSource<Chemical>(res))
+        .subscribe((res: Array<Chemical>) => {
+            this.allChemicals = res
+            const inStock = this.allChemicals.filter(chemical => !chemical.isArchived)
+            this.tableData = new MatTableDataSource<Chemical>(inStock)
+        })
+
+        this.toggleArchiveControl.valueChanges.subscribe(includeArchived => {
+            this.tableData.data = includeArchived ? this.allChemicals : this.allChemicals.filter(chemical => !chemical.isArchived)
+        })
     }
 
     archive(chemical: Chemical): void {
@@ -31,4 +43,5 @@ export class CoshhComponent implements OnInit {
             this.tableData.data = this.tableData.data.concat([chemical])
         })
     }
+
 }
