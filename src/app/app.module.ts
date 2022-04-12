@@ -16,6 +16,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule, MAT_DATE_LOCALE } from '@angular/material/core';
 import {MatCheckboxModule} from "@angular/material/checkbox";
+import {MatToolbarModule} from "@angular/material/toolbar";
+import {MatTooltipModule} from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [
@@ -38,6 +40,8 @@ import {MatCheckboxModule} from "@angular/material/checkbox";
         MatDatepickerModule,
         MatNativeDateModule,
         MatCheckboxModule,
+        MatToolbarModule,
+        MatTooltipModule
     ],
   providers: [
     { provide: MAT_DATE_LOCALE, useValue: 'en-GB' }
