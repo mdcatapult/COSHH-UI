@@ -30,27 +30,7 @@ export class CoshhComponent implements OnInit {
             const inStock = this.allChemicals.filter(chemical => !chemical.isArchived)
             this.tableData = new MatTableDataSource<Chemical>(inStock)
 
-            this.allChemicals.forEach(chem => {
-
-
-                const formGroup = this.fb.group({
-                    casNumber: [chem.casNumber],
-                    chemicalName: [chem.chemicalName, Validators.required],
-                    photoPath: [chem.photoPath],
-                    matterState: [chem.matterState],
-                    quantity: [chem.quantity],
-                    added: [chem.added],
-                    expiry: [chem.expiry],
-                    safetyDataSheet: [chem.safetyDataSheet],
-                    coshhLink: [chem.coshhLink],
-                    storageTemp: [chem.storageTemp],
-                    location: [chem.location],
-                })
-
-                formGroup.valueChanges.subscribe(chem => this.updateChemical(chem))
-
-                this.formArray.push(formGroup)
-            })
+            this.allChemicals.forEach(chem => this.addChemicalForm(chem))
         })
 
         this.formGroup = this.fb.group({
@@ -74,7 +54,28 @@ export class CoshhComponent implements OnInit {
     onChemicalAdded(chemical: Chemical): void {
         this.http.post('http://localhost:8080/chemical', chemical).subscribe(() => {
             this.tableData.data = this.tableData.data.concat([chemical])
+            this.addChemicalForm(chemical)
         })
+    }
+
+    addChemicalForm(chemical: Chemical): void {
+        const formGroup = this.fb.group({
+            casNumber: [chemical.casNumber],
+            chemicalName: [chemical.chemicalName, Validators.required],
+            photoPath: [chemical.photoPath],
+            matterState: [chemical.matterState],
+            quantity: [chemical.quantity],
+            added: [chemical.added],
+            expiry: [chemical.expiry],
+            safetyDataSheet: [chemical.safetyDataSheet],
+            coshhLink: [chemical.coshhLink],
+            storageTemp: [chemical.storageTemp],
+            location: [chemical.location],
+        })
+
+        formGroup.valueChanges.subscribe(chemical => this.updateChemical(chemical))
+
+        this.formArray.push(formGroup)
     }
 
 }
