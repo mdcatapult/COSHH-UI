@@ -2,7 +2,7 @@ import * as moment from 'moment';
 
 export type Chemical = {
   casNumber: string,
-  chemicalName: string,
+  name: string,
   photoPath: string,
   matterState: 'solid' | 'liquid',
   quantity: string,
@@ -13,11 +13,26 @@ export type Chemical = {
   storageTemp: 'Shelf' | '+4' | '-20' | '-80',
   location: string,
   isArchived: boolean,
-  hazards: string[]
+  hazards: Hazard[]
 }
 
-export const columnTypes = ['casNumber',
-  'chemicalName',
+export type Hazard = 'None' |
+'Explosive' |
+'Flammable' |
+'Oxidising' |
+'Corrosive' |
+'Acute toxicity' |
+'Hazardous to the environment' |
+'Ozone' |
+'Serious health hazard' |
+'Gas under pressure'
+
+
+export const columnTypes = [
+  'casNumber',
+  'name',
+  'hazards',
+  'location',
   'photoPath',
   'matterState',
   'quantity',
@@ -25,8 +40,6 @@ export const columnTypes = ['casNumber',
   'expiry',
   'safetyDataSheet',
   'coshhLink',
-  'hazards',
   'storageTemp',
-  'location',
   'archive'
 ]
