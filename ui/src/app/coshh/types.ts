@@ -13,6 +13,7 @@ export type Chemical = {
   storageTemp: 'Shelf' | '+4' | '-20' | '-80',
   location: string,
   isArchived: boolean,
+  hazards: string[]
 }
 
 export const columnTypes = ['casNumber',

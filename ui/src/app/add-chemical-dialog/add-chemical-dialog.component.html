@@ -18,8 +18,8 @@
     <mat-form-field appearance="fill">
         <mat-label>Chemical State</mat-label>
         <select matNativeControl required formControlName="matterState">
-          <option value="liquid">Liquid</option>
-          <option value="solid">Solid</option>
+            <option value="liquid">Liquid</option>
+            <option value="solid">Solid</option>
         </select>
     </mat-form-field>
 
@@ -55,17 +55,26 @@
         <mat-datepicker #expiryPicker></mat-datepicker>
     </mat-form-field>
 
-    <mat-form-field class="example-form-field" appearance="fill">
+    <mat-form-field appearance="fill">
         <mat-label>Link to Safety Data Sheet</mat-label>
         <input matInput type="text" formControlName="safetyDataSheet">
     </mat-form-field>
 
-    <mat-form-field class="example-form-field" appearance="fill">
+    <mat-form-field appearance="fill">
         <mat-label>Link to COSHH form</mat-label>
         <input matInput type="text" formControlName="coshhLink">
     </mat-form-field>
 
-    <mat-form-field class="example-form-field" appearance="fill">
+        <mat-label>Hazard category</mat-label>
+        <div *ngFor="let hazardCategory of hazardCategories; let i=index">
+            <mat-checkbox
+                   matInput
+                   formArrayName="hazards"
+                   [value]="hazardCategory"
+                   (change)="onCheckboxChange($event, i)"> {{ hazardCategory }}</mat-checkbox>
+        </div>
+
+    <mat-form-field appearance="fill">
         <mat-label>Lab Location</mat-label>
         <input matInput type="text" formControlName="location">
     </mat-form-field>
