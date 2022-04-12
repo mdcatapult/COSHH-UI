@@ -35,7 +35,7 @@ export class AddChemicalDialogComponent {
 
     form = new FormGroup({
         casNumber: new FormControl('', [Validators.pattern('\\b[1-9]{1}\\d{1,5}-\\d{2}-\\d\\b'), Validators.required]),
-        chemicalName: new FormControl('', Validators.required),
+        name: new FormControl('', Validators.required),
         photoPath: new FormControl('', Validators.required),
         matterState: new FormControl('', Validators.required),
         quantity: new FormControl('', Validators.required),
