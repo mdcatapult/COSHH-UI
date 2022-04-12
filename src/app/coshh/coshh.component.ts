@@ -30,7 +30,7 @@ export class CoshhComponent implements OnInit {
             const inStock = this.allChemicals.filter(chemical => !chemical.isArchived)
             this.tableData = new MatTableDataSource<Chemical>(inStock)
 
-            this.allChemicals.forEach(chem => this.addChemicalForm(chem))
+            inStock.forEach(chem => this.addChemicalForm(chem))
         })
 
         this.formGroup = this.fb.group({
@@ -39,6 +39,8 @@ export class CoshhComponent implements OnInit {
 
         this.toggleArchiveControl.valueChanges.subscribe(includeArchived => {
             this.tableData.data = includeArchived ? this.allChemicals : this.allChemicals.filter(chemical => !chemical.isArchived)
+            this.formArray.clear()
+            this.tableData.data.forEach(chem => this.addChemicalForm(chem))
         })
     }
 
@@ -53,6 +55,7 @@ export class CoshhComponent implements OnInit {
 
     onChemicalAdded(chemical: Chemical): void {
         this.http.post('http://localhost:8080/chemical', chemical).subscribe(() => {
+            this.allChemicals.push(chemical)
             this.tableData.data = this.tableData.data.concat([chemical])
             this.addChemicalForm(chemical)
         })
