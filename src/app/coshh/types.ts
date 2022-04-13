@@ -16,16 +16,6 @@ export type Chemical = {
   hazards: Hazard[]
 }
 
-export type Hazard = 'None' |
-'Explosive' |
-'Flammable' |
-'Oxidising' |
-'Corrosive' |
-'Acute toxicity' |
-'Hazardous to the environment' |
-'Ozone' |
-'Serious health hazard' |
-'Gas under pressure'
 
 
 export const columnTypes = [
@@ -43,3 +33,27 @@ export const columnTypes = [
   'storageTemp',
   'archive'
 ]
+
+export function allHazards(): Hazard[] {
+  return ALL_HAZARDS.map(e => e)
+}
+
+const ALL_HAZARDS = [
+  'None',
+  'Explosive',
+  'Flammable',
+  'Oxidising',
+  'Corrosive',
+  'Acute toxicity',
+  'Hazardous to the environment',
+  'Ozone',
+  'Serious health hazard',
+  'Gas under pressure',
+] as const
+
+type HazardTuple = typeof ALL_HAZARDS
+export type Hazard = HazardTuple[number]
+
+
+
+

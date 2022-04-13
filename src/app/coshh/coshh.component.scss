@@ -33,8 +33,19 @@ table {
 .coshh-archive-checkbox{
   margin: 0 1vw 0 0;
 }
+
 .hazard{
-  height: 5vh;
+  height: 8vh;
+}
+
+ul {
+  columns: 4;
+  -webkit-columns: 4;
+  -moz-columns: 4;  
+  list-style-type: none;
+  padding: 0; 
+  margin: 0;
+  border: 1px solid gray;
 }
 
 

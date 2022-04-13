@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {Chemical, columnTypes, Hazard} from './types';
+import {allHazards, Chemical, columnTypes, Hazard} from './types';
 import { MatTableDataSource } from '@angular/material/table';
 import {FormArray, FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import { map, Observable, startWith } from 'rxjs';
@@ -16,12 +16,14 @@ export class CoshhComponent implements OnInit {
     constructor(private http: HttpClient, private fb: FormBuilder) {
     }
 
+    hazardFilterValues = (<string[]>allHazards()).concat('All')
     tableData = new MatTableDataSource<Chemical>() // data source for table
     columns: string[] = columnTypes // columns to display in table
     allChemicals: Chemical[] = [] // all the chemicals from backend
     toggleArchiveControl = new FormControl(false) 
+    hazardFilterControl = new FormControl('')
 
-    nameOptions: Observable<string[]> = new Observable()
+    searchOptions: Observable<string[]> = new Observable()
     searchControl = new FormControl()
 
     formGroup = new FormGroup({}) // form group for table
@@ -31,25 +33,26 @@ export class CoshhComponent implements OnInit {
         
         this.http.get<Array<Chemical>>('http://localhost:8080/chemicals')
         .subscribe((res: Array<Chemical>) => {
+
             this.allChemicals = res
             const inStock = this.allChemicals.filter(chemical => !chemical.isArchived)
             this.tableData = new MatTableDataSource<Chemical>(inStock)
 
             inStock.forEach(chem => this.addChemicalForm(chem))
 
-            this.nameOptions = this.getSearchObservable(this.toggleArchiveControl.value)
+            this.searchOptions = this.getSearchObservable(this.toggleArchiveControl.value)
             
         })    
         
         this.formGroup = this.fb.group({
-            chemicals:this.formArray
+            chemicals: this.formArray
         })
         
         this.toggleArchiveControl.valueChanges.subscribe(includeArchived => {
             this.tableData.data = this.filterArchived(this.allChemicals)
             this.formArray.clear()
             this.tableData.data.forEach(chem => this.addChemicalForm(chem))
-            this.nameOptions = this.getSearchObservable(includeArchived)
+            this.searchOptions = this.getSearchObservable(includeArchived)
         })
 
         this.searchControl.valueChanges.subscribe((value: string) => {
@@ -62,10 +65,18 @@ export class CoshhComponent implements OnInit {
             this.formArray.clear()
             this.tableData.data.forEach(chem => this.addChemicalForm(chem))
         })
+
+        this.hazardFilterControl.valueChanges.subscribe(hazard => {
+            const filtered = this.allChemicals.filter(chem => hazard === 'All' || chem.hazards.includes(hazard))
+            this.tableData.data = this.filterArchived(filtered)
+
+            this.formArray.clear()
+            this.tableData.data.forEach(chem => this.addChemicalForm(chem))
+        })
     }
 
     filterArchived(chemicals: Chemical[]): Chemical[] {
-        return this.toggleArchiveControl.value ? chemicals : this.allChemicals.filter(chemical => !chemical.isArchived)
+        return this.toggleArchiveControl.value ? chemicals : chemicals.filter(chemical => !chemical.isArchived)
     }
 
     archive(chemical: Chemical): void {
@@ -82,7 +93,7 @@ export class CoshhComponent implements OnInit {
             this.allChemicals.push(chemical)
             this.tableData.data = this.tableData.data.concat([chemical])
             this.addChemicalForm(chemical)
-            this.nameOptions = this.getSearchObservable(this.toggleArchiveControl.value)
+            this.searchOptions = this.getSearchObservable(this.toggleArchiveControl.value)
         })
     }
 
@@ -108,7 +119,6 @@ export class CoshhComponent implements OnInit {
 
     getSearchObservable(includeArchived: boolean): Observable<string[]> {
         return this.searchControl.valueChanges.pipe(
-            startWith(''),
             map(option => 
                 this.allChemicals
                 .filter(chemical => chemical.name.toLowerCase().includes(option.toLowerCase()))
@@ -125,9 +135,9 @@ export class CoshhComponent implements OnInit {
             case 'Corrosive': return 'assets/corrosive.jpg'
             case 'Gas under pressure': return 'assets/Gas.jpg'
             case 'Oxidising': return 'assets/Oxidising.jpg'
-            case 'Acute toxicity': return 'Toxic.jpg'
-            case 'Serious health hazard': return 'Serious-Health-Hazard.jpg'
-            case 'Hazardous to the environment': return 'environment.jpg'
+            case 'Acute toxicity': return 'assets/Toxic.jpg'
+            case 'Serious health hazard': return 'assets/Serious-Health-Hazard.jpg'
+            case 'Hazardous to the environment': return 'assets/environment.jpg'
             case 'None': return ''
             default: return ''
         }
