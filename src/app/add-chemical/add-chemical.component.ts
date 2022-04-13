@@ -7,7 +7,7 @@ import { Chemical } from '../coshh/types';
 @Component({
   selector: 'app-add-chemical',
   templateUrl: './add-chemical.component.html',
-  styleUrls: ['./add-chemical.component.sass']
+  styleUrls: ['./add-chemical.component.scss']
 })
 export class AddChemicalComponent implements OnInit {
 

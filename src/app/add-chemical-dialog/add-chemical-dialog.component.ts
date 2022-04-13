@@ -7,7 +7,7 @@ import {Chemical} from '../coshh/types';
 @Component({
     selector: 'app-add-chemical-dialog',
     templateUrl: './add-chemical-dialog.component.html',
-    styleUrls: ['./add-chemical-dialog.component.sass']
+    styleUrls: ['./add-chemical-dialog.component.scss']
 })
 export class AddChemicalDialogComponent {
 
