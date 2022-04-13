@@ -64,9 +64,9 @@
                 <ng-container matColumnDef="hazards">
                     <th mat-header-cell *matHeaderCellDef> Hazards</th>
                     <td mat-cell *matCellDef="let chemical"> 
-                        <div *ngFor="let hazard of chemical.hazards">
+                        <span *ngFor="let hazard of chemical.hazards">
                             <img class="img-responsive hazard" [src]="getHazardPicture(hazard)">
-                        </div>
+                        </span>
                     </td>
                 </ng-container>
 

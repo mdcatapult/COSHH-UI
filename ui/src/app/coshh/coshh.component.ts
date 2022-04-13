@@ -9,7 +9,7 @@ import { map, Observable, startWith } from 'rxjs';
 @Component({
     selector: 'app-coshh',
     templateUrl: './coshh.component.html',
-    styleUrls: ['./coshh.component.sass']
+    styleUrls: ['./coshh.component.scss']
 })
 export class CoshhComponent implements OnInit {
 
