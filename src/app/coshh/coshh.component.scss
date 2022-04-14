@@ -35,17 +35,41 @@ table {
 }
 
 .hazard{
-  height: 8vh;
+  height: 6vh;
 }
 
 ul {
-  columns: 4;
-  -webkit-columns: 4;
-  -moz-columns: 4;  
+  columns: 5;
+  -webkit-columns: 5;
+  -moz-columns: 5;
   list-style-type: none;
   padding: 0; 
   margin: 0;
-  border: 1px solid gray;
 }
 
 
+.cas-number-field {
+  max-width: 4vw;
+}
+
+.date-form-field {
+  max-width: 5.5vw;
+}
+
+.storage-temp-form-field {
+  max-width: 5vw;
+}
+
+.mat-cell,
+.mat-header-cell {
+  word-wrap: initial;
+  display: table-cell;
+  line-break: unset;
+  padding-top: 0.5vh;
+  //white-space: nowrap;
+}
+
+.mat-row,
+.mat-header-row {
+  display: table-row;
+}

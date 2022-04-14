@@ -46,7 +46,7 @@ const ALL_HAZARDS = [
   'Corrosive',
   'Acute toxicity',
   'Hazardous to the environment',
-  'Ozone',
+  'Health hazard',
   'Serious health hazard',
   'Gas under pressure',
 ] as const
