@@ -3,22 +3,24 @@
     <header>
         <img class="mdc-logo" src="assets/mdc-logo-white.png">
         <mat-toolbar class="coshh-toolbar">
-            <span>MDC COSHH Inventory </span>
+            <span>COSHH Inventory </span>
 
             <span class="spacer"></span>       
             
-            
-            <mat-form-field appearance="fill">
+            <div class="toolbar-controls-container">
+                <div>
+            <mat-form-field appearance="outline">
                 <mat-label>Filter by hazard</mat-label>
                 <select matNativeControl required [formControl]="hazardFilterControl" >
                   <option *ngFor="let hazard of hazardFilterValues" [value]="hazard">{{hazard}}</option>
                 </select>
-            </mat-form-field>  
+            </mat-form-field>
+                </div>
 
 
-
-            <mat-form-field class="example-full-width" appearance="fill">
-                <mat-label>Search</mat-label>
+<div>
+            <mat-form-field appearance="outline">
+                <mat-label>Search by chemical name</mat-label>
                 <input type="text"
                        placeholder="Type to search..."
                        aria-label="Search"
@@ -31,16 +33,22 @@
                   </mat-option>
                 </mat-autocomplete>
               </mat-form-field>
+            </div>
+            </div>
 
+            <div class="archive-checkbox-container">
             <mat-checkbox
                     class="coshh-archive-checkbox"
                     [formControl]="toggleArchiveControl"
                     color="primary">Display archived chemicals
             </mat-checkbox>
+            </div>
 
+            <div class="add-chemical">
             <app-add-chemical
                     (onChemicalAdded)="onChemicalAdded($event)"
             ></app-add-chemical>
+            </div>
 
         </mat-toolbar>
     </header>
@@ -94,7 +102,7 @@
                 </ng-container>
 
                 <ng-container matColumnDef="photoPath">
-                    <th mat-header-cell *matHeaderCellDef> Photo Path</th>
+                    <th mat-header-cell *matHeaderCellDef> Photo</th>
                     <td mat-cell *matCellDef="let chemical; let index = index"  [formGroupName]="index">
 
                         <mat-form-field class="example-form-field" appearance="fill">
@@ -198,7 +206,11 @@
                     <th mat-header-cell *matHeaderCellDef></th>
                     <td mat-cell *matCellDef="let chemical" class="coshh-archive-cell">
                         <button
-                                mat-icon-button
+                                matTooltip="Archive this chemical"
+                                matTooltipPosition="above"
+                                class="archive-button"
+                                mat-mini-fab
+                                color="warn"
                                 (click)="archive(chemical)"
                         >
                             <mat-icon>delete</mat-icon>

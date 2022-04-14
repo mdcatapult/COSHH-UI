@@ -28,6 +28,7 @@ table {
 
 .coshh-archive-cell{
   padding-left: 24px !important;
+  padding-bottom: 15px;
 }
 
 .coshh-archive-checkbox{
@@ -66,10 +67,27 @@ ul {
   display: table-cell;
   line-break: unset;
   padding-top: 0.5vh;
-  //white-space: nowrap;
 }
 
 .mat-row,
 .mat-header-row {
   display: table-row;
+}
+
+.toolbar-controls-container {
+  width: 20vw;
+  font-size: 12px;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  padding: 15px 15px 0 0;
+}
+
+.archive-checkbox-container {
+  font-size: 15px;
+  font-weight: normal;
+}
+
+.add-chemical {
+  padding-right: 0.35vw;
 }
