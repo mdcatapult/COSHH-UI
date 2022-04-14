@@ -130,14 +130,15 @@ export class CoshhComponent implements OnInit {
 
     getHazardPicture(hazard: Hazard): string {
         switch(hazard) {
-            case 'Explosive': return 'assets/Explosive-sign-1-768x768.jpg'
-            case 'Flammable': return 'assets/Flammable.jpg'
             case 'Corrosive': return 'assets/corrosive.jpg'
-            case 'Gas under pressure': return 'assets/Gas.jpg'
-            case 'Oxidising': return 'assets/Oxidising.jpg'
-            case 'Acute toxicity': return 'assets/Toxic.jpg'
-            case 'Serious health hazard': return 'assets/Serious-Health-Hazard.jpg'
             case 'Hazardous to the environment': return 'assets/environment.jpg'
+            case 'Explosive': return 'assets/explosive.jpg'
+            case 'Flammable': return 'assets/flammable.jpg'
+            case 'Gas under pressure': return 'assets/gas.jpg'
+            case 'Health hazard': return 'assets/health.jpg'
+            case 'Oxidising': return 'assets/oxidising.jpg'
+            case 'Serious health hazard': return 'assets/serious.jpg'
+            case 'Acute toxicity': return 'assets/toxic.jpg'
             case 'None': return ''
             default: return ''
         }

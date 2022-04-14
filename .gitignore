@@ -1,3 +1,5 @@
 ui/node_modules
 ui/.angular/cache/*
 .idea
+*.DS_Store
+
