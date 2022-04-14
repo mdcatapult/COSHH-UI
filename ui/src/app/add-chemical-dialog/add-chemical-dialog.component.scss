@@ -1,0 +1,17 @@
+.hazard-category-container {
+  display: block;
+  padding: 1vh 0 2vh 0;
+}
+
+mat-label {
+  font-weight: bold;
+}
+
+.add-chemical-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.submit-button-container {
+  display: flex;
+}
