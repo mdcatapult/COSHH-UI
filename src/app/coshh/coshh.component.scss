@@ -4,38 +4,34 @@ table {
   overflow: hidden !important;
 }
 
-.mat-header-cell{
+.mat-header-cell {
   font-size: 20px;
 }
 
-.mdc-logo{
+.mdc-logo {
   padding: 0.75vh 0 0 0.75vw;
 }
 
-.table-container{
+.table-container {
   margin: 1vw;
 }
 
-.spacer{
-  flex: 1 1 auto;
-}
-
-.coshh-toolbar{
+.coshh-toolbar {
   margin: 0 auto;
   max-width: 98%;
   border-radius: 4px;
 }
 
-.coshh-archive-cell{
+.coshh-archive-cell {
   padding-left: 24px !important;
   padding-bottom: 15px;
 }
 
-.coshh-archive-checkbox{
+.coshh-archive-checkbox {
   margin: 0 1vw 0 0;
 }
 
-.hazard{
+.hazard {
   height: 6vh;
 }
 
@@ -44,7 +40,7 @@ ul {
   -webkit-columns: 5;
   -moz-columns: 5;
   list-style-type: none;
-  padding: 0; 
+  padding: 0;
   margin: 0;
 }
 
@@ -89,5 +85,9 @@ ul {
 }
 
 .add-chemical {
-  padding-right: 0.35vw;
+  padding-right: 0.55vw;
+}
+
+header {
+  text-align: center;
 }

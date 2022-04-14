@@ -1,4 +1,4 @@
-<form [formGroup]="form">
+<form class="add-chemical-form" [formGroup]="form">
 
     <mat-form-field class="example-form-field" appearance="fill">
         <mat-label>CAS Number</mat-label>
@@ -65,20 +65,28 @@
         <input matInput type="text" formControlName="coshhLink">
     </mat-form-field>
 
-        <mat-label>Hazard category</mat-label>
-        <div *ngFor="let hazardCategory of hazardCategories; let i=index">
-            <mat-checkbox
-                   matInput
-                   formArrayName="hazards"
-                   [value]="hazardCategory"
-                   (change)="onCheckboxChange($event, i)"> {{ hazardCategory }}</mat-checkbox>
-        </div>
-
     <mat-form-field appearance="fill">
         <mat-label>Lab Location</mat-label>
         <input matInput type="text" formControlName="location">
     </mat-form-field>
 
-</form>
+    <div class="hazard-category-container">
+        <mat-label>Hazard category</mat-label>
+        <div *ngFor="let hazardCategory of hazardCategories; let i=index">
+            <mat-checkbox
+                    matInput
+                    formArrayName="hazards"
+                    [value]="hazardCategory"
+                    (change)="onCheckboxChange($event, i)"> {{ hazardCategory }}</mat-checkbox>
+        </div>
+    </div>
 
-<button (click)="onClose()">Submit</button>
+</form>
+<div class="submit-button-container">
+    <span class="spacer"></span>
+    <button
+            mat-raised-button
+            color="primary"
+            (click)="onClose()">Submit
+    </button>
+</div>
