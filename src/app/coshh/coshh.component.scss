@@ -14,6 +14,8 @@ table {
 
 .table-container {
   margin: 1vw;
+  overflow-x: scroll;
+  max-width: 100%;
 }
 
 .coshh-toolbar {
