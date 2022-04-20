@@ -39,6 +39,7 @@ export class CoshhComponent implements OnInit {
             this.tableData = new MatTableDataSource<Chemical>(inStock)
 
             inStock.forEach(chem => this.addChemicalForm(chem))
+            console.log(this.allChemicals)
 
             this.searchOptions = this.getSearchObservable(this.toggleArchiveControl.value)
             
