@@ -16,7 +16,7 @@ export class CoshhComponent implements OnInit {
     constructor(private http: HttpClient, private fb: FormBuilder) {
     }
 
-    chemicals = new Chemicals()
+    chemicals = new Chemicals() // this represents all the chemicals returned from the API
     hazardFilterValues = (<string[]>allHazards()).concat('All')
     tableData = new MatTableDataSource<Chemical>() // data source for table
     columns: string[] = columnTypes // columns to display in table
@@ -116,9 +116,7 @@ export class CoshhComponent implements OnInit {
     getSearchObservable(): Observable<string[]> {
         return this.searchControl.valueChanges.pipe(
             map(option =>
-                this.chemicals.get(this.toggleArchiveControl.value, this.hazardFilterControl.value)
-                    .filter(chemical => chemical.name.toLowerCase().includes(option.toLowerCase()))
-                    .map(chemical => chemical.name)
+                this.chemicals.getNames(this.toggleArchiveControl.value, this.hazardFilterControl.value, option)
             )
         )
     }
