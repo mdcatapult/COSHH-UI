@@ -1,83 +1,110 @@
 <form class="add-chemical-form" [formGroup]="form">
 
-    <mat-form-field class="example-form-field" appearance="fill">
-        <mat-label>CAS Number</mat-label>
-        <input matInput type="text" formControlName="casNumber">
-    </mat-form-field>
+    <div class="column">
+        <div class="row">
+            <mat-form-field class="row-item" appearance="fill">
+                <mat-label>CAS Number</mat-label>
+                <input matInput type="text" formControlName="casNumber">
+            </mat-form-field>
+        </div>
 
-    <mat-form-field class="example-form-field" appearance="fill">
-        <mat-label>Chemical Name</mat-label>
-        <input matInput type="text" formControlName="name">
-    </mat-form-field>
+        <div class="row">
+            <mat-form-field class="row-item" appearance="fill">
+                <mat-label>Chemical Name</mat-label>
+                <input matInput type="text" formControlName="name">
+            </mat-form-field>
+        </div>
 
-    <mat-form-field class="example-form-field" appearance="fill">
-        <mat-label>Photo</mat-label>
-        <input matInput type="text" formControlName="photoPath">
-    </mat-form-field>
+        <div class="row">
+            <mat-form-field class="row-item" appearance="fill">
+                <mat-label>Photo</mat-label>
+                <input matInput type="text" formControlName="photoPath">
+            </mat-form-field>
+        </div>
 
-    <mat-form-field appearance="fill">
-        <mat-label>Chemical State</mat-label>
-        <select matNativeControl required formControlName="matterState">
-            <option value="liquid">Liquid</option>
-            <option value="solid">Solid</option>
-        </select>
-    </mat-form-field>
+        <div class="row">
+            <mat-form-field class="row-item" appearance="fill">
+                <mat-label>Chemical State</mat-label>
+                <select matNativeControl required formControlName="matterState">
+                    <option value="liquid">Liquid</option>
+                    <option value="solid">Solid</option>
+                </select>
+            </mat-form-field>
+        </div>
 
-    <mat-form-field appearance="fill">
-        <mat-label>Storage Temperature</mat-label>
-        <select matNativeControl required formControlName="storageTemp">
-            <option value="Shelf">Shelf</option>
-            <option value="+4">+4</option>
-            <option value="-20">-20</option>
-            <option value="-80">-80</option>
-        </select>
-    </mat-form-field>
+        <div class="rows">
+            <mat-form-field appearance="fill">
+                <mat-label>Storage Temperature</mat-label>
+                <select matNativeControl required formControlName="storageTemp">
+                    <option value="Shelf">Shelf</option>
+                    <option value="+4">+4</option>
+                    <option value="-20">-20</option>
+                    <option value="-80">-80</option>
+                </select>
+            </mat-form-field>
+        </div>
 
+        <div class="row">
+            <mat-form-field appearance="fill">
+                <mat-label>Quantity</mat-label>
+                <input matInput type="text" formControlName="quantity">
+            </mat-form-field>
+        </div>
+    </div>
 
-    <mat-form-field class="example-form-field" appearance="fill">
-        <mat-label>Quantity</mat-label>
-        <input matInput type="text" formControlName="quantity">
-    </mat-form-field>
+    <div class="column">
+        <div class="row">
+            <mat-form-field appearance="fill">
+                <mat-label>Date added</mat-label>
+                <input readonly matInput [matDatepicker]="addedPicker" formControlName="added">
+                <mat-hint>DD/MM/YYYY</mat-hint>
+                <mat-datepicker-toggle matSuffix [for]="addedPicker"></mat-datepicker-toggle>
+                <mat-datepicker #addedPicker></mat-datepicker>
+            </mat-form-field>
+        </div>
 
-    <mat-form-field appearance="fill">
-        <mat-label>Date added - ADDED TO WHAT?!</mat-label>
-        <input readonly matInput [matDatepicker]="addedPicker" formControlName="added">
-        <mat-hint>DD/MM/YYYY</mat-hint>
-        <mat-datepicker-toggle matSuffix [for]="addedPicker"></mat-datepicker-toggle>
-        <mat-datepicker #addedPicker></mat-datepicker>
-    </mat-form-field>
+        <div class="row">
+            <mat-form-field appearance="fill">
+                <mat-label>Expiry Date</mat-label>
+                <input readonly matInput [matDatepicker]="expiryPicker" formControlName="expiry">
+                <mat-hint>DD/MM/YYYY</mat-hint>
+                <mat-datepicker-toggle matSuffix [for]="expiryPicker"></mat-datepicker-toggle>
+                <mat-datepicker #expiryPicker></mat-datepicker>
+            </mat-form-field>
+        </div>
 
-    <mat-form-field appearance="fill">
-        <mat-label>Expiry Date</mat-label>
-        <input readonly matInput [matDatepicker]="expiryPicker" formControlName="expiry">
-        <mat-hint>DD/MM/YYYY</mat-hint>
-        <mat-datepicker-toggle matSuffix [for]="expiryPicker"></mat-datepicker-toggle>
-        <mat-datepicker #expiryPicker></mat-datepicker>
-    </mat-form-field>
+        <div class="row">
+            <mat-form-field appearance="fill">
+                <mat-label>Link to Safety Data Sheet</mat-label>
+                <input matInput type="text" formControlName="safetyDataSheet">
+            </mat-form-field>
+        </div>
 
-    <mat-form-field appearance="fill">
-        <mat-label>Link to Safety Data Sheet</mat-label>
-        <input matInput type="text" formControlName="safetyDataSheet">
-    </mat-form-field>
+        <div class="row">
+            <mat-form-field appearance="fill">
+                <mat-label>Link to COSHH form</mat-label>
+                <input matInput type="text" formControlName="coshhLink">
+            </mat-form-field>
+        </div>
 
-    <mat-form-field appearance="fill">
-        <mat-label>Link to COSHH form</mat-label>
-        <input matInput type="text" formControlName="coshhLink">
-    </mat-form-field>
+        <div class="row">
+            <mat-form-field appearance="fill">
+                <mat-label>Lab Location</mat-label>
+                <input matInput type="text" formControlName="location">
+            </mat-form-field>
+        </div>
 
-    <mat-form-field appearance="fill">
-        <mat-label>Lab Location</mat-label>
-        <input matInput type="text" formControlName="location">
-    </mat-form-field>
-
-    <div class="hazard-category-container">
-        <mat-label>Hazard category</mat-label>
-        <div *ngFor="let hazardCategory of hazardCategories; let i=index">
-            <mat-checkbox
-                    matInput
-                    formArrayName="hazards"
-                    [value]="hazardCategory"
-                    (change)="onCheckboxChange($event, i)"> {{ hazardCategory }}</mat-checkbox>
+        <div class="row">
+            <div class="hazard-category-container">
+                <mat-label>Hazard category</mat-label>
+                <div *ngFor="let hazardCategory of hazardCategories; let i=index">
+                    <mat-checkbox
+                            matInput
+                            formArrayName="hazards"
+                            [value]="hazardCategory"
+                            (change)="onCheckboxChange($event, i)"> {{ hazardCategory }}</mat-checkbox>
+                </div>
+            </div>
         </div>
     </div>
 
