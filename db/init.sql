@@ -12,7 +12,7 @@ CREATE TYPE hazard AS ENUM(
     'Corrosive',
     'Acute toxicity',
     'Hazardous to the environment',
-    'Health hazard',
+    'Health hazard/Hazardous to the ozone layer',
     'Serious health hazard',
     'Gas under pressure'
 );
@@ -98,5 +98,188 @@ VALUES
     'some-location',
     'Shelf',
     'true'
+), (
+
+    '6020-60-8',
+    'creatine 123',
+    'some-path',
+    'solid',
+    '100g',
+    '2022-04-08',
+    '2023-04-08',
+    'link-to-sds',
+    'link-to-cosh',
+    'some-location',
+    'Shelf',
+    'true'
+), (
+
+    '6020-87-1',
+    'cre',
+    'some-path',
+    'solid',
+    '100g',
+    '2022-04-08',
+    '2023-04-08',
+    'link-to-sds',
+    'link-to-cosh',
+    'some-location',
+    'Shelf',
+    'true'
+), (
+
+    '6021-87-8',
+    'tine mono',
+    'some-path',
+    'solid',
+    '100g',
+    '2022-04-08',
+    '2023-04-08',
+    'link-to-sds',
+    'link-to-cosh',
+    'some-location',
+    'Shelf',
+    'true'
+), (
+
+    '6920-87-8',
+    'monohydrate',
+    'some-path',
+    'solid',
+    '100g',
+    '2022-04-08',
+    '2023-04-08',
+    'link-to-sds',
+    'link-to-cosh',
+    'some-location',
+    'Shelf',
+    'true'
+), (
+
+    '6020-27-8',
+    '222222',
+    'some-path',
+    'solid',
+    '100g',
+    '2022-04-08',
+    '2023-04-08',
+    'link-to-sds',
+    'link-to-cosh',
+    'some-location',
+    'Shelf',
+    'true'
+), (
+
+    '6660-87-8',
+    'cjhdfgkjf222',
+    'some-path',
+    'solid',
+    '100g',
+    '2022-04-08',
+    '2023-04-08',
+    'link-to-sds',
+    'link-to-cosh',
+    'some-location',
+    'Shelf',
+    'true'
+    ), (
+
+    '6990-87-8',
+    'abcdefg',
+    'some-path',
+    'solid',
+    '100g',
+    '2022-04-08',
+    '2023-04-08',
+    'link-to-sds',
+    'link-to-cosh',
+    'some-location',
+    'Shelf',
+    'true'
+), (
+
+    '6190-87-0',
+    'creatine monohydrate 222222',
+    'some-path',
+    'solid',
+    '100g',
+    '2022-04-08',
+    '2023-04-08',
+    'link-to-sds',
+    'link-to-cosh',
+    'some-location',
+    'Shelf',
+    'true'
+), (
+
+    '1000-07-8',
+    '8743iuy56ehjrt',
+    'some-path',
+    'solid',
+    '100g',
+    '2022-04-08',
+    '2023-04-08',
+    'link-to-sds',
+    'link-to-cosh',
+    'some-location',
+    'Shelf',
+    'true'
+), (
+
+    '6020-00-0',
+    'creatindrate 222222',
+    'some-path',
+    'solid',
+    '100g',
+    '2022-04-08',
+    '2023-04-08',
+    'link-to-sds',
+    'link-to-cosh',
+    'some-location',
+    'Shelf',
+    'true'
+), (
+
+    '6020-66-8',
+    'drate sd222',
+    'some-path',
+    'solid',
+    '100g',
+    '2022-04-08',
+    '2023-04-08',
+    'link-to-sds',
+    'link-to-cosh',
+    'some-location',
+    'Shelf',
+    'true'
+), (
+
+    '1020-87-8',
+    'crea mono22222',
+    'some-path',
+    'solid',
+    '100g',
+    '2022-04-08',
+    '2023-04-08',
+    'link-to-sds',
+    'link-to-cosh',
+    'some-location',
+    'Shelf',
+    'true'
+), (
+
+    '6000-87-8',
+    'creahgse2',
+    'some-path',
+    'solid',
+    '100g',
+    '2022-04-08',
+    '2023-04-08',
+    'link-to-sds',
+    'link-to-cosh',
+    'some-location',
+    'Shelf',
+    'true'
+
 );
 

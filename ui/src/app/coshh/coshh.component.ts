@@ -136,7 +136,7 @@ export class CoshhComponent implements OnInit {
             case 'Explosive': return 'assets/explosive.jpg'
             case 'Flammable': return 'assets/flammable.jpg'
             case 'Gas under pressure': return 'assets/gas.jpg'
-            case 'Health hazard': return 'assets/health.jpg'
+            case 'Health hazard/Hazardous to the ozone layer': return 'assets/health.jpg'
             case 'Oxidising': return 'assets/oxidising.jpg'
             case 'Serious health hazard': return 'assets/serious.jpg'
             case 'Acute toxicity': return 'assets/toxic.jpg'
