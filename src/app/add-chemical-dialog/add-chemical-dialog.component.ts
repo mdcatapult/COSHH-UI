@@ -26,7 +26,7 @@ export class AddChemicalDialogComponent {
         'Corrosive',
         'Acute toxicity',
         'Hazardous to the environment',
-        'Health hazard//Hazardous to the ozone layer',
+        'Health hazard/Hazardous to the ozone layer',
         'Serious health hazard',
         'Gas under pressure'
     ]
