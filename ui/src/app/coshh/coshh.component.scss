@@ -8,8 +8,13 @@ table {
   font-size: 20px;
 }
 
+header {
+  text-align: right !important;
+}
+
 .mdc-logo {
-  padding: 0.75vh 0 0 0.75vw;
+  padding: 0.75vh 1vw 0 0;
+  max-width: 12vw;
 }
 
 .table-container {
@@ -27,7 +32,7 @@ table {
 }
 
 .coshh-archive-cell {
-  padding-left: 2.3vw !important;
+  padding-left: 2vw !important;
   padding-bottom: 1vh;
 }
 
@@ -49,15 +54,18 @@ ul {
 }
 
 
-.cas-number-field {
-  max-width: 4vw;
+.cas-number-field,
+.sds-coshh-form-field {
+  max-width: 5.5vw;
 }
 
 .date-form-field {
   max-width: 7.5vw;
 }
 
-.storage-temp-form-field {
+.storage-temp-form-field,
+.state-form-field,
+.quantity-form-field {
   max-width: 5vw;
 }
 
@@ -67,6 +75,7 @@ ul {
   display: table-cell;
   line-break: unset;
   padding-top: 0.5vh;
+  padding-right: 0.5vw;
 }
 
 .mat-row,
@@ -90,7 +99,7 @@ ul {
 }
 
 .add-chemical {
-  padding-right: 0.55vw;
+  padding-left: 0.55vw;
 }
 
 header {
