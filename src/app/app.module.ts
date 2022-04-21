@@ -19,6 +19,7 @@ import {MatCheckboxModule} from "@angular/material/checkbox";
 import {MatToolbarModule} from "@angular/material/toolbar";
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
+import {MatButtonModule} from "@angular/material/button";
 
 @NgModule({
   declarations: [
@@ -45,6 +46,7 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
         MatTooltipModule,
         MatOptionModule,
         MatAutocompleteModule,
+        MatButtonModule,
     ],
   providers: [
     { provide: MAT_DATE_LOCALE, useValue: 'en-GB' }
