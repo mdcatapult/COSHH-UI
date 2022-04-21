@@ -1,0 +1,36 @@
+.hazard-category-container {
+  display: block;
+  padding: 1vh 0 2vh 0;
+}
+
+mat-label {
+  font-weight: bold;
+}
+
+
+.submit-button-container {
+  display: flex;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  flex-basis: 50%;
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.add-chemical-form {
+  display: flex;
+  width: 45vw;
+}
+
+mat-form-field {
+  width: 90%;
+}
+
