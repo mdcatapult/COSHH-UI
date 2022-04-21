@@ -115,8 +115,8 @@ export class CoshhComponent implements OnInit {
 
     getSearchObservable(): Observable<string[]> {
         return this.searchControl.valueChanges.pipe(
-            map(option =>
-                this.chemicals.getNames(this.toggleArchiveControl.value, this.hazardFilterControl.value, option)
+            map(search =>
+                this.chemicals.getNames(this.toggleArchiveControl.value, this.hazardFilterControl.value, search)
             )
         )
     }
