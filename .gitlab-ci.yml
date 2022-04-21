@@ -1,0 +1,46 @@
+stages:
+  - test-lint-build
+  - release
+
+test-lint-build-ui:
+  stage: test-lint-build
+  image: registry.mdcatapult.io/informatics/docker-images/ci/node
+  tags:
+    - wopr
+  before_script:
+    - apt-get -yqq update && apt-get upgrade -yqq chromium libxss1 xvfb
+    - export CHROME_BIN=/usr/bin/chromium
+    - npm install
+  script:
+    - npm run lint
+    - npm run test
+  coverage: /Lines\s+:\s(\d+\.?\d*)%\s\(\s\d+\/\d+\s\)/
+  except:
+    variables:
+      - $CI_COMMIT_MESSAGE =~ /^Setting version to.*/
+
+test-lint-build-api:
+  stage: test-lint-build
+  image:
+    name: registry.mdcatapult.io/informatics/docker-images/ci/golang
+  script:
+    - go vet ./...
+    - go test ./...
+  except:
+    refs:
+    - master
+    - tags
+    variables:
+    - "$CI_COMMIT_MESSAGE =~ /^Setting version to.*/"
+
+release-api:
+  stage: release
+  image: registry.mdcatapult.io/informatics/docker-images/ci/golang
+  script:
+  - release.sh
+  only:
+    refs:
+    - master
+  except:
+    variables:
+    - "$CI_COMMIT_MESSAGE =~ /^Setting version to.*/"
