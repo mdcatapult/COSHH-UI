@@ -63,9 +63,9 @@ export class Chemicals {
     }
     add = (chemical: Chemical) => this.chemicals.push(chemical)
     set = (chemicals: Chemical[]) => this.chemicals = chemicals
-    getNames = (includeArchived: boolean, hazardCategory: string, option: any): string[] => {
+    getNames = (includeArchived: boolean, hazardCategory: string, search: string): string[] => {
         return this.get(includeArchived, hazardCategory)
-            .filter(chemical => chemical.name.toLowerCase().includes(option.toLowerCase()))
+            .filter(chemical => chemical.name.toLowerCase().includes(search.toLowerCase()))
             .map(chemical => chemical.name)
     }
 }
