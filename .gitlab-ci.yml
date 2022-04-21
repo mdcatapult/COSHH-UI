@@ -15,7 +15,7 @@ test-lint-build-ui:
     - export CHROME_BIN=/usr/bin/chromium
     - npm install
   script:
-    - npm run test
+    - npm run test:ci
     - npm run build
   coverage: /Lines\s+:\s(\d+\.?\d*)%\s\(\s\d+\/\d+\s\)/
   except:
