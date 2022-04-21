@@ -2,12 +2,15 @@ stages:
   - test-lint-build
   - release
 
+default:
+  tags:
+    - wopr
+
 test-lint-build-ui:
   stage: test-lint-build
   image: registry.mdcatapult.io/informatics/docker-images/ci/node
-  tags:
-    - wopr
   before_script:
+    - cd ui
     - apt-get -yqq update && apt-get upgrade -yqq chromium libxss1 xvfb
     - export CHROME_BIN=/usr/bin/chromium
     - npm install
@@ -24,6 +27,8 @@ test-lint-build-api:
   image:
     name: registry.mdcatapult.io/informatics/docker-images/ci/golang
   script:
+    - ls
+    - cd api
     - go vet ./...
     - go test ./...
   except:
