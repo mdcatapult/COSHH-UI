@@ -1,4 +1,6 @@
+import { Overlay } from '@angular/cdk/overlay';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 
 import { AddChemicalComponent } from './add-chemical.component';
 
@@ -8,7 +10,12 @@ describe('AddChemicalComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ AddChemicalComponent ]
+      declarations: [ AddChemicalComponent ],
+      providers: [
+        MatDialog,
+        Overlay,
+      ],
+      imports: [MatDialogModule]
     })
     .compileComponents();
   });
