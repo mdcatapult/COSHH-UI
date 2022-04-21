@@ -4,48 +4,104 @@ table {
   overflow: hidden !important;
 }
 
-.mat-header-cell{
+.mat-header-cell {
   font-size: 20px;
 }
 
-.mdc-logo{
-  padding: 0.75vh 0 0 0.75vw;
+header {
+  text-align: right !important;
 }
 
-.table-container{
+.mdc-logo {
+  padding: 0.75vh 1vw 0 0;
+  max-width: 12vw;
+}
+
+.table-container {
   margin: 1vw;
+  overflow-x: auto;
+  overflow-y: auto;
+  max-height: 64vh;
+  max-width: 100%;
 }
 
-.spacer{
-  flex: 1 1 auto;
-}
-
-.coshh-toolbar{
+.coshh-toolbar {
   margin: 0 auto;
   max-width: 98%;
   border-radius: 4px;
 }
 
-.coshh-archive-cell{
-  padding-left: 24px !important;
+.coshh-archive-cell {
+  padding-left: 2vw !important;
+  padding-bottom: 1vh;
 }
 
-.coshh-archive-checkbox{
+.coshh-archive-checkbox {
   margin: 0 1vw 0 0;
 }
 
-.hazard{
-  height: 8vh;
+.hazard {
+  height: 6vh;
 }
 
 ul {
-  columns: 4;
-  -webkit-columns: 4;
-  -moz-columns: 4;  
+  columns: 5;
+  -webkit-columns: 5;
+  -moz-columns: 5;
   list-style-type: none;
-  padding: 0; 
+  padding: 0;
   margin: 0;
-  border: 1px solid gray;
 }
 
 
+.cas-number-field,
+.sds-coshh-form-field {
+  max-width: 5.5vw;
+}
+
+.date-form-field {
+  max-width: 7.5vw;
+}
+
+.storage-temp-form-field,
+.state-form-field,
+.quantity-form-field {
+  max-width: 5vw;
+}
+
+.mat-cell,
+.mat-header-cell {
+  word-wrap: initial;
+  display: table-cell;
+  line-break: unset;
+  padding-top: 0.5vh;
+  padding-right: 0.5vw;
+}
+
+.mat-row,
+.mat-header-row {
+  display: table-row;
+}
+
+.toolbar-controls-container {
+  width: 20vw;
+  font-size: 1vh;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  padding: 1.3vh 1vw 0 0;
+}
+
+.archive-checkbox-container {
+  font-size: 1.5vh;
+  font-weight: normal;
+  margin-left: 2vw;
+}
+
+.add-chemical {
+  padding-left: 0.55vw;
+}
+
+header {
+  text-align: center;
+}

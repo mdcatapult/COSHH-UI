@@ -1,2 +1,4 @@
 ui/.angular/cache/*
 .idea
+*.DS_Store
+
