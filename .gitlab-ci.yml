@@ -27,7 +27,6 @@ test-lint-build-api:
   image:
     name: registry.mdcatapult.io/informatics/docker-images/ci/golang
   script:
-    - ls
     - cd api
     - go vet ./...
     - go test ./...
