@@ -1,4 +1,7 @@
+import { HttpClient, HttpHandler } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormBuilder } from '@angular/forms';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 import { CoshhComponent } from './coshh.component';
 
@@ -8,7 +11,15 @@ describe('CoshhComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ CoshhComponent ]
+      declarations: [ CoshhComponent ],
+      providers: [
+        HttpClient,
+        HttpHandler,
+        FormBuilder,
+      ],
+      imports: [
+        MatAutocompleteModule,
+      ]
     })
     .compileComponents();
   });
