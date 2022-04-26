@@ -49,7 +49,7 @@ export class CoshhComponent implements OnInit {
         })
 
         this.toggleArchiveControl.valueChanges.subscribe(_ => {
-            this.tableData.data = this.chemicals.get(this.toggleArchiveControl.value, this.hazardFilterControl.value)
+            this.refresh()
             this.formArray.clear()
             this.tableData.data.forEach(chem => this.addChemicalForm(chem))
             this.searchOptions = this.getSearchObservable()
@@ -67,7 +67,7 @@ export class CoshhComponent implements OnInit {
         })
 
         this.hazardFilterControl.valueChanges.subscribe(_ => {
-            this.tableData.data = this.chemicals.get(this.toggleArchiveControl.value, this.hazardFilterControl.value)
+            this.refresh()
 
             this.formArray.clear()
             this.tableData.data.forEach(chem => this.addChemicalForm(chem))
@@ -78,6 +78,12 @@ export class CoshhComponent implements OnInit {
     archive(chemical: Chemical): void {
         chemical.isArchived = true
         this.updateChemical(chemical)
+
+        this.refresh()
+    }
+
+    refresh(): void {
+        this.tableData.data = this.chemicals.get(this.toggleArchiveControl.value, this.hazardFilterControl.value)
     }
 
     updateChemical(chemical: Chemical): void {
