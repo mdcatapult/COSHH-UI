@@ -4,7 +4,6 @@ import {allHazards, Chemical, Chemicals, columnTypes, Hazard} from './types';
 import {MatTableDataSource} from '@angular/material/table';
 import {FormArray, FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {map, Observable} from 'rxjs';
-import { ThisReceiver } from '@angular/compiler';
 
 
 @Component({
