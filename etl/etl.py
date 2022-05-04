@@ -65,7 +65,9 @@ def get_chemical(lab, chemical) -> dict:
 def insert_chemical(data_frame_row, lab_location):
 
     chemical = get_chemical(lab_location, data_frame_row)
-
+    if chemical["state"] is not None:
+        chemical["state"] = chemical["state"].lower()
+    
     sql = """
         INSERT INTO chemical(
             cas_number,
@@ -89,7 +91,7 @@ def insert_chemical(data_frame_row, lab_location):
         chemical["casNumber"],
         chemical["chemicalName"],
         chemical["photo"],
-        chemical["state"] if chemical["state"] is not None and str(chemical["state"]).strip().lower() != 'liq' else 'liquid',
+        chemical["state"] if chemical["state"] is not None and str(chemical["state"]).strip() != 'liq' else 'liquid',
         chemical["quantity"],
         chemical["dateAdded"],
         chemical["expiryDate"],
@@ -128,17 +130,13 @@ def insert_chemicals(file_path):
 
     for sheet_name in excel.sheet_names:
 
-        if 'Lab' not in sheet_name:
+        if sheet_name == 'Chemical list': 
             continue
 
         df = pd.read_excel(excel, sheet_name=sheet_name)
         df = df.replace({np.nan: None})
 
-        header = None
-
         for i, row in df.iterrows():
-            if i == 3: 
-                header = row.values
             if i > 3 and row[0] is not None and row[0] is not pd.NaT: # skip headers; skip rows where chemical name is empty
                 insert_chemical(row, sheet_name)
 
