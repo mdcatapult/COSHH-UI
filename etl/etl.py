@@ -4,17 +4,67 @@ import numpy as np
 import psycopg2
 import psycopg2.extras
 
-def insert_chemical(data_frame_row, lab_location, header):
+def get_chemical(lab, chemical) -> dict:
 
-    photo = None
-    sds = None
-    if 'Photo' not in header:
-        if 'SDS' not in header: 
-             chemical_name, cas_number, state, quantity, date_added, expiry_date, hazards, coshh = data_frame_row
-        else:
-            chemical_name, cas_number, state, quantity, date_added, expiry_date, hazards, sds, coshh = data_frame_row
-    else:
-        chemical_name, photo, cas_number, state, quantity, date_added, expiry_date, hazards, sds, coshh = data_frame_row
+    lab = lab.strip()
+    if lab == 'Lab 1' or lab == 'Lab 2':
+        return  {
+            "chemicalName": chemical[0],
+            "photo": chemical[1],
+            "casNumber": chemical[2],
+            "state": chemical[3],
+            "quantity": chemical[4],
+            "dateAdded": chemical[5],
+            "expiryDate": chemical[6],
+            "hazards": chemical[7],
+            "sds": chemical[8],
+            "coshh": chemical[9]
+        }
+
+    if lab == 'Wolfson':
+        return  {
+            "chemicalName": chemical[0],
+            "photo": chemical[12],
+            "casNumber": chemical[2],
+            "state": chemical[3],
+            "quantity": chemical[4],
+            "dateAdded": chemical[5],
+            "expiryDate": chemical[6],
+            "hazards": chemical[7],
+            "coshh": chemical[8],
+            "sds": None
+        }
+
+    if lab == 'Lab 5':
+        return  {
+            "chemicalName": chemical[0],
+            "photo": None,
+            "casNumber": chemical[1],
+            "state": chemical[2],
+            "quantity": chemical[3],
+            "dateAdded": chemical[4],
+            "expiryDate": chemical[5],
+            "hazards": chemical[6],
+            "coshh": chemical[7],
+            "sds": None
+        }
+
+    return  {
+        "chemicalName": chemical[0],
+        "photo": None,
+        "casNumber": chemical[1],
+        "state": chemical[2],
+        "quantity": chemical[3],
+        "dateAdded": chemical[4],
+        "expiryDate": chemical[5],
+        "hazards": chemical[6],
+        "sds": chemical[7],
+        "coshh": chemical[8],
+    }
+
+def insert_chemical(data_frame_row, lab_location):
+
+    chemical = get_chemical(lab_location, data_frame_row)
 
     sql = """
         INSERT INTO chemical(
@@ -36,15 +86,15 @@ def insert_chemical(data_frame_row, lab_location, header):
 
     cur = conn.cursor()
     cur.execute(sql, (
-        cas_number,
-        chemical_name,
-        photo,
-        state if state is not None and str(state).strip().lower() != 'liq' else 'liquid',
-        quantity,
-        date_added,
-        expiry_date,
-        sds,
-        coshh,
+        chemical["casNumber"],
+        chemical["chemicalName"],
+        chemical["photo"],
+        chemical["state"] if chemical["state"] is not None and str(chemical["state"]).strip().lower() != 'liq' else 'liquid',
+        chemical["quantity"],
+        chemical["dateAdded"],
+        chemical["expiryDate"],
+        chemical["sds"],
+        chemical["coshh"],
         lab_location,
         'Shelf',
         False,
@@ -52,6 +102,7 @@ def insert_chemical(data_frame_row, lab_location, header):
 
     id = cur.fetchone()[0]
 
+    hazards = chemical["hazards"]
     if hazards is not None:
         insert_hazards(id, hazards)
 
@@ -69,9 +120,7 @@ def insert_hazards(id, hazards):
 
     cur = conn.cursor()
     
-    psycopg2.extras.execute_values (
-    cur, sql, values, template=None, page_size=100
-)
+    psycopg2.extras.execute_values(cur, sql, values)
 
 
 def insert_chemicals(file_path):
@@ -88,11 +137,10 @@ def insert_chemicals(file_path):
         header = None
 
         for i, row in df.iterrows():
-            # print(row[1])
             if i == 3: 
                 header = row.values
             if i > 3 and row[0] is not None and row[0] is not pd.NaT: # skip headers; skip rows where chemical name is empty
-                insert_chemical(row, sheet_name, header)
+                insert_chemical(row, sheet_name)
 
     conn.close()
 
