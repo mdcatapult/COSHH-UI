@@ -3,8 +3,6 @@ services:
   db:
     network_mode: host
     image: postgres
-    ports:
-     - "5432:5432"
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
@@ -13,6 +11,4 @@ services:
   server:
     network_mode: host
     image: "registry.mdcatapult.io/informatics/software-engineering/coshh"
-    ports:
-     - "8080:8080"
 
