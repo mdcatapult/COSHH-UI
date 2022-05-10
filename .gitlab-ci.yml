@@ -33,7 +33,7 @@ test-lint-build-api:
     POSTGRES_USER: postgres
     POSTGRES_PASSWORD: postgres
   before_script:
-    - apt install -y postgresql postgresql-contrib -y
+    - apt install -y postgresql postgresql-contrib -q
     - psql -h "postgres" -U "$POSTGRES_USER" -d "$POSTGRES_DB" -f ./db/init.sql
   script:
     - cd api
