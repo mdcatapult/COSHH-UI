@@ -1,6 +1,7 @@
 version: '3.1'
 services:
   db:
+    network_mode: host
     image: postgres
     ports:
      - "5432:5432"
@@ -10,7 +11,8 @@ services:
     volumes:
       - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
   server:
-    image: "registry.mdcatapult.io/informatics/software-engineering/coshh"
+    network_mode: host
+    image: "registry.mdcatapult.io/informatics/software-engineering/coshh:latest"
     ports:
      - "8080:8080"
 
