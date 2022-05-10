@@ -27,15 +27,19 @@ test-lint-build-api:
   image:
     name: registry.mdcatapult.io/informatics/docker-images/ci/golang
   services:
-    - postgres:latest
+    - postgres:10.11
   variables:
     POSTGRES_DB: coshh
     POSTGRES_USER: postgres
     POSTGRES_PASSWORD: postgres
+  before_script:
+    - apt install postgresql postgresql-contrib
+    - psql -h "postgres" -U "$POSTGRES_USER" -d "$POSTGRES_DB" -f ./db/init.sql
   script:
     - cd api
     - go vet ./...
     - go test -v ./... -p 1
+
   except:
     refs:
       - master
