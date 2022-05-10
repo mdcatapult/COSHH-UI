@@ -6,7 +6,7 @@ You may need to `npm i` if running for the first time, and `npm install -g @angu
 ### Running Tests Locally
 
 ```
-docker-compose up db -d
+docker-compose up db
 cd api
 go test -v ./... -p 1
 ```
