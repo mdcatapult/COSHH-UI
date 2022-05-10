@@ -26,25 +26,31 @@ test-lint-build-api:
   stage: test-lint-build
   image:
     name: registry.mdcatapult.io/informatics/docker-images/ci/golang
+    services:
+      - postgres:latest
+    variables:
+      POSTGRES_DB: coshh
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
   script:
     - cd api
     - go vet ./...
-    - go test ./...
+    - go test -v ./... -p 1
   except:
     refs:
-    - master
-    - tags
+      - master
+      - tags
     variables:
-    - "$CI_COMMIT_MESSAGE =~ /^Setting version to.*/"
+      - "$CI_COMMIT_MESSAGE =~ /^Setting version to.*/"
 
 release-api:
   stage: release
   image: registry.mdcatapult.io/informatics/docker-images/ci/golang
   script:
-  - release.sh
+    - release.sh
   only:
     refs:
-    - master
+      - master
   except:
     variables:
-    - "$CI_COMMIT_MESSAGE =~ /^Setting version to.*/"
+      - "$CI_COMMIT_MESSAGE =~ /^Setting version to.*/"
