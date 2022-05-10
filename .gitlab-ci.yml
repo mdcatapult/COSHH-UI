@@ -26,12 +26,12 @@ test-lint-build-api:
   stage: test-lint-build
   image:
     name: registry.mdcatapult.io/informatics/docker-images/ci/golang
-    services:
-      - postgres:latest
-    variables:
-      POSTGRES_DB: coshh
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
+  services:
+    - postgres:latest
+  variables:
+    POSTGRES_DB: coshh
+    POSTGRES_USER: postgres
+    POSTGRES_PASSWORD: postgres
   script:
     - cd api
     - go vet ./...
