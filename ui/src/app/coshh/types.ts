@@ -1,4 +1,3 @@
-import { ThisReceiver } from '@angular/compiler';
 import * as moment from 'moment';
 
 export type Chemical = {
