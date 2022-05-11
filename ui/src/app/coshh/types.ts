@@ -1,6 +1,8 @@
+import { ThisReceiver } from '@angular/compiler';
 import * as moment from 'moment';
 
 export type Chemical = {
+    id: number,
     casNumber: string,
     name: string,
     photoPath: string,
