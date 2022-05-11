@@ -3,7 +3,7 @@ import {HttpClient} from '@angular/common/http';
 import {allHazards, Chemical, Chemicals, columnTypes, Hazard} from './types';
 import {MatTableDataSource} from '@angular/material/table';
 import {FormArray, FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
-import {map, Observable} from 'rxjs';
+import {debounceTime, map, Observable} from 'rxjs';
 
 
 @Component({
@@ -34,7 +34,7 @@ export class CoshhComponent implements OnInit {
         this.http.get<Array<Chemical>>('http://localhost:8080/chemicals')
             .subscribe((res: Array<Chemical>) => {
 
-                this.chemicals.set(res)
+                this.chemicals.set(res || [])
                 const inStock = this.chemicals.get(this.toggleArchiveControl.value, this.hazardFilterControl.value)
                 this.tableData = new MatTableDataSource<Chemical>(inStock)
 
@@ -87,14 +87,16 @@ export class CoshhComponent implements OnInit {
     }
 
     updateChemical(chemical: Chemical): void {
-        this.http.put('http://localhost:8080/chemical', chemical).subscribe()
+        this.http.put('http://localhost:8080/chemical', chemical).pipe(
+            debounceTime(100)
+        ).subscribe()
     }
 
     onChemicalAdded(chemical: Chemical): void {
-        this.http.post('http://localhost:8080/chemical', chemical).subscribe(() => {
-            this.chemicals.add(chemical)
-            this.tableData.data = this.tableData.data.concat([chemical])
-            this.addChemicalForm(chemical)
+        this.http.post<Chemical>('http://localhost:8080/chemical', chemical).subscribe((addedChemical: Chemical) => {
+            this.chemicals.add(addedChemical)
+            this.tableData.data = this.tableData.data.concat([addedChemical])
+            this.addChemicalForm(addedChemical)
             this.searchOptions = this.getSearchObservable()
         })
     }
@@ -114,7 +116,10 @@ export class CoshhComponent implements OnInit {
             location: [chemical.location],
         })
 
-        formGroup.valueChanges.subscribe(chemical => this.updateChemical(chemical))
+        formGroup.valueChanges.subscribe(changedChemical => {
+            changedChemical.id = chemical.id 
+            this.updateChemical(changedChemical)
+        })
 
         this.formArray.push(formGroup)
     }
