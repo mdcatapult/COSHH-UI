@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { AddChemicalDialogComponent } from '../add-chemical-dialog/add-chemical-dialog.component';
 import { Chemical } from '../coshh/types';
@@ -13,6 +13,7 @@ export class AddChemicalComponent implements OnInit {
 
   constructor(public dialog: MatDialog) { }
 
+  @Input() labs: string[] = []
   @Output() onChemicalAdded = new EventEmitter<Chemical>()
 
   ngOnInit(): void {
@@ -21,7 +22,7 @@ export class AddChemicalComponent implements OnInit {
   addChemical(): void{
     const dialogRef = this.dialog.open(AddChemicalDialogComponent, {
         width: '50vw',
-        data: {},
+        data: {labs: this.labs},
       })
   
       dialogRef.afterClosed().subscribe((chemical: Chemical) => {
