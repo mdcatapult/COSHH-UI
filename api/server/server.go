@@ -1,7 +1,9 @@
 package server
 
 import (
+	"encoding/csv"
 	"net/http"
+	"os"
 
 	"github.com/gin-gonic/gin"
 	"gitlab.mdcatapult.io/informatics/software-engineering/coshh/chemical"
@@ -15,6 +17,8 @@ func Start(port string) error {
 	r.GET("/chemicals", getChemicals)
 	r.PUT("/chemical", updateChemical)
 	r.POST("/chemical", insertChemical)
+
+	r.GET("/labs", getLabs)
 
 	return r.Run(port)
 }
@@ -60,6 +64,25 @@ func insertChemical(c *gin.Context) {
 	chemical.Id = id
 
 	c.JSON(http.StatusOK, chemical)
+}
+
+func getLabs(c *gin.Context) {
+	labsFile, err := os.Open("/mnt/labs.csv")
+	if err != nil {
+		c.AbortWithError(http.StatusInternalServerError, err)
+		return
+	}
+
+	defer labsFile.Close()
+
+	csvReader := csv.NewReader(labsFile)
+	labs, err := csvReader.Read()
+	if err != nil {
+		c.AbortWithError(http.StatusInternalServerError, err)
+		return
+	}
+
+	c.JSON(http.StatusOK, labs)
 }
 
 func corsMiddleware() gin.HandlerFunc {
