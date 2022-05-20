@@ -63,7 +63,7 @@ publish-api:
       /kaniko/executor
       --context $CI_PROJECT_DIR/api
       --build-arg VERSION_HASH=$CI_COMMIT_SHORT_SHA
-      --destination $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
+      --destination $CI_REGISTRY_IMAGE-api:$CI_COMMIT_REF_SLUG
   except:
     refs:
       - master
@@ -85,7 +85,7 @@ publish-ui:
       /kaniko/executor
       --context $CI_PROJECT_DIR/ui
       --build-arg VERSION_HASH=$CI_COMMIT_SHORT_SHA
-      --destination $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
+      --destination $CI_REGISTRY_IMAGE-ui:$CI_COMMIT_REF_SLUG
   except:
     refs:
       - master
