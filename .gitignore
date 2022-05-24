@@ -2,4 +2,4 @@ ui/.angular/cache/*
 .idea
 *.DS_Store
 api/coshh
-
+ui/dist
