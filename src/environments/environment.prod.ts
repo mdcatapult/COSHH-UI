@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  backendUrl: 'https://coshh.wopr.inf.mdc'
+  backendUrl: 'https://coshh-api'
 };
