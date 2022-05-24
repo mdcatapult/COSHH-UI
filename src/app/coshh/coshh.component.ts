@@ -4,6 +4,7 @@ import {allHazards, Chemical, Chemicals, columnTypes, Hazard} from './types';
 import {MatTableDataSource} from '@angular/material/table';
 import {FormArray, FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {debounceTime, map, Observable} from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 
 @Component({
@@ -31,9 +32,10 @@ export class CoshhComponent implements OnInit {
     formGroup = new FormGroup({}) // form group for table
     formArray = new FormArray([]) // form array for table rows
 
+
     ngOnInit(): void {
 
-        this.http.get<Array<Chemical>>('http://localhost:8080/chemicals')
+        this.http.get<Array<Chemical>>( `${environment.backendUrl}/chemicals`)
             .subscribe((res: Array<Chemical>) => {
 
                 this.chemicals.set(res || [])
@@ -50,7 +52,7 @@ export class CoshhComponent implements OnInit {
 
         })
 
-        this.http.get<string[]>('http://localhost:8080/labs').subscribe(labs => {
+        this.http.get<string[]>(`${environment.backendUrl}/labs`).subscribe(labs => {
             this.labFilterValues = labs.concat('All')
             this.labFilterControl.setValue(this.labFilterValues[0])
         })
@@ -109,13 +111,13 @@ export class CoshhComponent implements OnInit {
     }
 
     updateChemical(chemical: Chemical): void {
-        this.http.put('http://localhost:8080/chemical', chemical).pipe(
+        this.http.put( `${environment.backendUrl}/chemical`, chemical).pipe(
             debounceTime(100)
         ).subscribe()
     }
 
     onChemicalAdded(chemical: Chemical): void {
-        this.http.post<Chemical>('http://localhost:8080/chemical', chemical).subscribe((addedChemical: Chemical) => {
+        this.http.post<Chemical>(`${environment.backendUrl}/chemical`, chemical).subscribe((addedChemical: Chemical) => {
             this.chemicals.add(addedChemical)
             this.tableData.data = this.tableData.data.concat([addedChemical])
             this.addChemicalForm(addedChemical)

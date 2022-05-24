@@ -1,17 +1,19 @@
-FROM node:14-alpine
+FROM node:14-alpine as build
 
 WORKDIR /app
 
-COPY package.json ./
-
-COPY package-lock.json ./
+COPY package.json package-lock.json ./
 
 RUN npm install
 
 RUN npm install -g @angular/cli
 
-EXPOSE 4200
-
 COPY . .
 
-CMD ["ng", "s"]
+RUN ng build
+
+FROM nginx:1.21-alpine
+
+COPY --from=build app/dist/coshh /usr/share/nginx/html
+
+EXPOSE 80
