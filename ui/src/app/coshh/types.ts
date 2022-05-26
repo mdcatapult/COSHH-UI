@@ -59,6 +59,7 @@ export type Hazard = HazardTuple[number]
 
 export class Chemicals {
     private chemicals: Chemical[] = []
+
     get = (includeArchived: boolean, hazardCategory: string, lab: string, expiry: Expiry): Chemical[] => {
         return this.chemicals
             .filter(chemical => includeArchived || !chemical.isArchived)
@@ -75,16 +76,24 @@ export class Chemicals {
             .map(chemical => chemical.name)
     }
 
+    update = (chemical: Chemical) => {
+        const i = this.chemicals.findIndex(chem => chem.id === chemical.id)
+        this.chemicals[i] = chemical;
+    }
+
     private static filterExpiryDate(chemical: Chemical, expiry: Expiry): boolean {
+        console.log('expiry', expiry)
+        console.log('chemical', chemical)
         if (expiry === 'Any') {
             return true
         }
 
         const timeUntilExpiry = Chemicals.timeUntilExpiry(chemical)
-        if (expiry === '< 30 Days' && timeUntilExpiry <= 30 && timeUntilExpiry > 0) {
-            return true
+        if (expiry === '< 30 Days') {
+            return timeUntilExpiry <= 30 && timeUntilExpiry > 0
         }
 
+        console.log('timeUntilExpiry', timeUntilExpiry)
         return timeUntilExpiry <= 0
     }
 
