@@ -23,6 +23,7 @@ export class CoshhComponent implements OnInit {
     toggleArchiveControl = new FormControl(false)
     hazardFilterControl = new FormControl('All')
 
+
     searchOptions: Observable<string[]> = new Observable()
     searchControl = new FormControl()
 
@@ -117,11 +118,31 @@ export class CoshhComponent implements OnInit {
         })
 
         formGroup.valueChanges.subscribe(changedChemical => {
-            changedChemical.id = chemical.id 
+            changedChemical.id = chemical.id
             this.updateChemical(changedChemical)
+            chemical.backgroundColour = this.getExpiryColour(chemical)
+            this.refresh()
         })
 
         this.formArray.push(formGroup)
+    }
+
+    getExpiryColour(chemical: Chemical): "yellow" | "red" | "" {
+        const expiryDate = new Date(chemical.expiry.toString());
+        const currentDate = new Date();
+
+        const difference = expiryDate.getTime() - currentDate.getTime();
+
+        const totalDaysBeforeExpiry = Math.ceil(difference / (1000 * 3600 * 24));
+        console.log(totalDaysBeforeExpiry + ' days to expiry date');
+
+        if (totalDaysBeforeExpiry <= 30 && totalDaysBeforeExpiry > 0) {
+            return "yellow"
+        }
+        if (totalDaysBeforeExpiry <= 0) {
+            return "red"
+        }
+        return ''
     }
 
     getSearchObservable(): Observable<string[]> {

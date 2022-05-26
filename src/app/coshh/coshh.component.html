@@ -163,7 +163,7 @@
                     <td mat-cell *matCellDef="let chemical; let index=index" [formGroupName]="index">
 
                         <mat-form-field class="date-form-field" appearance="standard">
-                            <input readonly matInput [matDatepicker]="expiryPicker" formControlName="expiry">
+                            <input readonly matInput [matDatepicker]="expiryPicker" formControlName="expiry" [style.background-color]="chemical.backgroundColour">
                             <mat-datepicker-toggle matSuffix [for]="expiryPicker"></mat-datepicker-toggle>
                             <mat-datepicker #expiryPicker></mat-datepicker>
                         </mat-form-field>
