@@ -18,6 +18,8 @@ export type Chemical = {
     backgroundColour: string
 }
 
+export type Expiry = 'Any' | '< 30 Days' | 'Expired'
+
 
 export const columnTypes = [
     'casNumber',
@@ -57,19 +59,43 @@ export type Hazard = HazardTuple[number]
 
 export class Chemicals {
     private chemicals: Chemical[] = []
-    get = (includeArchived: boolean, hazardCategory: string, lab: string): Chemical[] => {
+    get = (includeArchived: boolean, hazardCategory: string, lab: string, expiry: Expiry): Chemical[] => {
         return this.chemicals
             .filter(chemical => includeArchived || !chemical.isArchived)
             .filter(chemical => hazardCategory === 'All' ||
                 chemical.hazards?.map(hazard => hazard.toString()).includes(hazardCategory))
             .filter(chemical => lab === 'All' || chemical.location === lab)
+            .filter(chemical => Chemicals.filterExpiryDate(chemical, expiry))
     }
     add = (chemical: Chemical) => this.chemicals.push(chemical)
     set = (chemicals: Chemical[]) => this.chemicals = chemicals
-    getNames = (includeArchived: boolean, hazardCategory: string, search: string, lab: string): string[] => {
-        return this.get(includeArchived, hazardCategory, lab)
+    getNames = (includeArchived: boolean, hazardCategory: string, search: string, lab: string, expiry: Expiry): string[] => {
+        return this.get(includeArchived, hazardCategory, lab, expiry)
             .filter(chemical => chemical.name.toLowerCase().includes(search.toLowerCase()))
             .map(chemical => chemical.name)
+    }
+
+    private static filterExpiryDate(chemical: Chemical, expiry: Expiry): boolean {
+        if (expiry === 'Any') {
+            return true
+        }
+
+        const timeUntilExpiry = Chemicals.timeUntilExpiry(chemical)
+        if (expiry === '< 30 Days' && timeUntilExpiry <= 30 && timeUntilExpiry > 0) {
+            return true
+        }
+
+        return timeUntilExpiry <= 0
+    }
+
+    
+    static timeUntilExpiry(chemical: Chemical): number {
+        const expiryDate = new Date(chemical.expiry.toString());
+        const currentDate = new Date();
+
+        const difference = expiryDate.getTime() - currentDate.getTime();
+
+        return Math.ceil(difference / (1000 * 3600 * 24));
     }
 }
 
