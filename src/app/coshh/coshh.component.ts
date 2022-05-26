@@ -28,7 +28,7 @@ export class CoshhComponent implements OnInit {
     labFilterValues: string[] = []
 
     expiryFilterControl = new FormControl('Any')
-    expiryFilterValues = ['Any', '< 30 days', 'Expired']
+    expiryFilterValues = ['Any', '< 30 Days', 'Expired']
 
     searchOptions: Observable<string[]> = new Observable()
     searchControl = new FormControl()
@@ -41,6 +41,11 @@ export class CoshhComponent implements OnInit {
         this.http.get<Array<Chemical>>('http://localhost:8080/chemicals')
             .subscribe((res: Array<Chemical>) => {
 
+                res = res.map(chem => {
+                    chem.backgroundColour = this.getExpiryColour(chem)
+                    return chem
+                })
+
                 this.chemicals.set(res || [])
                 const inStock = this.chemicals.get(
                     this.toggleArchiveControl.value,
@@ -50,10 +55,7 @@ export class CoshhComponent implements OnInit {
                 )
                 this.tableData = new MatTableDataSource<Chemical>(inStock)
 
-                inStock.map(chem => {
-                    chem.backgroundColour = this.getExpiryColour(chem)
-                    return chem
-                }).forEach(chem => this.addChemicalForm(chem))
+                inStock.forEach(chem => this.addChemicalForm(chem))
 
                 this.searchOptions = this.getSearchObservable()
 
@@ -107,6 +109,9 @@ export class CoshhComponent implements OnInit {
 
         this.expiryFilterControl.valueChanges.subscribe(() => {
             this.refresh()
+
+            this.formArray.clear()
+            this.tableData.data.forEach(chem => this.addChemicalForm(chem))
         })
     }
 
@@ -130,7 +135,7 @@ export class CoshhComponent implements OnInit {
     updateChemical(chemical: Chemical): void {
         this.http.put('http://localhost:8080/chemical', chemical).pipe(
             debounceTime(100)
-        ).subscribe()
+        ).subscribe(() => this.chemicals.update(chemical))
     }
 
     onChemicalAdded(chemical: Chemical): void {
@@ -162,6 +167,7 @@ export class CoshhComponent implements OnInit {
             changedChemical.id = chemical.id
             this.updateChemical(changedChemical)
             chemical.backgroundColour = this.getExpiryColour(changedChemical)
+            this.refresh()
         })
 
         this.formArray.push(formGroup)
