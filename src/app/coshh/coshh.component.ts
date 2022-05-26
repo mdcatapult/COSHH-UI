@@ -23,7 +23,6 @@ export class CoshhComponent implements OnInit {
     toggleArchiveControl = new FormControl(false)
     hazardFilterControl = new FormControl('All')
 
-
     searchOptions: Observable<string[]> = new Observable()
     searchControl = new FormControl()
 
