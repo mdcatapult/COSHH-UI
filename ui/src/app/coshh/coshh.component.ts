@@ -4,7 +4,7 @@ import {allHazards, Chemical, Chemicals, columnTypes, Hazard} from './types';
 import {MatTableDataSource} from '@angular/material/table';
 import {FormArray, FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {debounceTime, map, Observable} from 'rxjs';
-import * as moment from 'moment';
+
 
 
 @Component({
@@ -23,8 +23,12 @@ export class CoshhComponent implements OnInit {
     columns: string[] = columnTypes // columns to display in table
     toggleArchiveControl = new FormControl(false)
     hazardFilterControl = new FormControl('All')
+
     labFilterControl = new FormControl('')
     labFilterValues: string[] = []
+
+    expiryFilterControl = new FormControl('Any')
+    expiryFilterValues = ['Any', '< 30 days', 'Expired']
 
     searchOptions: Observable<string[]> = new Observable()
     searchControl = new FormControl()
@@ -41,7 +45,8 @@ export class CoshhComponent implements OnInit {
                 const inStock = this.chemicals.get(
                     this.toggleArchiveControl.value,
                     this.hazardFilterControl.value,
-                    this.labFilterControl.value
+                    this.labFilterControl.value,
+                    this.expiryFilterControl.value
                 )
                 this.tableData = new MatTableDataSource<Chemical>(inStock)
 
@@ -73,7 +78,12 @@ export class CoshhComponent implements OnInit {
         this.searchControl.valueChanges.subscribe((value: string) => {
 
             this.tableData.data = value === '' ?
-                this.chemicals.get(this.toggleArchiveControl.value, this.hazardFilterControl.value, this.labFilterControl.value) :
+                this.chemicals.get(
+                    this.toggleArchiveControl.value, 
+                    this.hazardFilterControl.value,
+                    this.labFilterControl.value,
+                    this.expiryFilterControl.value,
+                ) :
                 this.tableData.data.filter(chemical => chemical.name.toLowerCase().includes(value.toLowerCase()))
 
 
@@ -94,6 +104,10 @@ export class CoshhComponent implements OnInit {
             this.formArray.clear()
             this.tableData.data.forEach(chem => this.addChemicalForm(chem))
         })
+
+        this.expiryFilterControl.valueChanges.subscribe(() => {
+            this.refresh()
+        })
     }
 
 
@@ -108,7 +122,8 @@ export class CoshhComponent implements OnInit {
         this.tableData.data = this.chemicals.get(
             this.toggleArchiveControl.value, 
             this.hazardFilterControl.value,
-            this.labFilterControl.value
+            this.labFilterControl.value,
+            this.expiryFilterControl.value,
         )
     }
 
@@ -153,22 +168,17 @@ export class CoshhComponent implements OnInit {
     }
 
     getExpiryColour(chemical: Chemical): "yellow" | "red" | "" {
-        const expiryDate = new Date(chemical.expiry.toString());
-        const currentDate = new Date();
 
-        const difference = expiryDate.getTime() - currentDate.getTime();
-
-        const totalDaysBeforeExpiry = Math.ceil(difference / (1000 * 3600 * 24));
-        console.log(totalDaysBeforeExpiry + ' days to expiry date');
-
-        if (totalDaysBeforeExpiry <= 30 && totalDaysBeforeExpiry > 0) {
+        const timeUntilExpiry = Chemicals.timeUntilExpiry(chemical)
+        if (timeUntilExpiry <= 30 && timeUntilExpiry > 0) {
             return "yellow"
         }
-        if (totalDaysBeforeExpiry <= 0) {
+        if (timeUntilExpiry <= 0) {
             return "red"
         }
         return ''
     }
+
 
     getSearchObservable(): Observable<string[]> {
         return this.searchControl.valueChanges.pipe(
@@ -177,7 +187,8 @@ export class CoshhComponent implements OnInit {
                     this.toggleArchiveControl.value,
                     this.hazardFilterControl.value, 
                     search,
-                    this.labFilterControl.value
+                    this.labFilterControl.value,
+                    this.expiryFilterControl.value
                 )
             )
         )
