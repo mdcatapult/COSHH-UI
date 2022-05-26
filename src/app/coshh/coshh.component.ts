@@ -4,6 +4,7 @@ import {allHazards, Chemical, Chemicals, columnTypes, Hazard} from './types';
 import {MatTableDataSource} from '@angular/material/table';
 import {FormArray, FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {debounceTime, map, Observable} from 'rxjs';
+import * as moment from 'moment';
 
 
 @Component({
@@ -38,7 +39,10 @@ export class CoshhComponent implements OnInit {
                 const inStock = this.chemicals.get(this.toggleArchiveControl.value, this.hazardFilterControl.value)
                 this.tableData = new MatTableDataSource<Chemical>(inStock)
 
-                inStock.forEach(chem => this.addChemicalForm(chem))
+                inStock.map(chem => {
+                    chem.backgroundColour = this.getExpiryColour(chem)
+                    return chem
+                }).forEach(chem => this.addChemicalForm(chem))
 
                 this.searchOptions = this.getSearchObservable()
 
@@ -119,8 +123,7 @@ export class CoshhComponent implements OnInit {
         formGroup.valueChanges.subscribe(changedChemical => {
             changedChemical.id = chemical.id
             this.updateChemical(changedChemical)
-            chemical.backgroundColour = this.getExpiryColour(chemical)
-            this.refresh()
+            chemical.backgroundColour = this.getExpiryColour(changedChemical)
         })
 
         this.formArray.push(formGroup)
