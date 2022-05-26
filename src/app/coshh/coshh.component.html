@@ -5,6 +5,7 @@
             <span>COSHH Inventory </span>
             <div class="add-chemical">
                 <app-add-chemical
+                        [labs]="labFilterValues"
                         (onChemicalAdded)="onChemicalAdded($event)"
                 ></app-add-chemical>
             </div>
@@ -12,6 +13,17 @@
             <span class="spacer"></span>
 
             <div class="toolbar-controls-container">
+
+                <div>
+                    <mat-form-field appearance="outline">
+                        <mat-label>Filter by lab</mat-label>
+                        <select matNativeControl required [formControl]="labFilterControl">
+                            <option *ngFor="let lab of labFilterValues" [value]="lab">{{lab}}</option>
+                        </select>
+                    </mat-form-field>
+                </div>
+
+
                 <div>
                     <mat-form-field appearance="outline">
                         <mat-label>Filter by hazard</mat-label>
@@ -48,11 +60,6 @@
                 </mat-checkbox>
             </div>
 
-<!--            <div class="add-chemical">-->
-<!--                <app-add-chemical-->
-<!--                        (onChemicalAdded)="onChemicalAdded($event)"-->
-<!--                ></app-add-chemical>-->
-<!--            </div>-->
 
         </mat-toolbar>
     </header>
