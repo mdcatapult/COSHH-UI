@@ -15,6 +15,7 @@ export type Chemical = {
     location: string,
     isArchived: boolean,
     hazards: Hazard[]
+    backgroundColour: string
 }
 
 
