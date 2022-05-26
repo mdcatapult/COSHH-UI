@@ -135,7 +135,11 @@ export class CoshhComponent implements OnInit {
     updateChemical(chemical: Chemical): void {
         this.http.put('http://localhost:8080/chemical', chemical).pipe(
             debounceTime(100)
-        ).subscribe(() => this.chemicals.update(chemical))
+        ).subscribe(() => {
+            this.chemicals.update(chemical)
+            chemical.backgroundColour = this.getExpiryColour(chemical)
+            this.refresh()
+        })
     }
 
     onChemicalAdded(chemical: Chemical): void {
