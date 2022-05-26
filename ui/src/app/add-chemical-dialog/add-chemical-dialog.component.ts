@@ -1,4 +1,4 @@
-import {Component, Inject} from '@angular/core';
+import {Component, Inject, Input} from '@angular/core';
 import {FormArray, FormControl, FormGroup, Validators} from '@angular/forms';
 import {DateAdapter} from '@angular/material/core';
 import {MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
@@ -14,7 +14,7 @@ export class AddChemicalDialogComponent {
     constructor(
         public dialogRef: MatDialogRef<AddChemicalDialogComponent>,
         private dateAdapter: DateAdapter<Date>,
-        @Inject(MAT_DIALOG_DATA) public data: Chemical,
+        @Inject(MAT_DIALOG_DATA) public data: {labs: string[]},
     ) {
         this.dateAdapter.setLocale('en-GB');
     }
