@@ -69,7 +69,7 @@ def insert_chemical(data_frame_row, lab_location):
         chemical["state"] = chemical["state"].lower()
     
     sql = """
-        INSERT INTO chemical(
+        INSERT INTO coshh.chemical(
             cas_number,
             chemical_name,
             photo_path,
@@ -114,7 +114,7 @@ def insert_chemical(data_frame_row, lab_location):
 def insert_hazards(id, hazards):
     hazards = hazards.split(',')
 
-    sql = "INSERT INTO chemical_to_hazard (id, hazard) VALUES %s"
+    sql = "INSERT INTO coshh.chemical_to_hazard (id, hazard) VALUES %s"
   
     values = []
     for hazard in hazards:

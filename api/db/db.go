@@ -1,8 +1,10 @@
 package db
 
 import (
+	"context"
 	"fmt"
 	"github.com/jmoiron/sqlx"
+	"github.com/sethvargo/go-envconfig"
 	"gitlab.mdcatapult.io/informatics/software-engineering/coshh/chemical"
 	"strings"
 	"time"
@@ -10,14 +12,37 @@ import (
 
 var db *sqlx.DB
 
+type Config struct {
+	Port     int    `env:"PORT,required"`
+	User string `env:"USER,default=postgres,required"`
+	Password string `env:"PASSWORD,required"`
+	DbName string `env:"DBNAME,required"`
+	Host string `env:"HOST,required"`
+}
+
 func Connect(host string) error {
-	const (
+	var (
 		port     = 5432
 		user     = "postgres"
 		password = "postgres"
-		dbname   = "coshh"
+		dbname   = "informatics"
 		retries  = 3
+		schema = "coshh"
 	)
+
+	ctx := context.Background()
+	var config Config
+
+	if err := envconfig.Process(ctx, &config); err != nil {
+		fmt.Println("Env vars unset or incorrect, using default config")
+	} else {
+		fmt.Println("Using config from env vars")
+		host = config.Host
+		port = config.Port
+		user = config.User
+		password = config.Password
+		dbname = config.DbName
+	}
 
 	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s "+"password=%s dbname=%s sslmode=disable", host, port, user, password, dbname)
 
@@ -25,9 +50,17 @@ func Connect(host string) error {
 	for i := 1; i < retries; i++ {
 		db, err = sqlx.Connect("postgres", psqlInfo)
 		if err == nil {
+			_, err = db.Exec(fmt.Sprintf("set search_path=%s", schema))
+			if err != nil {
+				fmt.Printf("Failed to set search path to schema: %s\n", schema)
+				return err
+			}
+			fmt.Printf("Connected to database: %s, schema: %s\n", dbname, schema)
+
 			break
 		}
 
+		fmt.Println(err)
 		fmt.Println("Failed to connect to DB, retrying in 5 seconds...")
 		time.Sleep(5 * time.Second)
 	}
