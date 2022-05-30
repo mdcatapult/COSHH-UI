@@ -14,7 +14,7 @@
 
             <div class="toolbar-controls-container">
 
-                <div>
+                <div class="filter-control">
                     <mat-form-field appearance="outline">
                         <mat-label>Filter by lab</mat-label>
                         <select matNativeControl required [formControl]="labFilterControl">
@@ -23,7 +23,7 @@
                     </mat-form-field>
                 </div>
 
-                <div>
+                <div class="filter-control">
                     <mat-form-field appearance="outline">
                         <mat-label>Filter by expiry</mat-label>
                         <select matNativeControl required [formControl]="expiryFilterControl">
@@ -32,7 +32,7 @@
                     </mat-form-field>
                 </div>
 
-                <div>
+                <div class="filter-control">
                     <mat-form-field appearance="outline">
                         <mat-label>Filter by hazard</mat-label>
                         <select matNativeControl required [formControl]="hazardFilterControl">
@@ -42,7 +42,7 @@
                 </div>
 
 
-                <div>
+                <div class="filter-control">
                     <mat-form-field appearance="outline">
                         <mat-label>Search by chemical name</mat-label>
                         <input type="text"
@@ -60,7 +60,7 @@
                 </div>
             </div>
 
-            <div class="archive-checkbox-container">
+            <div class="filter-control archive-checkbox-container">
                 <mat-checkbox
                         class="coshh-archive-checkbox"
                         [formControl]="toggleArchiveControl"
