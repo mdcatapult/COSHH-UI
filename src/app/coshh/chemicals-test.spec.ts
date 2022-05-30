@@ -2,7 +2,7 @@ import * as moment from "moment";
 import { Chemicals } from "./chemicals";
 import { Chemical } from "./types";
 
-describe('Chenmicals', () => {
+describe('Chemicals', () => {
 
 
     describe('daysUntilExpiry', () => {

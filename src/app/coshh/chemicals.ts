@@ -32,7 +32,7 @@ export class Chemicals {
             case 'Any':
                 return true
             case '< 30 Days':
-                return timeUntilExpiry <= 30 && timeUntilExpiry > 0
+                return timeUntilExpiry < 30 && timeUntilExpiry > 0
             case 'Expired':
                 return timeUntilExpiry <= 0
         }

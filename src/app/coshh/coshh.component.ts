@@ -170,7 +170,7 @@ export class CoshhComponent implements OnInit {
     getExpiryColour(chemical: Chemical): ExpiryColor{
 
         const timeUntilExpiry = Chemicals.daysUntilExpiry(chemical)
-        if (timeUntilExpiry <= 30 && timeUntilExpiry > 0) {
+        if (timeUntilExpiry < 30 && timeUntilExpiry > 0) {
             return yellow
         }
         if (timeUntilExpiry <= 0) {
