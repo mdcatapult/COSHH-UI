@@ -15,11 +15,14 @@ export type Chemical = {
     location: string,
     isArchived: boolean,
     hazards: Hazard[]
-    backgroundColour: string
+    backgroundColour: ExpiryColor
 }
 
 export type Expiry = 'Any' | '< 30 Days' | 'Expired'
 
+export type ExpiryColor = '' | typeof yellow | typeof red
+export const yellow = 'rgb(255,255,0,0.6)' 
+export const red = 'rgb(255,0,0,0.6)' 
 
 export const columnTypes = [
     'casNumber',
@@ -57,56 +60,6 @@ const ALL_HAZARDS = [
 type HazardTuple = typeof ALL_HAZARDS
 export type Hazard = HazardTuple[number]
 
-export class Chemicals {
-    private chemicals: Chemical[] = []
-
-    get = (includeArchived: boolean, hazardCategory: string, lab: string, expiry: Expiry): Chemical[] => {
-        return this.chemicals
-            .filter(chemical => includeArchived || !chemical.isArchived)
-            .filter(chemical => hazardCategory === 'All' ||
-                chemical.hazards?.map(hazard => hazard.toString()).includes(hazardCategory))
-            .filter(chemical => lab === 'All' || chemical.location === lab)
-            .filter(chemical => Chemicals.filterExpiryDate(chemical, expiry))
-    }
-    add = (chemical: Chemical) => this.chemicals.push(chemical)
-    set = (chemicals: Chemical[]) => this.chemicals = chemicals
-    getNames = (includeArchived: boolean, hazardCategory: string, search: string, lab: string, expiry: Expiry): string[] => {
-        return this.get(includeArchived, hazardCategory, lab, expiry)
-            .filter(chemical => chemical.name.toLowerCase().includes(search.toLowerCase()))
-            .map(chemical => chemical.name)
-    }
-
-    update = (chemical: Chemical) => {
-        const i = this.chemicals.findIndex(chem => chem.id === chemical.id)
-        this.chemicals[i] = chemical;
-    }
-
-    private static filterExpiryDate(chemical: Chemical, expiry: Expiry): boolean {
-        console.log('expiry', expiry)
-        console.log('chemical', chemical)
-        if (expiry === 'Any') {
-            return true
-        }
-
-        const timeUntilExpiry = Chemicals.timeUntilExpiry(chemical)
-        if (expiry === '< 30 Days') {
-            return timeUntilExpiry <= 30 && timeUntilExpiry > 0
-        }
-
-        console.log('timeUntilExpiry', timeUntilExpiry)
-        return timeUntilExpiry <= 0
-    }
-
-    
-    static timeUntilExpiry(chemical: Chemical): number {
-        const expiryDate = new Date(chemical.expiry.toString());
-        const currentDate = new Date();
-
-        const difference = expiryDate.getTime() - currentDate.getTime();
-
-        return Math.ceil(difference / (1000 * 3600 * 24));
-    }
-}
 
 
 
