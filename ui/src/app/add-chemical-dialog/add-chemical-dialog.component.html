@@ -90,7 +90,7 @@
         <div class="row">
             <mat-form-field appearance="fill">
                 <mat-label>Lab Location</mat-label>
-                    <select matNativeControl required formControlName="location">
+                    <select matNativeControl formControlName="location">
                         <option *ngFor="let lab of data.labs" [value]="lab">{{lab}}</option>
                     </select>
             </mat-form-field>
