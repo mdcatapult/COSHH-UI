@@ -24,7 +24,7 @@ export class CoshhComponent implements OnInit {
     hazardFilterControl = new FormControl('All')
 
     labFilterControl = new FormControl('')
-    labFilterValues: string[] = ['All', 'Lab 1'] //RMOVED!!!!
+    labFilterValues: string[] = []
 
     expiryFilterControl = new FormControl('Any')
     expiryFilterValues = ['Any', '< 30 Days', 'Expired']
