@@ -1,10 +1,11 @@
 import {Component, OnInit} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {allHazards, Chemical, Chemicals, columnTypes, Hazard} from './types';
+import {allHazards, Chemical, columnTypes, ExpiryColor, Hazard, red, yellow} from './types';
 import {MatTableDataSource} from '@angular/material/table';
 import {FormArray, FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
-import {debounceTime, map, Observable} from 'rxjs';
+import {combineLatest, debounceTime, map, Observable, startWith} from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { Chemicals } from './chemicals';
 
 
 @Component({
@@ -23,8 +24,12 @@ export class CoshhComponent implements OnInit {
     columns: string[] = columnTypes // columns to display in table
     toggleArchiveControl = new FormControl(false)
     hazardFilterControl = new FormControl('All')
+
     labFilterControl = new FormControl('')
     labFilterValues: string[] = []
+
+    expiryFilterControl = new FormControl('Any')
+    expiryFilterValues = ['Any', '< 30 Days', 'Expired']
 
     searchOptions: Observable<string[]> = new Observable()
     searchControl = new FormControl()
@@ -38,11 +43,17 @@ export class CoshhComponent implements OnInit {
         this.http.get<Array<Chemical>>( `${environment.backendUrl}/chemicals`)
             .subscribe((res: Array<Chemical>) => {
 
+                res = res?.map(chem => {
+                    chem.backgroundColour = this.getExpiryColour(chem)
+                    return chem
+                })
+
                 this.chemicals.set(res || [])
                 const inStock = this.chemicals.get(
                     this.toggleArchiveControl.value,
                     this.hazardFilterControl.value,
-                    this.labFilterControl.value
+                    this.labFilterControl.value,
+                    this.expiryFilterControl.value
                 )
                 this.tableData = new MatTableDataSource<Chemical>(inStock)
 
@@ -61,17 +72,16 @@ export class CoshhComponent implements OnInit {
             chemicals: this.formArray
         })
 
-        this.toggleArchiveControl.valueChanges.subscribe(_ => {
-            this.refresh()
-            this.formArray.clear()
-            this.tableData.data.forEach(chem => this.addChemicalForm(chem))
-            this.searchOptions = this.getSearchObservable()
-        })
 
         this.searchControl.valueChanges.subscribe((value: string) => {
 
             this.tableData.data = value === '' ?
-                this.chemicals.get(this.toggleArchiveControl.value, this.hazardFilterControl.value, this.labFilterControl.value) :
+                this.chemicals.get(
+                    this.toggleArchiveControl.value, 
+                    this.hazardFilterControl.value,
+                    this.labFilterControl.value,
+                    this.expiryFilterControl.value,
+                ) :
                 this.tableData.data.filter(chemical => chemical.name.toLowerCase().includes(value.toLowerCase()))
 
 
@@ -79,19 +89,20 @@ export class CoshhComponent implements OnInit {
             this.tableData.data.forEach(chem => this.addChemicalForm(chem))
         })
 
-        this.hazardFilterControl.valueChanges.subscribe(_ => {
+        combineLatest([
+            this.hazardFilterControl,
+            this.labFilterControl,
+            this.expiryFilterControl,
+            this.toggleArchiveControl
+        ].map(control => control.valueChanges.pipe(startWith(control.value)))
+        ).subscribe(() => {
             this.refresh()
-
+            
             this.formArray.clear()
             this.tableData.data.forEach(chem => this.addChemicalForm(chem))
+            this.searchOptions = this.getSearchObservable()
         })
 
-        this.labFilterControl.valueChanges.subscribe(_ => {
-            this.refresh()
-
-            this.formArray.clear()
-            this.tableData.data.forEach(chem => this.addChemicalForm(chem))
-        })
     }
 
 
@@ -106,18 +117,24 @@ export class CoshhComponent implements OnInit {
         this.tableData.data = this.chemicals.get(
             this.toggleArchiveControl.value, 
             this.hazardFilterControl.value,
-            this.labFilterControl.value
+            this.labFilterControl.value,
+            this.expiryFilterControl.value,
         )
     }
 
-    updateChemical(chemical: Chemical): void {
+    updateChemical(chemical: Chemical, refresh?: boolean): void {
         this.http.put( `${environment.backendUrl}/chemical`, chemical).pipe(
             debounceTime(100)
-        ).subscribe()
+        ).subscribe(() => {
+            this.chemicals.update(chemical)
+            chemical.backgroundColour = this.getExpiryColour(chemical)
+            if (refresh) this.refresh()
+        })
     }
 
     onChemicalAdded(chemical: Chemical): void {
         this.http.post<Chemical>(`${environment.backendUrl}/chemical`, chemical).subscribe((addedChemical: Chemical) => {
+            addedChemical.backgroundColour = this.getExpiryColour(chemical)
             this.chemicals.add(addedChemical)
             this.tableData.data = this.tableData.data.concat([addedChemical])
             this.addChemicalForm(addedChemical)
@@ -142,12 +159,26 @@ export class CoshhComponent implements OnInit {
         })
 
         formGroup.valueChanges.subscribe(changedChemical => {
-            changedChemical.id = chemical.id 
-            this.updateChemical(changedChemical)
+            changedChemical.id = chemical.id
+            this.updateChemical(changedChemical, changedChemical.expiry !== chemical.expiry)
+            chemical.backgroundColour = this.getExpiryColour(changedChemical)        
         })
 
         this.formArray.push(formGroup)
     }
+
+    getExpiryColour(chemical: Chemical): ExpiryColor{
+
+        const timeUntilExpiry = Chemicals.daysUntilExpiry(chemical)
+        if (timeUntilExpiry < 30 && timeUntilExpiry > 0) {
+            return yellow
+        }
+        if (timeUntilExpiry <= 0) {
+            return red
+        }
+        return ''
+    }
+
 
     getSearchObservable(): Observable<string[]> {
         return this.searchControl.valueChanges.pipe(
@@ -156,7 +187,8 @@ export class CoshhComponent implements OnInit {
                     this.toggleArchiveControl.value,
                     this.hazardFilterControl.value, 
                     search,
-                    this.labFilterControl.value
+                    this.labFilterControl.value,
+                    this.expiryFilterControl.value
                 )
             )
         )

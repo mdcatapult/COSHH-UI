@@ -15,8 +15,14 @@ export type Chemical = {
     location: string,
     isArchived: boolean,
     hazards: Hazard[]
+    backgroundColour: ExpiryColor
 }
 
+export type Expiry = 'Any' | '< 30 Days' | 'Expired'
+
+export type ExpiryColor = '' | typeof yellow | typeof red
+export const yellow = 'rgb(255,255,0,0.6)' 
+export const red = 'rgb(255,0,0,0.6)' 
 
 export const columnTypes = [
     'casNumber',
@@ -54,23 +60,6 @@ const ALL_HAZARDS = [
 type HazardTuple = typeof ALL_HAZARDS
 export type Hazard = HazardTuple[number]
 
-export class Chemicals {
-    private chemicals: Chemical[] = []
-    get = (includeArchived: boolean, hazardCategory: string, lab: string): Chemical[] => {
-        return this.chemicals
-            .filter(chemical => includeArchived || !chemical.isArchived)
-            .filter(chemical => hazardCategory === 'All' ||
-                chemical.hazards?.map(hazard => hazard.toString()).includes(hazardCategory))
-            .filter(chemical => lab === 'All' || chemical.location === lab)
-    }
-    add = (chemical: Chemical) => this.chemicals.push(chemical)
-    set = (chemicals: Chemical[]) => this.chemicals = chemicals
-    getNames = (includeArchived: boolean, hazardCategory: string, search: string, lab: string): string[] => {
-        return this.get(includeArchived, hazardCategory, lab)
-            .filter(chemical => chemical.name.toLowerCase().includes(search.toLowerCase()))
-            .map(chemical => chemical.name)
-    }
-}
 
 
 
