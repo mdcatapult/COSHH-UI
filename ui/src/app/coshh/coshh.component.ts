@@ -4,7 +4,9 @@ import {allHazards, Chemical, columnTypes, ExpiryColor, Hazard, red, yellow} fro
 import {MatTableDataSource} from '@angular/material/table';
 import {FormArray, FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {combineLatest, debounceTime, map, Observable, startWith} from 'rxjs';
+import { environment } from 'src/environments/environment';
 import { Chemicals } from './chemicals';
+
 
 @Component({
     selector: 'app-coshh',
@@ -35,9 +37,10 @@ export class CoshhComponent implements OnInit {
     formGroup = new FormGroup({}) // form group for table
     formArray = new FormArray([]) // form array for table rows
 
+
     ngOnInit(): void {
 
-        this.http.get<Array<Chemical>>('http://localhost:8080/chemicals')
+        this.http.get<Array<Chemical>>( `${environment.backendUrl}/chemicals`)
             .subscribe((res: Array<Chemical>) => {
 
                 res = res?.map(chem => {
@@ -60,7 +63,7 @@ export class CoshhComponent implements OnInit {
 
         })
 
-        this.http.get<string[]>('http://localhost:8080/labs').subscribe(labs => {
+        this.http.get<string[]>(`${environment.backendUrl}/labs`).subscribe(labs => {
             this.labFilterValues = labs.concat('All')
             this.labFilterControl.setValue(this.labFilterValues[0])
         })
@@ -120,7 +123,7 @@ export class CoshhComponent implements OnInit {
     }
 
     updateChemical(chemical: Chemical, refresh?: boolean): void {
-        this.http.put('http://localhost:8080/chemical', chemical).pipe(
+        this.http.put( `${environment.backendUrl}/chemical`, chemical).pipe(
             debounceTime(100)
         ).subscribe(() => {
             this.chemicals.update(chemical)
@@ -130,8 +133,7 @@ export class CoshhComponent implements OnInit {
     }
 
     onChemicalAdded(chemical: Chemical): void {
-        this.http.post<Chemical>('http://localhost:8080/chemical', chemical).subscribe((addedChemical: Chemical) => {
-
+        this.http.post<Chemical>(`${environment.backendUrl}/chemical`, chemical).subscribe((addedChemical: Chemical) => {
             addedChemical.backgroundColour = this.getExpiryColour(chemical)
             this.chemicals.add(addedChemical)
             this.tableData.data = this.tableData.data.concat([addedChemical])
