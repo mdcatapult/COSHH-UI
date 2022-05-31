@@ -81,6 +81,7 @@ publish-ui:
   before_script:
     - echo "{\"auths\":{\"$CI_REGISTRY\":{\"username\":\"$CI_REGISTRY_USER\",\"password\":\"$CI_REGISTRY_PASSWORD\"}}}" > /kaniko/.docker/config.json
   script:
+    - cd ui
     - >
       /kaniko/executor
       --context $CI_PROJECT_DIR/ui
@@ -107,11 +108,12 @@ release-api:
 
 release-ui:
   stage: release
-  image: registry.mdcatapult.io/informatics/docker-images/ci/node
+  image: registry.mdcatapult.io/informatics/docker-images/ci/node:alex-node-ci-test
   tags:
     - wopr
   script:
-    - /scripts/release.sh -b -r develop
+    - cd ui
+    - /scripts/release.sh -b -r develop --npm-path=ui
   only:
     - master
   except:
