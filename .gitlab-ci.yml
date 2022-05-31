@@ -112,6 +112,7 @@ release-ui:
   tags:
     - wopr
   script:
+    - git pull
     - cd ui
     - /scripts/release.sh -b -r develop
   only:
