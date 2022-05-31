@@ -112,8 +112,7 @@ release-ui:
   tags:
     - wopr
   script:
-    - cd ui
-    - /scripts/release.sh -b -r develop
+    - /scripts/release.sh -b -r develop --npm-path=ui
   only:
     - master
   except:
