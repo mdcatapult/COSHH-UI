@@ -82,7 +82,6 @@ publish-ui:
   before_script:
     - echo "{\"auths\":{\"$CI_REGISTRY\":{\"username\":\"$CI_REGISTRY_USER\",\"password\":\"$CI_REGISTRY_PASSWORD\"}}}" > /kaniko/.docker/config.json
   script:
-    - cd ui
     - >
       /kaniko/executor
       --context $CI_PROJECT_DIR/ui
