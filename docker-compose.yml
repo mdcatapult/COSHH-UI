@@ -17,5 +17,5 @@ services:
     ports:
      - "8080:8080"
     volumes: 
-      - ./labs.csv:/mnt/labs.csv
+      - ./api/labs.csv:/mnt/labs.csv
 
