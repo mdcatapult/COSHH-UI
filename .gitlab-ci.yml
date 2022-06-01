@@ -112,7 +112,8 @@ release-ui:
   tags:
     - wopr
   script:
-    - /scripts/release.sh -b -r develop --npm-path=ui
+    - git checkout master; git pull
+    - /scripts/release.sh --npm-path=ui
   only:
     - master
   except:
