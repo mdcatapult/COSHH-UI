@@ -1,7 +1,8 @@
 stages:
   - test-lint-build
   - publish
-  - release
+  - release-api
+  - release-ui
 
 default:
   tags:
@@ -94,7 +95,7 @@ publish-ui:
 
 
 release-api:
-  stage: release
+  stage: release-api
   image: registry.mdcatapult.io/informatics/docker-images/ci/golang
   script:
     - release.sh
@@ -106,12 +107,14 @@ release-api:
       - "$CI_COMMIT_MESSAGE =~ /^Setting version to.*/"
 
 release-ui:
-  stage: release
+  stage: release-ui
   image: registry.mdcatapult.io/informatics/docker-images/ci/node
   tags:
     - wopr
   script:
-    - /scripts/release.sh -b -r develop
+    - git checkout master; git pull
+    - cd ui
+    - /scripts/release.sh
   only:
     - master
   except:
