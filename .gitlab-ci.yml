@@ -113,7 +113,8 @@ release-ui:
     - wopr
   script:
     - git checkout master; git pull
-    - /scripts/release.sh --npm-path=ui
+    - cd ui
+    - /scripts/release.sh
   only:
     - master
   except:
