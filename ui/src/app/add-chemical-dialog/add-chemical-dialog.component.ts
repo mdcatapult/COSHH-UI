@@ -1,8 +1,8 @@
 import {Component, Inject, Input} from '@angular/core';
-import {FormArray, FormControl, FormGroup, Validators} from '@angular/forms';
+import { FormGroup, Validators, FormControl, FormArray} from '@angular/forms';
 import {DateAdapter} from '@angular/material/core';
 import {MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
-import {Chemical} from '../coshh/types';
+import * as moment from 'moment';
 
 @Component({
     selector: 'app-add-chemical-dialog',
@@ -39,13 +39,13 @@ export class AddChemicalDialogComponent {
         photoPath: new FormControl('', Validators.required),
         matterState: new FormControl('', Validators.required),
         quantity: new FormControl('', Validators.required),
-        added: new FormControl(new Date(), Validators.required),
-        expiry: new FormControl(new Date(), Validators.required),
+        added: new FormControl(moment(new Date(), "DD-MM-YYY"), Validators.required),
+        expiry: new FormControl(moment(new Date(), "DD-MM-YYY"), Validators.required),
         safetyDataSheet: new FormControl('', Validators.required),
         coshhLink: new FormControl(''),
         storageTemp: new FormControl('', Validators.required),
         location: new FormControl(''),
-        hazards: new FormArray(this.hazardCategories.map(() => new FormControl(false)), Validators.required)
+        hazards: new FormArray(this.hazardCategories.map(() => new FormControl('')), Validators.required)
     });
 
     onClose(): void {
@@ -61,7 +61,6 @@ export class AddChemicalDialogComponent {
         } else {
             this.selectedHazardCategories.splice(this.selectedHazardCategories.indexOf(changedCategory))
         }
-        console.log(this.selectedHazardCategories)
     }
 
 }

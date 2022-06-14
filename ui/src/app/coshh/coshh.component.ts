@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {allHazards, Chemical, columnTypes, ExpiryColor, Hazard, red, yellow} from './types';
 import {MatTableDataSource} from '@angular/material/table';
-import {FormArray, FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
+import {UntypedFormArray, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators} from "@angular/forms";
 import {combineLatest, debounceTime, map, Observable, startWith} from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Chemicals } from './chemicals';
@@ -15,27 +15,27 @@ import { Chemicals } from './chemicals';
 })
 export class CoshhComponent implements OnInit {
 
-    constructor(private http: HttpClient, private fb: FormBuilder) {
+    constructor(private http: HttpClient, private fb: UntypedFormBuilder) {
     }
 
     chemicals = new Chemicals() // this represents all the chemicals returned from the API
     hazardFilterValues = (<string[]>allHazards()).concat('All')
     tableData = new MatTableDataSource<Chemical>() // data source for table
     columns: string[] = columnTypes // columns to display in table
-    toggleArchiveControl = new FormControl(false)
-    hazardFilterControl = new FormControl('All')
+    toggleArchiveControl = new UntypedFormControl(false)
+    hazardFilterControl = new UntypedFormControl('All')
 
-    labFilterControl = new FormControl('')
+    labFilterControl = new UntypedFormControl('')
     labFilterValues: string[] = []
 
-    expiryFilterControl = new FormControl('Any')
+    expiryFilterControl = new UntypedFormControl('Any')
     expiryFilterValues = ['Any', '< 30 Days', 'Expired']
 
     searchOptions: Observable<string[]> = new Observable()
-    searchControl = new FormControl()
+    searchControl = new UntypedFormControl()
 
-    formGroup = new FormGroup({}) // form group for table
-    formArray = new FormArray([]) // form array for table rows
+    formGroup = new UntypedFormGroup({}) // form group for table
+    formArray = new UntypedFormArray([]) // form array for table rows
 
 
     ngOnInit(): void {
