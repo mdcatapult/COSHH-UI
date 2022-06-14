@@ -66,8 +66,6 @@ publish-api:
       --build-arg VERSION_HASH=$CI_COMMIT_SHORT_SHA
       --destination $CI_REGISTRY_IMAGE/api:$CI_COMMIT_REF_SLUG
   except:
-    refs:
-      - master
     variables:
       - $CI_COMMIT_MESSAGE =~ /^Setting version to.*/
 
@@ -88,8 +86,6 @@ publish-ui:
       --build-arg VERSION_HASH=$CI_COMMIT_SHORT_SHA
       --destination $CI_REGISTRY_IMAGE/ui:$CI_COMMIT_REF_SLUG
   except:
-    refs:
-      - master
     variables:
       - $CI_COMMIT_MESSAGE =~ /^Setting version to.*/
 
