@@ -65,7 +65,7 @@ export class CoshhComponent implements OnInit {
 
         this.http.get<string[]>(`${environment.backendUrl}/labs`).subscribe(labs => {
             this.labFilterValues = labs.concat('All')
-            this.labFilterControl.setValue(this.labFilterValues[0])
+            this.labFilterControl.setValue('All')
         })
 
         this.formGroup = this.fb.group({
