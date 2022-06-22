@@ -14,7 +14,8 @@ CREATE TYPE coshh.hazard AS ENUM (
     'Hazardous to the environment',
     'Health hazard/Hazardous to the ozone layer',
     'Serious health hazard',
-    'Gas under pressure'
+    'Gas under pressure',
+    'Unknown'
     );
 
 CREATE TYPE coshh.storage_temp AS ENUM (

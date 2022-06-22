@@ -105,6 +105,9 @@
                         <div *ngIf="!chemical.hazards || chemical.hazards.includes('None')">
                             None
                         </div>
+                        <div *ngIf="chemical.hazards.includes('Unknown')">
+                            Unknown
+                        </div>
                         <ul>
                             <li *ngFor="let hazard of chemical.hazards">
                                 <img class="img-responsive hazard" [src]="getHazardPicture(hazard)">
