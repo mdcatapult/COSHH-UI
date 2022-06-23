@@ -87,20 +87,25 @@ def insert_chemical(data_frame_row, lab_location):
     """
 
     cur = conn.cursor()
-    cur.execute(sql, (
-        chemical["casNumber"],
-        chemical["chemicalName"],
-        chemical["photo"],
-        chemical["state"] if chemical["state"] is not None and str(chemical["state"]).strip() != 'liq' else 'liquid',
-        chemical["quantity"],
-        chemical["dateAdded"],
-        chemical["expiryDate"],
-        chemical["sds"],
-        chemical["coshh"],
-        lab_location,
-        'Shelf',
-        False,
-    ))
+
+    try:
+        cur.execute(sql, (
+            chemical["casNumber"],
+            chemical["chemicalName"],
+            chemical["photo"],
+            chemical["state"] if chemical["state"] is not None and str(chemical["state"]).strip() != 'liq' else 'liquid',
+            chemical["quantity"],
+            chemical["dateAdded"],
+            chemical["expiryDate"],
+            chemical["sds"],
+            chemical["coshh"],
+            lab_location,
+            'Shelf',
+            False,
+        ))
+    except Exception as error:
+        print("Failed to insert ", chemical["chemicalName"], ": ", error)
+        return 
 
     id = cur.fetchone()[0]
     
