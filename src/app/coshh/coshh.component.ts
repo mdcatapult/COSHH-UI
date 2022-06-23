@@ -214,8 +214,6 @@ export class CoshhComponent implements OnInit {
                 return 'assets/serious.jpg'
             case 'Acute toxicity':
                 return 'assets/toxic.jpg'
-            case 'None':
-                return ''
             default:
                 return ''
         }
