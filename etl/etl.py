@@ -105,6 +105,8 @@ def insert_chemical(data_frame_row, lab_location):
         ))
     except Exception as error:
         print("Failed to insert ", chemical["chemicalName"], ": ", error)
+        conn.commit()
+        cur.close()
         return 
 
     id = cur.fetchone()[0]
