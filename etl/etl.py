@@ -87,42 +87,39 @@ def insert_chemical(data_frame_row, lab_location):
     """
 
     cur = conn.cursor()
-    cur.execute(sql, (
-        chemical["casNumber"],
-        chemical["chemicalName"],
-        chemical["photo"],
-        chemical["state"] if chemical["state"] is not None and str(chemical["state"]).strip() != 'liq' else 'liquid',
-        chemical["quantity"],
-        chemical["dateAdded"],
-        chemical["expiryDate"],
-        chemical["sds"],
-        chemical["coshh"],
-        lab_location,
-        'Shelf',
-        False,
-    ))
+
+    try:
+        cur.execute(sql, (
+            chemical["casNumber"],
+            chemical["chemicalName"],
+            chemical["photo"],
+            chemical["state"] if chemical["state"] is not None and str(chemical["state"]).strip() != 'liq' else 'liquid',
+            chemical["quantity"],
+            chemical["dateAdded"],
+            chemical["expiryDate"],
+            chemical["sds"],
+            chemical["coshh"],
+            lab_location,
+            'Shelf',
+            False,
+        ))
+    except Exception as error:
+        print("Failed to insert ", chemical["chemicalName"], ": ", error)
+        conn.commit()
+        cur.close()
+        return 
 
     id = cur.fetchone()[0]
-
-    hazards = chemical["hazards"]
-    if hazards is not None:
-        insert_hazards(id, hazards)
+    
+    insert_hazard(id)
 
     conn.commit()
     cur.close()
 
-def insert_hazards(id, hazards):
-    hazards = hazards.split(',')
-
-    sql = "INSERT INTO coshh.chemical_to_hazard (id, hazard) VALUES %s"
-  
-    values = []
-    for hazard in hazards:
-        values.append((id, hazard.strip()))
+def insert_hazard(id):
 
     cur = conn.cursor()
-    
-    psycopg2.extras.execute_values(cur, sql, values)
+    cur.execute("INSERT INTO coshh.chemical_to_hazard (id, hazard) VALUES (%s, %s)", (id, 'Unknown'))
 
 
 def insert_chemicals(file_path):
