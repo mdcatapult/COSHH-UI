@@ -105,7 +105,7 @@
                         <div *ngIf="!chemical.hazards || chemical.hazards.includes('None')">
                             None
                         </div>
-                        <div *ngIf="chemical.hazards.includes('Unknown')">
+                        <div *ngIf="!chemical.hazards || chemical.hazards.includes('Unknown')">
                             Unknown
                         </div>
                         <ul>
