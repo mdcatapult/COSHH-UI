@@ -3,3 +3,5 @@ ui/.angular/cache/*
 *.DS_Store
 api/coshh
 ui/dist
+ui/node_modules
+*.swp
