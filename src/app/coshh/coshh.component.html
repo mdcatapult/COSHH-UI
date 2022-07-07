@@ -102,15 +102,7 @@
                 <ng-container matColumnDef="hazards">
                     <th mat-header-cell *matHeaderCellDef> Hazards</th>
                     <td mat-cell class="hazard-cell" *matCellDef="let chemical">
-                        <div *ngIf="!chemical.hazards; then missingHazardBlock else hazardBlock"></div>
-                        <ng-template #missingHazardBlock>
-                            <div>None</div>
-                        </ng-template>
-                        <ng-template #hazardBlock>
-                            <div *ngIf="chemical.hazards.includes('None')">None</div>
-                            <div *ngIf="chemical.hazards.includes('Unknown')">Unknown</div>
-                        </ng-template>
-
+                        <div *ngIf="!chemical.hazards">None</div>
                         <ul>
                             <li *ngFor="let hazard of chemical.hazardList">
                                 <img *ngIf="hazard.activated" class="img-responsive hazard"
