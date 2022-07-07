@@ -20,7 +20,7 @@ export type Chemical = {
 }
 
 export type HazardListItem = {
-    title: string,
+    title: Hazard,
     activated: boolean,
     value: string
 }
