@@ -4,8 +4,9 @@ import {allHazards, Chemical, columnTypes, ExpiryColor, Hazard, red, yellow} fro
 import {MatTableDataSource} from '@angular/material/table';
 import {UntypedFormArray, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators} from "@angular/forms";
 import {combineLatest, debounceTime, map, Observable, startWith} from 'rxjs';
-import { environment } from 'src/environments/environment';
-import { Chemicals } from './chemicals';
+import {environment} from 'src/environments/environment';
+import {Chemicals} from './chemicals';
+import {MatCheckboxChange} from "@angular/material/checkbox";
 
 
 @Component({
@@ -19,6 +20,18 @@ export class CoshhComponent implements OnInit {
     }
 
     chemicals = new Chemicals() // this represents all the chemicals returned from the API
+
+    getHazardListForChemical = (chemical: Chemical) => {
+        return allHazards().map((hazard: Hazard) => {
+            return {
+                title: hazard,
+                activated: chemical.hazards.includes(hazard),
+                value: hazard
+            }
+        })
+    }
+
+    selectedHazards: Hazard[] = [];
     hazardFilterValues = (<string[]>allHazards()).concat('All')
     tableData = new MatTableDataSource<Chemical>() // data source for table
     columns: string[] = columnTypes // columns to display in table
@@ -40,11 +53,12 @@ export class CoshhComponent implements OnInit {
 
     ngOnInit(): void {
 
-        this.http.get<Array<Chemical>>( `${environment.backendUrl}/chemicals`)
+        this.http.get<Array<Chemical>>(`${environment.backendUrl}/chemicals`)
             .subscribe((res: Array<Chemical>) => {
 
-                res = res?.map(chem => {
+                res = res?.map((chem: Chemical) => {
                     chem.backgroundColour = this.getExpiryColour(chem)
+                    chem.hazardList = this.getHazardListForChemical(chem)
                     return chem
                 })
 
@@ -61,7 +75,7 @@ export class CoshhComponent implements OnInit {
 
                 this.searchOptions = this.getSearchObservable()
 
-        })
+            })
 
         this.http.get<string[]>(`${environment.backendUrl}/labs`).subscribe(labs => {
             this.labFilterValues = labs.concat('All')
@@ -77,7 +91,7 @@ export class CoshhComponent implements OnInit {
 
             this.tableData.data = value === '' ?
                 this.chemicals.get(
-                    this.toggleArchiveControl.value, 
+                    this.toggleArchiveControl.value,
                     this.hazardFilterControl.value,
                     this.labFilterControl.value,
                     this.expiryFilterControl.value,
@@ -90,14 +104,14 @@ export class CoshhComponent implements OnInit {
         })
 
         combineLatest([
-            this.hazardFilterControl,
-            this.labFilterControl,
-            this.expiryFilterControl,
-            this.toggleArchiveControl
-        ].map(control => control.valueChanges.pipe(startWith(control.value)))
+                this.hazardFilterControl,
+                this.labFilterControl,
+                this.expiryFilterControl,
+                this.toggleArchiveControl
+            ].map(control => control.valueChanges.pipe(startWith(control.value)))
         ).subscribe(() => {
             this.refresh()
-            
+
             this.formArray.clear()
             this.tableData.data.forEach(chem => this.addChemicalForm(chem))
             this.searchOptions = this.getSearchObservable()
@@ -115,7 +129,7 @@ export class CoshhComponent implements OnInit {
 
     refresh(): void {
         this.tableData.data = this.chemicals.get(
-            this.toggleArchiveControl.value, 
+            this.toggleArchiveControl.value,
             this.hazardFilterControl.value,
             this.labFilterControl.value,
             this.expiryFilterControl.value,
@@ -123,7 +137,7 @@ export class CoshhComponent implements OnInit {
     }
 
     updateChemical(chemical: Chemical, refresh?: boolean): void {
-        this.http.put( `${environment.backendUrl}/chemical`, chemical).pipe(
+        this.http.put(`${environment.backendUrl}/chemical`, chemical).pipe(
             debounceTime(100)
         ).subscribe(() => {
             this.chemicals.update(chemical)
@@ -161,13 +175,13 @@ export class CoshhComponent implements OnInit {
         formGroup.valueChanges.subscribe(changedChemical => {
             changedChemical.id = chemical.id
             this.updateChemical(changedChemical, changedChemical.expiry !== chemical.expiry)
-            chemical.backgroundColour = this.getExpiryColour(changedChemical)        
+            chemical.backgroundColour = this.getExpiryColour(changedChemical)
         })
 
         this.formArray.push(formGroup)
     }
 
-    getExpiryColour(chemical: Chemical): ExpiryColor{
+    getExpiryColour(chemical: Chemical): ExpiryColor {
 
         const timeUntilExpiry = Chemicals.daysUntilExpiry(chemical)
         if (timeUntilExpiry < 30 && timeUntilExpiry > 0) {
@@ -185,7 +199,7 @@ export class CoshhComponent implements OnInit {
             map(search =>
                 this.chemicals.getNames(
                     this.toggleArchiveControl.value,
-                    this.hazardFilterControl.value, 
+                    this.hazardFilterControl.value,
                     search,
                     this.labFilterControl.value,
                     this.expiryFilterControl.value
@@ -193,6 +207,13 @@ export class CoshhComponent implements OnInit {
             )
         )
     }
+
+    onHazardSelect(event: MatCheckboxChange, chemical: Chemical) {
+       console.log(event.checked, 'event.checked',
+        event.source.value, 'event.source.value',
+        event.source.name, 'event.source.name', chemical.hazardList)
+    }
+
 
     getHazardPicture(hazard: Hazard): string {
         switch (hazard) {

@@ -21,6 +21,8 @@ import {MatToolbarModule} from "@angular/material/toolbar";
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {MatButtonModule} from "@angular/material/button";
+import {MatMenuModule} from '@angular/material/menu';
+
 
 @NgModule({
     declarations: [
@@ -49,6 +51,7 @@ import {MatButtonModule} from "@angular/material/button";
         MatOptionModule,
         MatAutocompleteModule,
         MatButtonModule,
+        MatMenuModule
     ],
     providers: [
         {provide: MAT_DATE_LOCALE, useValue: 'en-GB'},
