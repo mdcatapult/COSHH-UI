@@ -14,8 +14,15 @@ export type Chemical = {
     storageTemp: 'Shelf' | '+4' | '-20' | '-80',
     location: string,
     isArchived: boolean,
-    hazards: Hazard[]
+    hazards: Hazard[],
+    hazardList: HazardListItem[],
     backgroundColour: ExpiryColor
+}
+
+export type HazardListItem = {
+    title: string,
+    activated: boolean,
+    value: string
 }
 
 export type Expiry = 'Any' | '< 30 Days' | 'Expired'
