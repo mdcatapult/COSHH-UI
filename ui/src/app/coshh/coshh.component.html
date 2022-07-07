@@ -111,10 +111,10 @@
                             <div *ngIf="chemical.hazards.includes('Unknown')">Unknown</div>
                         </ng-template>
 
-
-                        <ul *ngIf="!(chemical.hazards.includes('None') || chemical.hazards.includes('Unknown'))">
-                            <li *ngFor="let hazard of chemical.hazards">
-                                <img class="img-responsive hazard" [src]="getHazardPicture(hazard)">
+                        <ul>
+                            <li *ngFor="let hazard of chemical.hazardList">
+                                <img *ngIf="hazard.activated" class="img-responsive hazard"
+                                     [src]="getHazardPicture(hazard)">
                             </li>
                         </ul>
 
@@ -127,7 +127,7 @@
                                           [(ngModel)]="hazard.activated"
                                           [ngModelOptions]="{standalone: true}"
                                           (click)="$event.stopPropagation()"
-                                          (change)="onHazardSelect($event, chemical)"
+                                          (change)="onHazardSelect(chemical)"
                             >{{ hazard.title }}</mat-checkbox>
                         </mat-menu>
 

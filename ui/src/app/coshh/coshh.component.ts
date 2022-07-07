@@ -1,12 +1,11 @@
 import {Component, OnInit} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {allHazards, Chemical, columnTypes, ExpiryColor, Hazard, red, yellow} from './types';
+import {allHazards, Chemical, columnTypes, ExpiryColor, Hazard, HazardListItem, red, yellow} from './types';
 import {MatTableDataSource} from '@angular/material/table';
 import {UntypedFormArray, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators} from "@angular/forms";
 import {combineLatest, debounceTime, map, Observable, startWith} from 'rxjs';
 import {environment} from 'src/environments/environment';
 import {Chemicals} from './chemicals';
-import {MatCheckboxChange} from "@angular/material/checkbox";
 
 
 @Component({
@@ -208,15 +207,14 @@ export class CoshhComponent implements OnInit {
         )
     }
 
-    onHazardSelect(event: MatCheckboxChange, chemical: Chemical) {
-       console.log(event.checked, 'event.checked',
-        event.source.value, 'event.source.value',
-        event.source.name, 'event.source.name', chemical.hazardList)
+
+    onHazardSelect(chemical: Chemical) {
+        // TODO call API tp update chemical
     }
 
 
-    getHazardPicture(hazard: Hazard): string {
-        switch (hazard) {
+    getHazardPicture(hazard: HazardListItem): string {
+        switch (hazard.title) {
             case 'Corrosive':
                 return 'assets/corrosive.jpg'
             case 'Hazardous to the environment':
@@ -235,6 +233,8 @@ export class CoshhComponent implements OnInit {
                 return 'assets/serious.jpg'
             case 'Acute toxicity':
                 return 'assets/toxic.jpg'
+            case 'None':
+                return 'assets/non-hazardous.jpg'
             default:
                 return ''
         }
