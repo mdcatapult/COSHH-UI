@@ -153,6 +153,7 @@ export class CoshhComponent implements OnInit {
 
     onChemicalAdded(chemical: Chemical): void {
         this.http.post<Chemical>(`${environment.backendUrl}/chemical`, chemical).subscribe((addedChemical: Chemical) => {
+            addedChemical.hazardList = this.getHazardListForChemical(addedChemical)
             addedChemical.backgroundColour = this.getExpiryColour(chemical)
             this.chemicals.add(addedChemical)
             this.tableData.data = this.tableData.data.concat([addedChemical])
