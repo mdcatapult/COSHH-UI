@@ -41,3 +41,17 @@ Go to `http://localhost:4000` in your browser.
 ### Testing
 
 `make test`
+
+### Accessing the database locally from the command line
+
+Ensure you set the schema, e.g.
+
+```
+psql -h localhost -U postgres -d informatics        \\ password is postgres
+SET schema 'coshh';                                 
+```
+
+### Angular Environment Variables
+
+Note that Angular cannot read env vars at run time.  They are injected in via the `.environment.ts` and `environment.prod.ts`
+files at build time.  *If you want to change the API URL you will need to build a new image after updating the environment file.* 
