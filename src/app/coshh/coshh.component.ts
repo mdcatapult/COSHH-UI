@@ -217,7 +217,9 @@ export class CoshhComponent implements OnInit {
 
 
     onHazardSelect(chemical: Chemical) {
-        chemical.hazards = chemical.hazardList.filter(hazard => hazard.activated).map((hazard: HazardListItem) => hazard.title)
+        chemical.hazards = chemical.hazardList
+                            .filter(hazard => hazard.activated)
+                            .map((hazard: HazardListItem) => hazard.title)
         console.log('in onHazardSelect)')
         this.updateHazards(chemical)
     }
