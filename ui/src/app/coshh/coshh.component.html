@@ -103,12 +103,12 @@
                     <th mat-header-cell *matHeaderCellDef> Hazards</th>
                     <td mat-cell class="hazard-cell" *matCellDef="let chemical">
                         <img *ngIf="!chemical.hazards || !chemical.hazards.length" class="img-responsive hazard"
-                             [src]="'assets/unknown.jpg'">
+                             src="assets/unknown.jpg" alt="Unknown" title="Unknown">
 
                         <ul>
                             <li *ngFor="let hazard of chemical.hazardList">
                                 <img *ngIf="hazard.activated" class="img-responsive hazard"
-                                     [src]="getHazardPicture(hazard.title)">
+                                     [src]="getHazardPicture(hazard.title)" [alt]="hazard.title" [title]="hazard.title">
                             </li>
                         </ul>
 
