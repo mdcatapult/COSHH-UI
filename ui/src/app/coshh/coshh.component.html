@@ -116,12 +116,12 @@
                             <mat-icon>edit</mat-icon>
                         </button>
                         <mat-menu #menu="matMenu">
-                            <mat-checkbox class="hazard-checkbox" #hazards
+                            <mat-checkbox class="hazard-checkbox"
                                           *ngFor="let hazard of chemical.hazardList"
                                           [(ngModel)]="hazard.activated"
                                           [ngModelOptions]="{standalone: true}"
                                           (click)="$event.stopPropagation()"
-                                          (change)="onHazardSelect(chemical)"
+                                          (change)="onHazardSelect(chemical, $event)"
                             >{{ hazard.title }}</mat-checkbox>
                         </mat-menu>
 
