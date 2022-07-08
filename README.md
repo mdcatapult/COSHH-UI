@@ -55,3 +55,7 @@ SET schema 'coshh';
 
 Note that Angular cannot read env vars at run time.  They are injected in via the `.environment.ts` and `environment.prod.ts`
 files at build time.  *If you want to change the API URL you will need to build a new image after updating the environment file.* 
+
+### Gotchas
+
+When writing any new sql queries always remember to commit the transaction!
