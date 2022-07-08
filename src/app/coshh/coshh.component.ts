@@ -21,13 +21,13 @@ export class CoshhComponent implements OnInit {
     chemicals = new Chemicals() // this represents all the chemicals returned from the API
 
     getHazardListForChemical = (chemical: Chemical) => {
-        return allHazards().map((hazard: Hazard) => {
-            return {
-                title: hazard,
-                activated: chemical.hazards.includes(hazard),
-                value: hazard
-            }
-        })
+            return allHazards().map((hazard: Hazard) => {
+                return {
+                    title: hazard,
+                    activated: chemical.hazards ? chemical.hazards.includes(hazard) : false,
+                    value: hazard
+                }
+            })
     }
 
     selectedHazards: Hazard[] = [];
@@ -223,8 +223,8 @@ export class CoshhComponent implements OnInit {
     }
 
 
-    getHazardPicture(hazard: HazardListItem): string {
-        switch (hazard.title) {
+    getHazardPicture(hazard: Hazard): string {
+        switch (hazard) {
             case 'Corrosive':
                 return 'assets/corrosive.jpg'
             case 'Hazardous to the environment':
@@ -246,7 +246,7 @@ export class CoshhComponent implements OnInit {
             case 'None':
                 return 'assets/non-hazardous.jpg'
             default:
-                return ''
+                return 'assets/unknown.jpg'
         }
     }
 
