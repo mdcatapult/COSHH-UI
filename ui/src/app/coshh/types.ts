@@ -61,7 +61,7 @@ const ALL_HAZARDS = [
     'Hazardous to the environment',
     'Health hazard/Hazardous to the ozone layer',
     'Serious health hazard',
-    'Gas under pressure',
+    'Gas under pressure'
 ] as const
 
 type HazardTuple = typeof ALL_HAZARDS
