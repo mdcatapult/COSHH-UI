@@ -14,8 +14,15 @@ export type Chemical = {
     storageTemp: 'Shelf' | '+4' | '-20' | '-80',
     location: string,
     isArchived: boolean,
-    hazards: Hazard[]
+    hazards: Hazard[],
+    hazardList: HazardListItem[],
     backgroundColour: ExpiryColor
+}
+
+export type HazardListItem = {
+    title: Hazard,
+    activated: boolean,
+    value: string
 }
 
 export type Expiry = 'Any' | '< 30 Days' | 'Expired'
@@ -54,7 +61,7 @@ const ALL_HAZARDS = [
     'Hazardous to the environment',
     'Health hazard/Hazardous to the ozone layer',
     'Serious health hazard',
-    'Gas under pressure',
+    'Gas under pressure'
 ] as const
 
 type HazardTuple = typeof ALL_HAZARDS

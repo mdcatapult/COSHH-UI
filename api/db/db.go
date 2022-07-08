@@ -193,6 +193,35 @@ func insertChemical(tx *sqlx.Tx, chemical chemical.Chemical) (id int64, err erro
 
 }
 
+func DeleteHazards(chemical chemical.Chemical) error {
+	tx, err := db.Beginx()
+	if err != nil {
+		return err
+	}
+
+	query := `DELETE FROM chemical_to_hazard WHERE id = $1;`
+	_, err = tx.Exec(query, chemical.Id)
+	if err != nil {
+		return err
+	}
+
+	return tx.Commit()
+}
+
+func InsertHazards(chemical chemical.Chemical) error {
+	tx, err := db.Beginx()
+	if err != nil {
+		return err
+	}
+
+	err = insertHazards(tx, chemical, chemical.Id)
+	if err != nil {
+		return err
+	}
+
+	return tx.Commit()
+}
+
 func insertHazards(tx *sqlx.Tx, chemical chemical.Chemical, id int64) error {
 	// chemicalToHazard represents a row in chemical_to_hazard
 	type chemicalToHazard struct {

@@ -106,3 +106,18 @@ ul {
 header {
   text-align: center;
 }
+
+.hazard-menu-button {
+  min-width: 0;
+  padding: 0;
+}
+
+.hazard-cell {
+  display: inline-flex;
+  justify-content: space-between;
+  min-width: 100%;
+}
+
+.hazard-checkbox {
+  display: block;
+}
