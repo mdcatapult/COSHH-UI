@@ -148,9 +148,7 @@ export class CoshhComponent implements OnInit {
     updateHazards(chemical: Chemical): void {
         this.http.put(`${environment.backendUrl}/hazards`, chemical).pipe(
             debounceTime(100)
-        ).subscribe(() => {
-           console.log('in subscribe')
-        })
+        ).subscribe(() => {})
     }
 
     onChemicalAdded(chemical: Chemical): void {
@@ -220,7 +218,6 @@ export class CoshhComponent implements OnInit {
         chemical.hazards = chemical.hazardList
                             .filter(hazard => hazard.activated)
                             .map((hazard: HazardListItem) => hazard.title)
-        console.log('in onHazardSelect)')
         this.updateHazards(chemical)
     }
 
