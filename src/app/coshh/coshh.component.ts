@@ -236,7 +236,7 @@ export class CoshhComponent implements OnInit {
 
             // set hazards on the chemical to be those the user has selected via the checkboxes
             chemical.hazards = chemical.hazardList.reduce((hazardList: Hazard[], hazard: HazardListItem) => {
-                return hazard.activated ? [...hazardList, hazard.title] : hazardList
+                return hazard.activated ? hazardList.concat(hazard.title) : hazardList
             }, [])
 
             // update the chemical in the database
