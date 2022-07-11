@@ -235,9 +235,9 @@ export class CoshhComponent implements OnInit {
                 .map(hazardListItem => hazardListItem.activated = false)
 
             // set hazards on the chemical to be those the user has selected via the checkboxes
-            chemical.hazards = chemical.hazardList
-                .filter(hazard => hazard.activated)
-                .map((hazard: HazardListItem) => hazard.title)
+            chemical.hazards = chemical.hazardList.reduce((hazardList: Hazard[], hazard: HazardListItem) => {
+                return hazard.activated ? [...hazardList, hazard.title] : hazardList
+            }, [])
 
             // update the chemical in the database
             this.updateHazards(chemical)
