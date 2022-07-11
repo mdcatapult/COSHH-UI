@@ -218,18 +218,18 @@ export class CoshhComponent implements OnInit {
 
     onHazardSelect(chemical: Chemical, event: MatCheckboxChange) {
 
-        const checkedHazard = event.source._elementRef.nativeElement.innerText
+        const checkedHazard = event.source._elementRef.nativeElement.innerText.trim()
         const notHazardous = chemical.hazardList.filter(hazardListItem => hazardListItem.value === 'None')[0]
 
-        // if 'None' has been selected, set the activated property of all other hazards to false
+        // if 'None' has been selected, set the activated property of all other hazards to false and clear hazards
         if (notHazardous.activated && checkedHazard === 'None') {
+            chemical.hazards = ['None'];
             chemical.hazardList.forEach(hl => {
                 if (hl.title !== 'None') {
                     hl.activated = false;
                 }
             })
         } else {
-
             // if any hazard has been selected, set the activated property of the 'None' hazard to false
             chemical.hazardList.filter(hazardListItem => hazardListItem.value === 'None')
                 .map(hazardListItem => hazardListItem.activated = false)
@@ -238,10 +238,10 @@ export class CoshhComponent implements OnInit {
             chemical.hazards = chemical.hazardList.reduce((hazardList: Hazard[], hazard: HazardListItem) => {
                 return hazard.activated ? hazardList.concat(hazard.title) : hazardList
             }, [])
-
-            // update the chemical in the database
-            this.updateHazards(chemical)
         }
+
+        // update the chemical in the database
+        this.updateHazards(chemical)
     }
 
 
