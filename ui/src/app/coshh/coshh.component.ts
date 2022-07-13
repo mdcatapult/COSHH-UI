@@ -6,6 +6,7 @@ import {UntypedFormArray, UntypedFormBuilder, UntypedFormControl, UntypedFormGro
 import {combineLatest, debounceTime, map, Observable, startWith} from 'rxjs';
 import {environment} from 'src/environments/environment';
 import {Chemicals} from './chemicals';
+import {MatCheckboxChange} from "@angular/material/checkbox";
 
 
 @Component({
@@ -215,10 +216,31 @@ export class CoshhComponent implements OnInit {
     }
 
 
-    onHazardSelect(chemical: Chemical) {
-        chemical.hazards = chemical.hazardList
-                            .filter(hazard => hazard.activated)
-                            .map((hazard: HazardListItem) => hazard.title)
+    onHazardSelect(chemical: Chemical, event: MatCheckboxChange) {
+
+        const checkedHazard = event.source._elementRef.nativeElement.innerText.trim()
+        const notHazardous = chemical.hazardList.filter(hazardListItem => hazardListItem.value === 'None')[0]
+
+        // if 'None' has been selected, set the activated property of all other hazards to false and clear hazards
+        if (notHazardous.activated && checkedHazard === 'None') {
+            chemical.hazards = ['None'];
+            chemical.hazardList.forEach(hl => {
+                if (hl.title !== 'None') {
+                    hl.activated = false;
+                }
+            })
+        } else {
+            // if any hazard has been selected, set the activated property of the 'None' hazard to false
+            chemical.hazardList.filter(hazardListItem => hazardListItem.value === 'None')
+                .map(hazardListItem => hazardListItem.activated = false)
+
+            // set hazards on the chemical to be those the user has selected via the checkboxes
+            chemical.hazards = chemical.hazardList.reduce((hazardList: Hazard[], hazard: HazardListItem) => {
+                return hazard.activated ? hazardList.concat(hazard.title) : hazardList
+            }, [])
+        }
+
+        // update the chemical in the database
         this.updateHazards(chemical)
     }
 
