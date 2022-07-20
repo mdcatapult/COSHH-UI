@@ -204,7 +204,9 @@
                 <ng-container matColumnDef="safetyDataSheet">
                     <th mat-header-cell *matHeaderCellDef> SDS</th>
                     <td mat-cell *matCellDef="let chemical; let index = index" [formGroupName]="index">
-			    <a href="{{chemical.safetyDataSheet}}" target="_blank" title="Open Safety Data Sheet in new tab"><mat-icon aria-hidden="false" aria-label="Link to safety data sheet">link</mat-icon></a>
+			    <a href="{{chemical.safetyDataSheet}}" target="_blank" title="Open Safety Data Sheet in new tab">
+                    <mat-icon aria-hidden="false" aria-label="Link to safety data sheet">link</mat-icon>
+                </a>
                         <!-- <mat-form-field class="sds-coshh-form-field" appearance="standard">
                             <input matInput type="text" formControlName="safetyDataSheet">
                         </mat-form-field> -->
@@ -214,11 +216,12 @@
                 <ng-container matColumnDef="coshhLink">
                     <th mat-header-cell *matHeaderCellDef> COSHH</th>
                     <td mat-cell *matCellDef="let chemical; let index = index" [formGroupName]="index">
-
-                        <mat-form-field class="sds-coshh-form-field" appearance="standard">
+                        <a href="{{chemical.coshhLink}}" target="_blank" title="Open MDC Coshh info in new tab">
+                            <mat-icon aria-hidden="false" aria-label="Link to safety data sheet">link</mat-icon>
+                        </a>
+                        <!-- <mat-form-field class="sds-coshh-form-field" appearance="standard">
                             <input matInput type="text" formControlName="coshhLink">
-                        </mat-form-field>
-
+                        </mat-form-field> -->
                     </td>
                 </ng-container>
 
