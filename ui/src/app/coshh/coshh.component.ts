@@ -181,7 +181,9 @@ export class CoshhComponent implements OnInit {
 
         formGroup.valueChanges.subscribe(changedChemical => {
             changedChemical.id = chemical.id
-            this.updateChemical(changedChemical, changedChemical.expiry !== chemical.expiry)
+            // If the links or expiry date have updated then ensure the appropriate UI bits are updated by calling refreshPage
+            let refreshPage = changedChemical.expiry !== chemical.expiry || changedChemical.safetyDataSheet !== chemical.safetyDataSheet
+            this.updateChemical(changedChemical, refreshPage)
             chemical.backgroundColour = this.getExpiryColour(changedChemical)
         })
 
