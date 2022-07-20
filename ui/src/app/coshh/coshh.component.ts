@@ -57,6 +57,7 @@ export class CoshhComponent implements OnInit {
             .subscribe((res: Array<Chemical>) => {
 
                 res = res?.map((chem: Chemical) => {
+                    chem.editSDS = false
                     chem.backgroundColour = this.getExpiryColour(chem)
                     chem.hazardList = this.getHazardListForChemical(chem)
                     return chem
@@ -154,6 +155,7 @@ export class CoshhComponent implements OnInit {
 
     onChemicalAdded(chemical: Chemical): void {
         this.http.post<Chemical>(`${environment.backendUrl}/chemical`, chemical).subscribe((addedChemical: Chemical) => {
+            addedChemical.editSDS = false
             addedChemical.hazardList = this.getHazardListForChemical(addedChemical)
             addedChemical.backgroundColour = this.getExpiryColour(chemical)
             this.chemicals.add(addedChemical)
