@@ -204,12 +204,17 @@
                 <ng-container matColumnDef="safetyDataSheet">
                     <th mat-header-cell *matHeaderCellDef> SDS</th>
                     <td mat-cell *matCellDef="let chemical; let index = index" [formGroupName]="index">
-			    <a [href]="chemical.safetyDataSheet" target="_blank" title="Open Safety Data Sheet in new tab">
-                    <mat-icon aria-hidden="false" aria-label="Link to safety data sheet">link</mat-icon>
-                </a>
-                        <mat-form-field class="sds-coshh-form-field" appearance="standard">
-                            <input matInput type="text" formControlName="safetyDataSheet">
-                        </mat-form-field>
+                        <a [href]="chemical.safetyDataSheet" target="_blank" title="Open Safety Data Sheet in new tab">
+                            <mat-icon aria-hidden="false" aria-label="Link to safety data sheet" style="display: inline;">open_in_new</mat-icon>
+                        </a>
+                        <button mat-button class="hazard-menu-button" (click)="chemical.editSDS = !chemical.editSDS">
+                            <mat-icon>edit</mat-icon>
+                        </button>
+                        <ng-template [ngIf]="chemical.editSDS">
+                            <mat-form-field class="sds-coshh-form-field" appearance="standard">
+                                <input matInput type="text" formControlName="safetyDataSheet">
+                            </mat-form-field>
+                        </ng-template>
                     </td>
                 </ng-container>
 
