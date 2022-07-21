@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {allHazards, Chemical, columnTypes, ExpiryColor, Hazard, HazardListItem, red, yellow} from './types';
 import {MatTableDataSource} from '@angular/material/table';
-import {UntypedFormArray, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators} from "@angular/forms";
+import {FormControl, UntypedFormArray, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators} from "@angular/forms";
 import {combineLatest, debounceTime, map, Observable, startWith} from 'rxjs';
 import {environment} from 'src/environments/environment';
 import {Chemicals} from './chemicals';
@@ -175,7 +175,7 @@ export class CoshhComponent implements OnInit {
             quantity: [chemical.quantity],
             added: [chemical.added],
             expiry: [chemical.expiry],
-            safetyDataSheet: [chemical.safetyDataSheet],
+            safetyDataSheet: new FormControl([chemical.safetyDataSheet], {updateOn: 'blur'}),
             coshhLink: [chemical.coshhLink],
             storageTemp: [chemical.storageTemp],
             location: [chemical.location],
@@ -183,6 +183,8 @@ export class CoshhComponent implements OnInit {
 
         formGroup.valueChanges.subscribe(changedChemical => {
             changedChemical.id = chemical.id
+            changedChemical.hazardList = chemical.hazardList
+            changedChemical.hazards = chemical.hazards
             // If the links or expiry date have updated then ensure the appropriate UI bits are updated by calling refreshPage
             let refreshPage = changedChemical.expiry !== chemical.expiry || changedChemical.safetyDataSheet !== chemical.safetyDataSheet
             this.updateChemical(changedChemical, refreshPage)
