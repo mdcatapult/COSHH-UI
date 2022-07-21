@@ -58,6 +58,7 @@ export class CoshhComponent implements OnInit {
 
                 res = res?.map((chem: Chemical) => {
                     chem.editSDS = false
+                    chem.editCoshh = false
                     chem.backgroundColour = this.getExpiryColour(chem)
                     chem.hazardList = this.getHazardListForChemical(chem)
                     return chem
@@ -156,6 +157,7 @@ export class CoshhComponent implements OnInit {
     onChemicalAdded(chemical: Chemical): void {
         this.http.post<Chemical>(`${environment.backendUrl}/chemical`, chemical).subscribe((addedChemical: Chemical) => {
             addedChemical.editSDS = false
+            addedChemical.editCoshh = false
             addedChemical.hazardList = this.getHazardListForChemical(addedChemical)
             addedChemical.backgroundColour = this.getExpiryColour(chemical)
             this.chemicals.add(addedChemical)
@@ -175,8 +177,8 @@ export class CoshhComponent implements OnInit {
             quantity: [chemical.quantity],
             added: [chemical.added],
             expiry: [chemical.expiry],
-            safetyDataSheet: new FormControl([chemical.safetyDataSheet], {updateOn: 'blur'}),
-            coshhLink: [chemical.coshhLink],
+            safetyDataSheet: new FormControl(chemical.safetyDataSheet, {updateOn: 'blur'}),
+            coshhLink: new FormControl(chemical.coshhLink, {updateOn: 'blur'}),
             storageTemp: [chemical.storageTemp],
             location: [chemical.location],
         })
@@ -186,7 +188,9 @@ export class CoshhComponent implements OnInit {
             changedChemical.hazardList = chemical.hazardList
             changedChemical.hazards = chemical.hazards
             // If the links or expiry date have updated then ensure the appropriate UI bits are updated by calling refreshPage
-            let refreshPage = changedChemical.expiry !== chemical.expiry || changedChemical.safetyDataSheet !== chemical.safetyDataSheet
+            let refreshPage = changedChemical.expiry !== chemical.expiry 
+                              || changedChemical.safetyDataSheet !== chemical.safetyDataSheet
+                              || changedChemical.coshhLink !== chemical.coshhLink
             this.updateChemical(changedChemical, refreshPage)
             chemical.backgroundColour = this.getExpiryColour(changedChemical)
         })
