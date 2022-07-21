@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Inject, Input, OnInit} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {allHazards, Chemical, columnTypes, ExpiryColor, Hazard, HazardListItem, red, yellow} from './types';
 import {MatTableDataSource} from '@angular/material/table';
@@ -7,7 +7,6 @@ import {combineLatest, debounceTime, map, Observable, startWith} from 'rxjs';
 import {environment} from 'src/environments/environment';
 import {Chemicals} from './chemicals';
 import {MatCheckboxChange} from "@angular/material/checkbox";
-
 
 @Component({
     selector: 'app-coshh',
@@ -20,6 +19,7 @@ export class CoshhComponent implements OnInit {
     }
 
     chemicals = new Chemicals() // this represents all the chemicals returned from the API
+    labs: String[] = []
 
     getHazardListForChemical = (chemical: Chemical) => {
             return allHazards().map((hazard: Hazard) => {
@@ -82,6 +82,7 @@ export class CoshhComponent implements OnInit {
         this.http.get<string[]>(`${environment.backendUrl}/labs`).subscribe(labs => {
             this.labFilterValues = labs.concat('All')
             this.labFilterControl.setValue('All')
+            this.labs = labs
         })
 
         this.formGroup = this.fb.group({
