@@ -208,8 +208,8 @@
                             <a [href]="chemical.safetyDataSheet" target="_blank" title="Open Safety Data Sheet in new tab">
                                 <mat-icon aria-hidden="false" aria-label="Link to safety data sheet" style="display: inline;">open_in_new</mat-icon>
                             </a>
-                            <button mat-button class="hazard-menu-button" (click)="chemical.editSDS = !chemical.editSDS">
-                                <mat-icon aria-label="Edit safety data sheet link">edit</mat-icon>
+                            <button mat-button class="hazard-menu-button" (click)="chemical.editSDS = !chemical.editSDS" aria-label="Edit safety data sheet link" title="Edit safety data sheet link">
+                                <mat-icon>edit</mat-icon>
                             </button>
                         </ng-template>
                         <ng-template [ngIf]="chemical.editSDS">
