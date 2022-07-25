@@ -1,13 +1,12 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Inject, Input, OnInit} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {allHazards, Chemical, columnTypes, ExpiryColor, Hazard, HazardListItem, red, yellow} from './types';
 import {MatTableDataSource} from '@angular/material/table';
-import {UntypedFormArray, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators} from "@angular/forms";
+import {FormControl, UntypedFormArray, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators} from "@angular/forms";
 import {combineLatest, debounceTime, map, Observable, startWith} from 'rxjs';
 import {environment} from 'src/environments/environment';
 import {Chemicals} from './chemicals';
 import {MatCheckboxChange} from "@angular/material/checkbox";
-
 
 @Component({
     selector: 'app-coshh',
@@ -20,6 +19,7 @@ export class CoshhComponent implements OnInit {
     }
 
     chemicals = new Chemicals() // this represents all the chemicals returned from the API
+    labs: String[] = []
 
     getHazardListForChemical = (chemical: Chemical) => {
             return allHazards().map((hazard: Hazard) => {
@@ -57,6 +57,8 @@ export class CoshhComponent implements OnInit {
             .subscribe((res: Array<Chemical>) => {
 
                 res = res?.map((chem: Chemical) => {
+                    chem.editSDS = false
+                    chem.editCoshh = false
                     chem.backgroundColour = this.getExpiryColour(chem)
                     chem.hazardList = this.getHazardListForChemical(chem)
                     return chem
@@ -80,6 +82,7 @@ export class CoshhComponent implements OnInit {
         this.http.get<string[]>(`${environment.backendUrl}/labs`).subscribe(labs => {
             this.labFilterValues = labs.concat('All')
             this.labFilterControl.setValue('All')
+            this.labs = labs
         })
 
         this.formGroup = this.fb.group({
@@ -154,6 +157,8 @@ export class CoshhComponent implements OnInit {
 
     onChemicalAdded(chemical: Chemical): void {
         this.http.post<Chemical>(`${environment.backendUrl}/chemical`, chemical).subscribe((addedChemical: Chemical) => {
+            addedChemical.editSDS = false
+            addedChemical.editCoshh = false
             addedChemical.hazardList = this.getHazardListForChemical(addedChemical)
             addedChemical.backgroundColour = this.getExpiryColour(chemical)
             this.chemicals.add(addedChemical)
@@ -173,15 +178,21 @@ export class CoshhComponent implements OnInit {
             quantity: [chemical.quantity],
             added: [chemical.added],
             expiry: [chemical.expiry],
-            safetyDataSheet: [chemical.safetyDataSheet],
-            coshhLink: [chemical.coshhLink],
+            safetyDataSheet: new FormControl(chemical.safetyDataSheet, {updateOn: 'blur'}),
+            coshhLink: new FormControl(chemical.coshhLink, {updateOn: 'blur'}),
             storageTemp: [chemical.storageTemp],
             location: [chemical.location],
         })
 
         formGroup.valueChanges.subscribe(changedChemical => {
             changedChemical.id = chemical.id
-            this.updateChemical(changedChemical, changedChemical.expiry !== chemical.expiry)
+            changedChemical.hazardList = chemical.hazardList
+            changedChemical.hazards = chemical.hazards
+            // If the links or expiry date have updated then ensure the appropriate UI bits are updated by calling refreshPage
+            let refreshPage = changedChemical.expiry !== chemical.expiry 
+                              || changedChemical.safetyDataSheet !== chemical.safetyDataSheet
+                              || changedChemical.coshhLink !== chemical.coshhLink
+            this.updateChemical(changedChemical, refreshPage)
             chemical.backgroundColour = this.getExpiryColour(changedChemical)
         })
 

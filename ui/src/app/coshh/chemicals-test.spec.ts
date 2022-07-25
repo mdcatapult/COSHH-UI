@@ -23,7 +23,9 @@ describe('Chemicals', () => {
             isArchived: false,
             hazards: [],
             hazardList: [],
-            backgroundColour: ""
+            backgroundColour: "",
+            editCoshh: false,
+            editSDS: false
         }
 
         it('should be 0 for chemical expiring today', () => {
