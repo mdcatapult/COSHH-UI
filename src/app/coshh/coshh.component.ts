@@ -20,6 +20,7 @@ export class CoshhComponent implements OnInit {
 
     chemicals = new Chemicals() // this represents all the chemicals returned from the API
     labs: String[] = []
+    freezeColumns = false;
 
     getHazardListForChemical = (chemical: Chemical) => {
             return allHazards().map((hazard: Hazard) => {

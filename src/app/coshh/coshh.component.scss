@@ -21,7 +21,7 @@ header {
   margin: 1vw;
   overflow-x: auto;
   overflow-y: auto;
-  max-height: 64vh;
+  max-height: 83vh;
   max-width: 100%;
 }
 
@@ -29,6 +29,7 @@ header {
   margin: 0 auto;
   max-width: 98%;
   border-radius: 4px;
+  height: 10vh;
 }
 
 .coshh-archive-cell {
@@ -36,7 +37,7 @@ header {
   padding-bottom: 1vh;
 }
 
-.coshh-archive-checkbox {
+.coshh-checkbox {
   margin: 0 1vw 0 0;
 }
 
@@ -74,7 +75,7 @@ ul {
   word-wrap: initial;
   display: table-cell;
   line-break: unset;
-  padding-top: 0.5vh;
+  padding-top: 2vh;
   padding-right: 0.5vw;
 }
 
@@ -83,20 +84,24 @@ ul {
   display: table-row;
 }
 
+
 .toolbar-controls-container {
-  width: 20vw;
-  font-size: 1vh;
+  font-size: 2vh;
   display: flex;
-  padding: 1.3vh 1vw 0 0;
+  padding: 3vh 1vw 0 0;
+  justify-content: flex-end;
 }
 
 .filter-control {
-  flex: auto;
+  margin-left: 0.25vw;
+
 }
 
 .archive-checkbox-container {
   font-size: 1.5vh;
   font-weight: normal;
+  flex-direction: column;
+  display: flex;
 }
 
 .add-chemical {
@@ -132,4 +137,8 @@ header {
 
 .inline {
   display: inline;
+}
+
+.filter-select {
+  font-size: larger;
 }
