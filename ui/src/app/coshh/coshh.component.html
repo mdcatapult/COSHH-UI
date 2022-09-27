@@ -1,6 +1,6 @@
 <div>
     <header>
-        <img class="mdc-logo" src="assets/mdc-logo-white.png">
+        <img class="mdc-logo" src="assets/mdc-logo-blue-small.png">
         <mat-toolbar class="coshh-toolbar">
             <span>COSHH Inventory </span>
             <div class="add-chemical">
@@ -15,7 +15,7 @@
             <div class="toolbar-controls-container">
 
                 <div class="filter-control">
-                    <mat-form-field appearance="outline">
+                    <mat-form-field className="filter-select" appearance="outline">
                         <mat-label>Filter by lab</mat-label>
                         <select matNativeControl required [formControl]="labFilterControl">
                             <option *ngFor="let lab of labFilterValues" [value]="lab">{{lab}}</option>
@@ -44,7 +44,7 @@
 
                 <div class="filter-control">
                     <mat-form-field appearance="outline">
-                        <mat-label>Search by chemical name</mat-label>
+                        <mat-label>Search by name</mat-label>
                         <input type="text"
                                placeholder="Type to search..."
                                aria-label="Search"
@@ -62,9 +62,14 @@
 
             <div class="filter-control archive-checkbox-container">
                 <mat-checkbox
-                        class="coshh-archive-checkbox"
+                        class="coshh-checkbox"
                         [formControl]="toggleArchiveControl"
                         color="primary">Display archived chemicals
+                </mat-checkbox>
+                <mat-checkbox
+                        class="coshh-checkbox"
+                        [(ngModel)]="freezeColumns"
+                        color="primary">Freeze 'Name' and 'CAS' columns
                 </mat-checkbox>
             </div>
 
@@ -74,9 +79,9 @@
 
     <form [formGroup]="formGroup">
         <div class="table-container">
-            <table *ngIf="tableData.data.length" mat-table [dataSource]="tableData" formArrayName="chemicals">
+            <mat-table *ngIf="tableData.data.length" mat-table [dataSource]="tableData" formArrayName="chemicals">
 
-                <ng-container matColumnDef="casNumber">
+                <ng-container matColumnDef="casNumber" [sticky]=freezeColumns>
                     <th mat-header-cell *matHeaderCellDef> CAS no.</th>
                     <td mat-cell *matCellDef="let chemical; let index = index" [formGroupName]="index">
 
@@ -88,7 +93,7 @@
                     </td>
                 </ng-container>
 
-                <ng-container matColumnDef="name">
+                <ng-container matColumnDef="name" [sticky]=freezeColumns>
                     <th mat-header-cell *matHeaderCellDef> Chemical Name</th>
                     <td mat-cell *matCellDef="let chemical; let index = index" [formGroupName]="index">
 
@@ -278,9 +283,9 @@
                 </ng-container>
 
 
-                <tr mat-header-row *matHeaderRowDef="columns"></tr>
+                <mat-header-row *matHeaderRowDef="columns; sticky:true"></mat-header-row>
                 <tr mat-row *matRowDef="let row; columns: columns; let i = index"></tr>
-            </table>
+            </mat-table>
 
         </div>
     </form>
