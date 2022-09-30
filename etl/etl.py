@@ -21,7 +21,7 @@ def get_chemical(lab, chemical) -> dict:
             "coshh": chemical[9]
         }
 
-    if lab == 'Wolfson':
+    if lab == 'WMIC':
         return  {
             "chemicalName": chemical[0],
             "photo": chemical[12],
