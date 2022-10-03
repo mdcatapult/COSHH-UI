@@ -1,7 +1,5 @@
-DROP
-DATABASE IF EXISTS informatics;
-CREATE
-DATABASE informatics;
+DROP DATABASE IF EXISTS informatics;
+CREATE DATABASE informatics;
 \connect informatics
 CREATE SCHEMA coshh;
 
@@ -40,6 +38,7 @@ CREATE TABLE coshh.chemical
     safety_data_sheet VARCHAR(255),
     coshh_link        VARCHAR(255),
     lab_location      VARCHAR(255),
+    cupboard          VARCHAR(255),
     storage_temp      coshh.storage_temp NOT NULL,
     is_archived       BOOLEAN            NOT NULL
 );
