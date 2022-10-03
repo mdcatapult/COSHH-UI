@@ -50,6 +50,19 @@
                 <input matInput type="text" formControlName="quantity">
             </mat-form-field>
         </div>
+
+        <div class="row">
+            <div class="hazard-category-container">
+                <mat-label>Hazard category</mat-label>
+                <div *ngFor="let hazardCategory of hazardCategories; let i=index">
+                    <mat-checkbox
+                            matInput
+                            formArrayName="hazards"
+                            [value]="hazardCategory"
+                            (change)="onCheckboxChange($event, i)"> {{ hazardCategory }}</mat-checkbox>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div class="column">
@@ -97,16 +110,10 @@
         </div>
 
         <div class="row">
-            <div class="hazard-category-container">
-                <mat-label>Hazard category</mat-label>
-                <div *ngFor="let hazardCategory of hazardCategories; let i=index">
-                    <mat-checkbox
-                            matInput
-                            formArrayName="hazards"
-                            [value]="hazardCategory"
-                            (change)="onCheckboxChange($event, i)"> {{ hazardCategory }}</mat-checkbox>
-                </div>
-            </div>
+            <mat-form-field appearance="fill">
+                <mat-label>Cupboard</mat-label>
+                <input matInput type="text" formControlName="cupboard">
+            </mat-form-field>
         </div>
     </div>
 
