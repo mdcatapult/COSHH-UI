@@ -1,7 +1,5 @@
-DROP
-DATABASE IF EXISTS informatics;
-CREATE
-DATABASE informatics;
+DROP DATABASE IF EXISTS informatics;
+CREATE DATABASE informatics;
 \connect informatics
 CREATE SCHEMA coshh;
 
