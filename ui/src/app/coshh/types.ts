@@ -14,6 +14,7 @@ export type Chemical = {
     storageTemp: 'Shelf' | '+4' | '-20' | '-80',
     location: string,
     cupboard: string,
+    projectSpecific: string;
     isArchived: boolean,
     hazards: Hazard[],
     hazardList: HazardListItem[],
@@ -48,6 +49,7 @@ export const columnTypes = [
     'safetyDataSheet',
     'coshhLink',
     'storageTemp',
+    'projectSpecific',
     'archive'
 ]
 
