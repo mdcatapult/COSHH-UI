@@ -20,6 +20,7 @@ describe('Chemicals', () => {
             coshhLink: "",
             storageTemp: "Shelf",
             location: "",
+            cupboard: "",
             isArchived: false,
             hazards: [],
             hazardList: [],
