@@ -144,12 +144,12 @@
                     </td>
                 </ng-container>
 
-                <ng-container matColumnDef="photoPath">
-                    <th mat-header-cell *matHeaderCellDef> Photo</th>
+                <ng-container matColumnDef="chemicalNumber">
+                    <th mat-header-cell *matHeaderCellDef>Chemical Number</th>
                     <td mat-cell *matCellDef="let chemical; let index = index" [formGroupName]="index">
 
                         <mat-form-field class="example-form-field" appearance="standard">
-                            <input matInput type="text" formControlName="photoPath">
+                            <input matInput type="text" formControlName="chemicalNumber">
                         </mat-form-field>
 
                     </td>
