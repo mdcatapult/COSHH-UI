@@ -147,7 +147,7 @@
                 <ng-container matColumnDef="cupboard">
                     <th mat-header-cell *matHeaderCellDef> Cupboard</th>
                     <td mat-cell *matCellDef="let chemical; let index = index" [formGroupName]="index">
-                        <mat-form-field class="example-form-field" appearance="standard">
+                        <mat-form-field class="quantity-form-field" appearance="standard">
                             <input matInput type="text" formControlName="cupboard">
                         </mat-form-field>
                     </td>
@@ -270,6 +270,15 @@
                             </select>
                         </mat-form-field>
 
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="projectSpecific">
+                    <th mat-header-cell *matHeaderCellDef>Project Specific?</th>
+                    <td mat-cell *matCellDef="let chemical; let index = index" [formGroupName]="index">
+                        <mat-form-field class="quantity-form-field" appearance="standard">
+                            <input matInput type="text" formControlName="projectSpecific">
+                        </mat-form-field>
                     </td>
                 </ng-container>
 

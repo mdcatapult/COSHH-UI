@@ -46,7 +46,8 @@ export class AddChemicalDialogComponent {
         storageTemp: new FormControl('', Validators.required),
         location: new FormControl(''),
         cupboard: new FormControl(''),
-        hazards: new FormArray(this.hazardCategories.map(() => new FormControl('')), Validators.required)
+        hazards: new FormArray(this.hazardCategories.map(() => new FormControl('')), Validators.required),
+        projectSpecific: new FormControl('')
     });
 
     onClose(): void {

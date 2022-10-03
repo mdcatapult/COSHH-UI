@@ -22,6 +22,7 @@ describe('Chemicals', () => {
             location: "",
             cupboard: "",
             isArchived: false,
+            projectSpecific: "",
             hazards: [],
             hazardList: [],
             backgroundColour: "",
