@@ -16,7 +16,8 @@ export HOST=localhost \
 export PASSWORD=postgres \
 export PORT=5432 \
 export USER=postgres \
-export LABS_CSV="/Users/my.name/IdeaProjects/coshh/api/labs.csv"
+export LABS_CSV="/Users/my.name/IdeaProjects/coshh/api/labs.csv" \
+export PROJECTS_CSV="/Users/my.name/IdeaProjects/coshh/api/projects_041022.csv"
 ``` 
 
 Start the database:
