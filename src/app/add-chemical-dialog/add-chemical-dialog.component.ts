@@ -1,8 +1,9 @@
 import {Component, Inject, Input} from '@angular/core';
-import {FormGroup, Validators, FormControl, FormArray} from '@angular/forms';
+import {FormGroup, Validators, FormControl, FormArray, UntypedFormControl} from '@angular/forms';
 import {DateAdapter} from '@angular/material/core';
 import {MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import * as moment from 'moment';
+import {map, Observable} from "rxjs";
 
 @Component({
     selector: 'app-add-chemical-dialog',
@@ -21,6 +22,24 @@ export class AddChemicalDialogComponent {
         },
     ) {
         this.dateAdapter.setLocale('en-GB');
+    }
+
+    projectNamesOptions: Observable<string[]> = new Observable()
+    projectNamesControl = new UntypedFormControl()
+
+    ngOnInit(): void {
+        this.projectNamesOptions = this.getProjectNamesObservable()
+    }
+
+    getProjectNamesObservable(): Observable<string[]> {
+        return this.projectNamesControl.valueChanges.pipe(
+            map(name => {
+                    return this.data.projectNames
+                        .filter((option: string) => option.toLowerCase()
+                            .includes(name.toLowerCase()))
+                }
+            )
+        )
     }
 
     hazardCategories = [
