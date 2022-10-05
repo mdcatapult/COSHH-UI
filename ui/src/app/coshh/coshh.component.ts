@@ -184,7 +184,8 @@ export class CoshhComponent implements OnInit {
             storageTemp: [chemical.storageTemp],
             location: [chemical.location],
             cupboard: [chemical.cupboard],
-            projectSpecific: [chemical.projectSpecific]
+            projectCode: [chemical.projectCode],
+            projectName: [chemical.projectName]
         })
 
         formGroup.valueChanges.subscribe(changedChemical => {
