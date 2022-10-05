@@ -6,6 +6,8 @@
             <div class="add-chemical">
                 <app-add-chemical
                         [labs]="labFilterValues"
+                        [projectCodes]="projectCodes"
+                        [projectNames]="projectNames"
                         (onChemicalAdded)="onChemicalAdded($event)"
                 ></app-add-chemical>
             </div>
