@@ -273,11 +273,20 @@
                     </td>
                 </ng-container>
 
-                <ng-container matColumnDef="projectSpecific">
-                    <th mat-header-cell *matHeaderCellDef>Project Specific?</th>
+                <ng-container matColumnDef="projectCode">
+                    <th mat-header-cell *matHeaderCellDef>Project Code</th>
                     <td mat-cell *matCellDef="let chemical; let index = index" [formGroupName]="index">
                         <mat-form-field class="quantity-form-field" appearance="standard">
-                            <input matInput type="text" formControlName="projectSpecific">
+                            <input matInput type="text" formControlName="projectCode">
+                        </mat-form-field>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="projectName">
+                    <th mat-header-cell *matHeaderCellDef>Project Name</th>
+                    <td mat-cell *matCellDef="let chemical; let index = index" [formGroupName]="index">
+                        <mat-form-field class="quantity-form-field" appearance="standard">
+                            <input matInput type="text" formControlName="projectName">
                         </mat-form-field>
                     </td>
                 </ng-container>
