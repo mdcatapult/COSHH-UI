@@ -276,8 +276,10 @@
                 <ng-container matColumnDef="projectCode">
                     <th mat-header-cell *matHeaderCellDef>Project Code</th>
                     <td mat-cell *matCellDef="let chemical; let index = index" [formGroupName]="index">
-                        <mat-form-field class="quantity-form-field" appearance="standard">
-                            <input matInput type="text" formControlName="projectCode">
+                        <mat-form-field>
+                            <select matNativeControl formControlName="projectCode">
+                                <option *ngFor="let projectCode of projectCodes" [value]="projectCode">{{projectCode}}</option>
+                            </select>
                         </mat-form-field>
                     </td>
                 </ng-container>
@@ -285,8 +287,10 @@
                 <ng-container matColumnDef="projectName">
                     <th mat-header-cell *matHeaderCellDef>Project Name</th>
                     <td mat-cell *matCellDef="let chemical; let index = index" [formGroupName]="index">
-                        <mat-form-field class="quantity-form-field" appearance="standard">
-                            <input matInput type="text" formControlName="projectName">
+                        <mat-form-field>
+                            <select matNativeControl formControlName="projectName">
+                                <option *ngFor="let projectName of projectNames" [value]="projectName">{{projectName}}</option>
+                            </select>
                         </mat-form-field>
                     </td>
                 </ng-container>

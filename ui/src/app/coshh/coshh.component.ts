@@ -1,8 +1,15 @@
-import {Component, Inject, Input, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {allHazards, Chemical, columnTypes, ExpiryColor, Hazard, HazardListItem, red, yellow} from './types';
 import {MatTableDataSource} from '@angular/material/table';
-import {FormControl, UntypedFormArray, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators} from "@angular/forms";
+import {
+    FormControl,
+    UntypedFormArray,
+    UntypedFormBuilder,
+    UntypedFormControl,
+    UntypedFormGroup,
+    Validators
+} from "@angular/forms";
 import {combineLatest, debounceTime, map, Observable, startWith} from 'rxjs';
 import {environment} from 'src/environments/environment';
 import {Chemicals} from './chemicals';
@@ -19,7 +26,10 @@ export class CoshhComponent implements OnInit {
     }
 
     chemicals = new Chemicals() // this represents all the chemicals returned from the API
-    labs: String[] = []
+    labs: String[] = [];
+    projects: {} = {};
+    projectCodes: string[] = [];
+    projectNames: string[] = [];
     freezeColumns = false;
 
     getHazardListForChemical = (chemical: Chemical) => {
@@ -84,6 +94,21 @@ export class CoshhComponent implements OnInit {
             this.labFilterValues = labs.concat('All')
             this.labFilterControl.setValue('All')
             this.labs = labs
+        })
+
+        this.http.get<string[][]>(`${environment.backendUrl}/projects`).subscribe(projects => {
+
+            this.projects = projects.reduce((accumulator: {}, currentValue: string[], currentIndex) => {
+                // strip out header row and any blank rows
+                if (currentIndex > 0 && currentValue[0] && currentValue[1]) {
+                    Object.assign(accumulator, {[currentValue[0]]:currentValue[1]})
+                }
+
+                return accumulator
+            }, {})
+
+            this.projectCodes = Object.keys(this.projects)
+            this.projectNames = Object.values(this.projects)
         })
 
         this.formGroup = this.fb.group({
