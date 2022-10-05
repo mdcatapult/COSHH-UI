@@ -119,14 +119,18 @@
         <div class="row">
             <mat-form-field appearance="fill">
                 <mat-label>Project code</mat-label>
-                <input matInput type="text" formControlName="projectCode">
+                <select matNativeControl formControlName="projectCode">
+                    <option *ngFor="let code of data.projectCodes" [value]="code">{{code}}</option>
+                </select>
             </mat-form-field>
         </div>
 
         <div class="row">
             <mat-form-field appearance="fill">
                 <mat-label>Project name</mat-label>
-                <input matInput type="text" formControlName="projectName">
+                <select matNativeControl formControlName="projectName">
+                    <option *ngFor="let name of data.projectNames" [value]="name">{{name}}</option>
+                </select>
             </mat-form-field>
         </div>
     </div>
