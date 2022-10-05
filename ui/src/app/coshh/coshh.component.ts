@@ -58,6 +58,9 @@ export class CoshhComponent implements OnInit {
     searchOptions: Observable<string[]> = new Observable()
     searchControl = new UntypedFormControl()
 
+    projectNamesOptions: Observable<string[]> = new Observable()
+    projectNamesControl = new UntypedFormControl()
+
     formGroup = new UntypedFormGroup({}) // form group for table
     formArray = new UntypedFormArray([]) // form array for table rows
 
@@ -98,23 +101,23 @@ export class CoshhComponent implements OnInit {
 
         this.http.get<string[][]>(`${environment.backendUrl}/projects`).subscribe(projects => {
 
-            this.projects = projects.reduce((accumulator: {}, currentValue: string[], currentIndex) => {
+            this.projects = projects.reduce((projectsArray: {}, currentValue: string[], currentIndex) => {
                 // strip out header row and any blank rows
                 if (currentIndex > 0 && currentValue[0] && currentValue[1]) {
-                    Object.assign(accumulator, {[currentValue[0]]:currentValue[1]})
+                    Object.assign(projectsArray, {[currentValue[0]]:currentValue[1]})
                 }
 
-                return accumulator
+                return projectsArray
             }, {})
 
             this.projectCodes = Object.keys(this.projects)
             this.projectNames = Object.values(this.projects)
+            this.projectNamesOptions = this.getProjectNamesObservable()
         })
 
         this.formGroup = this.fb.group({
             chemicals: this.formArray
         })
-
 
         this.searchControl.valueChanges.subscribe((value: string) => {
 
@@ -131,6 +134,7 @@ export class CoshhComponent implements OnInit {
             this.formArray.clear()
             this.tableData.data.forEach(chem => this.addChemicalForm(chem))
         })
+
 
         combineLatest([
                 this.hazardFilterControl,
@@ -210,7 +214,7 @@ export class CoshhComponent implements OnInit {
             location: [chemical.location],
             cupboard: [chemical.cupboard],
             projectCode: [chemical.projectCode],
-            projectName: [chemical.projectName]
+            projectName: new FormControl(chemical.projectName)
         })
 
         formGroup.valueChanges.subscribe(changedChemical => {
@@ -251,6 +255,17 @@ export class CoshhComponent implements OnInit {
                     this.labFilterControl.value,
                     this.expiryFilterControl.value
                 )
+            )
+        )
+    }
+
+    getProjectNamesObservable(): Observable<string[]> {
+        return this.projectNamesControl.valueChanges.pipe(
+            map(name => {
+                    return this.projectNames
+                        .filter((option: string) => option.toLowerCase()
+                            .includes(name.toLowerCase()))
+                }
             )
         )
     }

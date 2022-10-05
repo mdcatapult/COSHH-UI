@@ -288,9 +288,16 @@
                     <th mat-header-cell *matHeaderCellDef>Project Name</th>
                     <td mat-cell *matCellDef="let chemical; let index = index" [formGroupName]="index">
                         <mat-form-field>
-                            <select matNativeControl formControlName="projectName">
-                                <option *ngFor="let projectName of projectNames" [value]="projectName">{{projectName}}</option>
-                            </select>
+                            <input type="text"
+                                   placeholder="Type to search..."
+                                   matInput
+                                   [formControl]="projectNamesControl"
+                                   [matAutocomplete]="auto">
+                            <mat-autocomplete #auto="matAutocomplete">
+                                <mat-option *ngFor="let option of projectNamesOptions | async | slice : 0 : 10" [value]="option">
+                                    {{option}}
+                                </mat-option>
+                            </mat-autocomplete>
                         </mat-form-field>
                     </td>
                 </ng-container>
