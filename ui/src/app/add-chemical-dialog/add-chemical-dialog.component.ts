@@ -4,6 +4,7 @@ import {DateAdapter} from '@angular/material/core';
 import {MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import * as moment from 'moment';
 import {map, Observable} from "rxjs";
+import {getAutocompleteObservable} from "../utility/utilities";
 
 @Component({
     selector: 'app-add-chemical-dialog',
@@ -28,19 +29,7 @@ export class AddChemicalDialogComponent {
     projectNamesControl = new UntypedFormControl()
 
     ngOnInit(): void {
-        this.projectNamesOptions = this.getProjectNamesObservable()
-    }
-
-    // TODO refactor to common getAutocompleteObservable
-    getProjectNamesObservable(): Observable<string[]> {
-        return this.projectNamesControl.valueChanges.pipe(
-            map(name => {
-                    return this.data.projectNames
-                        .filter((option: string) => option.toLowerCase()
-                            .includes(name.toLowerCase()))
-                }
-            )
-        )
+        this.projectNamesOptions = getAutocompleteObservable(this.projectNamesControl, this.data.projectNames)
     }
 
     hazardCategories = [
