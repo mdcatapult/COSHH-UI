@@ -31,6 +31,7 @@ export class AddChemicalDialogComponent {
         this.projectNamesOptions = this.getProjectNamesObservable()
     }
 
+    // TODO refactor to common getAutocompleteObservable
     getProjectNamesObservable(): Observable<string[]> {
         return this.projectNamesControl.valueChanges.pipe(
             map(name => {
