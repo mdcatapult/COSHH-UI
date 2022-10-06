@@ -14,6 +14,7 @@ import {combineLatest, debounceTime, map, Observable, startWith} from 'rxjs';
 import {environment} from 'src/environments/environment';
 import {Chemicals} from './chemicals';
 import {MatCheckboxChange} from "@angular/material/checkbox";
+import {getAutocompleteObservable} from "../utility/utilities";
 
 @Component({
     selector: 'app-coshh',
@@ -112,7 +113,7 @@ export class CoshhComponent implements OnInit {
 
             this.projectCodes = Object.keys(this.projects)
             this.projectNames = Object.values(this.projects)
-            this.projectNamesOptions = this.getProjectNamesObservable()
+            this.projectNamesOptions = getAutocompleteObservable(this.projectNamesControl, this.projectNames)
         })
 
         this.formGroup = this.fb.group({
@@ -258,19 +259,6 @@ export class CoshhComponent implements OnInit {
             )
         )
     }
-
-    // TODO refactor to common getAutocompleteObservable
-    getProjectNamesObservable(): Observable<string[]> {
-        return this.projectNamesControl.valueChanges.pipe(
-            map(name => {
-                    return this.projectNames
-                        .filter((option: string) => option.toLowerCase()
-                            .includes(name.toLowerCase()))
-                }
-            )
-        )
-    }
-
 
     onHazardSelect(chemical: Chemical, event: MatCheckboxChange) {
 
