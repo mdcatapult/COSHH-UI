@@ -259,6 +259,7 @@ export class CoshhComponent implements OnInit {
         )
     }
 
+    // TODO refactor to common getAutocompleteObservable
     getProjectNamesObservable(): Observable<string[]> {
         return this.projectNamesControl.valueChanges.pipe(
             map(name => {
