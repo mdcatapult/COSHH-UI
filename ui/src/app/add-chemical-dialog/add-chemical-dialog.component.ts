@@ -40,7 +40,7 @@ export class AddChemicalDialogComponent {
         matterState: new FormControl('', Validators.required),
         quantity: new FormControl('', Validators.required),
         added: new FormControl(moment(new Date(), "DD-MM-YYY"), Validators.required),
-        expiry: new FormControl(moment(new Date(), "DD-MM-YYY"), Validators.required),
+        expiry: new FormControl(moment(new Date(), "DD-MM-YYY").add(5, 'y'), Validators.required),
         safetyDataSheet: new FormControl('', Validators.required),
         coshhLink: new FormControl(''),
         storageTemp: new FormControl('', Validators.required),
