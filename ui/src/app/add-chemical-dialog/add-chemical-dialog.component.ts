@@ -26,10 +26,10 @@ export class AddChemicalDialogComponent {
     }
 
     projectNamesOptions: Observable<string[]> = new Observable()
-    projectNamesControl = new UntypedFormControl()
+    // projectNamesControl = new UntypedFormControl()
 
     ngOnInit(): void {
-        this.projectNamesOptions = getAutocompleteObservable(this.projectNamesControl, this.data.projectNames)
+        this.projectNamesOptions = getAutocompleteObservable(this.form.controls["projectName"], this.data.projectNames)
     }
 
     hazardCategories = [
@@ -61,7 +61,7 @@ export class AddChemicalDialogComponent {
         cupboard: new FormControl(''),
         hazards: new FormArray(this.hazardCategories.map(() => new FormControl('')), Validators.required),
         projectCode: new FormControl(''),
-        projectName: new FormControl('')
+        projectName: new UntypedFormControl('')
     })
 
     onClose(): void {
