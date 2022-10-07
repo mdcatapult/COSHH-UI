@@ -29,8 +29,7 @@ export class CoshhComponent implements OnInit {
     chemicals = new Chemicals() // this represents all the chemicals returned from the API
     labs: String[] = [];
     projects: {} = {};
-    projectCodes: string[] = [];
-    projectNames: string[] = [];
+    projectSpecific: string[] = [];
     freezeColumns = false;
 
     getHazardListForChemical = (chemical: Chemical) => {
@@ -58,9 +57,6 @@ export class CoshhComponent implements OnInit {
 
     searchOptions: Observable<string[]> = new Observable()
     searchControl = new UntypedFormControl()
-
-    projectNamesOptions: Observable<string[]> = new Observable()
-    projectNamesControl = new UntypedFormControl()
 
     formGroup = new UntypedFormGroup({}) // form group for table
     formArray = new UntypedFormArray([]) // form array for table rows
@@ -102,18 +98,18 @@ export class CoshhComponent implements OnInit {
 
         this.http.get<string[][]>(`${environment.backendUrl}/projects`).subscribe(projects => {
 
-            this.projects = projects.reduce((projectsArray: {}, currentValue: string[], currentIndex) => {
+
+            this.projectSpecific = projects.reduce((projectsArray: string[], currentValue: string[], currentIndex) => {
+                const projectCode = currentValue[0]
+                const projectName = currentValue[1]
                 // strip out header row and any blank rows
-                if (currentIndex > 0 && currentValue[0] && currentValue[1]) {
-                    Object.assign(projectsArray, {[currentValue[0]]:currentValue[1]})
+                if (currentIndex > 0 && projectCode && projectName) {
+                    projectsArray.push(`${projectCode} - ${projectName}`)
                 }
 
                 return projectsArray
-            }, {})
+            }, [])
 
-            this.projectCodes = Object.keys(this.projects)
-            this.projectNames = Object.values(this.projects)
-            this.projectNamesOptions = getAutocompleteObservable(this.projectNamesControl, this.projectNames)
         })
 
         this.formGroup = this.fb.group({
@@ -214,8 +210,7 @@ export class CoshhComponent implements OnInit {
             storageTemp: [chemical.storageTemp],
             location: [chemical.location],
             cupboard: [chemical.cupboard],
-            projectCode: [chemical.projectCode],
-            projectName: new FormControl(chemical.projectName)
+            projectSpecific: new FormControl(chemical.projectSpecific)
         })
 
         formGroup.valueChanges.subscribe(changedChemical => {
