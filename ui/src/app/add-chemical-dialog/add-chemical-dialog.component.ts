@@ -45,6 +45,7 @@ export class AddChemicalDialogComponent {
         coshhLink: new FormControl(''),
         storageTemp: new FormControl('', Validators.required),
         location: new FormControl(''),
+        cupboard: new FormControl(''),
         hazards: new FormArray(this.hazardCategories.map(() => new FormControl('')), Validators.required)
     });
 

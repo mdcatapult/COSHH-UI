@@ -183,6 +183,7 @@ export class CoshhComponent implements OnInit {
             coshhLink: new FormControl(chemical.coshhLink, {updateOn: 'blur'}),
             storageTemp: [chemical.storageTemp],
             location: [chemical.location],
+            cupboard: [chemical.cupboard]
         })
 
         formGroup.valueChanges.subscribe(changedChemical => {
