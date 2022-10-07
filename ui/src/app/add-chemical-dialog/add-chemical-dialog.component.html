@@ -115,6 +115,22 @@
                 <input matInput type="text" formControlName="cupboard">
             </mat-form-field>
         </div>
+
+        <div class="row">
+            <mat-form-field appearance="fill">
+                <mat-label>Project specific?</mat-label>
+                <input type="text"
+                       placeholder="Type to search..."
+                       matInput
+                       [formControl]="form.controls['projectSpecific']"
+                       [matAutocomplete]="auto">
+                <mat-autocomplete #auto="matAutocomplete">
+                    <mat-option *ngFor="let option of projectSpecificOptions | async | slice : 0 : 10" [value]="option">
+                        {{option}}
+                    </mat-option>
+                </mat-autocomplete>
+            </mat-form-field>
+        </div>
     </div>
 
 </form>
