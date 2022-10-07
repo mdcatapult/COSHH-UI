@@ -11,7 +11,7 @@ describe('Chemicals', () => {
             id: 0,
             casNumber: "",
             name: "",
-            photoPath: "",
+            chemicalNumber: "",
             matterState: "solid",
             quantity: "",
             added: moment(),

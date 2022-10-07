@@ -174,7 +174,7 @@ export class CoshhComponent implements OnInit {
         const formGroup = this.fb.group({
             casNumber: [chemical.casNumber],
             name: [chemical.name, Validators.required],
-            photoPath: [chemical.photoPath],
+            chemicalNumber: [chemical.chemicalNumber],
             matterState: [chemical.matterState],
             quantity: [chemical.quantity],
             added: [chemical.added],

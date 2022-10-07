@@ -29,8 +29,8 @@ CREATE TABLE coshh.chemical
 (
     id                SERIAL PRIMARY KEY,
     cas_number        VARCHAR(255),
-    chemical_name     VARCHAR(255) NOT NULL,
-    photo_path        VARCHAR(255),
+    chemical_name     VARCHAR(255)       NOT NULL,
+    chemical_number   VARCHAR(255),
     matter_state      coshh.matter_state,
     quantity          VARCHAR(255) DEFAULT '0',
     added             DATE,
@@ -39,11 +39,11 @@ CREATE TABLE coshh.chemical
     coshh_link        VARCHAR(255),
     lab_location      VARCHAR(255),
     storage_temp      coshh.storage_temp NOT NULL,
-    is_archived       BOOLEAN      NOT NULL
+    is_archived       BOOLEAN            NOT NULL
 );
 
 CREATE TABLE coshh.chemical_to_hazard
 (
-    id         INT,
-    hazard     coshh.hazard
+    id     INT,
+    hazard coshh.hazard
 );
