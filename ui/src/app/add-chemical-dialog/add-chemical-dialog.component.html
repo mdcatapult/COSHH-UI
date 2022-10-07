@@ -118,23 +118,14 @@
 
         <div class="row">
             <mat-form-field appearance="fill">
-                <mat-label>Project code</mat-label>
-                <select matNativeControl formControlName="projectCode">
-                    <option *ngFor="let code of data.projectCodes" [value]="code">{{code}}</option>
-                </select>
-            </mat-form-field>
-        </div>
-
-        <div class="row">
-            <mat-form-field appearance="fill">
-                <mat-label>Project name</mat-label>
+                <mat-label>Project specific?</mat-label>
                 <input type="text"
                        placeholder="Type to search..."
                        matInput
-                       [formControl]="form.controls['projectName']"
+                       [formControl]="form.controls['projectSpecific']"
                        [matAutocomplete]="auto">
                 <mat-autocomplete #auto="matAutocomplete">
-                    <mat-option *ngFor="let option of projectNamesOptions | async | slice : 0 : 10" [value]="option">
+                    <mat-option *ngFor="let option of projectSpecificOptions | async | slice : 0 : 10" [value]="option">
                         {{option}}
                     </mat-option>
                 </mat-autocomplete>

@@ -15,8 +15,7 @@ export class AddChemicalComponent implements OnInit {
     }
 
     @Input() labs: string[] = []
-    @Input() projectCodes: string[] = []
-    @Input() projectNames: string[] = []
+    @Input() projectSpecific: string[] = []
     @Output() onChemicalAdded = new EventEmitter<Chemical>()
 
     ngOnInit(): void {
@@ -27,8 +26,7 @@ export class AddChemicalComponent implements OnInit {
             width: '50vw',
             data: {
                 labs: this.labs,
-                projectCodes: this.projectCodes,
-                projectNames: this.projectNames
+                projectSpecific: this.projectSpecific,
             },
         })
 

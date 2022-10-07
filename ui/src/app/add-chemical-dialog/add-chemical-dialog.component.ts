@@ -18,18 +18,16 @@ export class AddChemicalDialogComponent {
         private dateAdapter: DateAdapter<Date>,
         @Inject(MAT_DIALOG_DATA) public data: {
             labs: string[],
-            projectCodes: string[],
-            projectNames: string[]
+            projectSpecific: string[]
         },
     ) {
         this.dateAdapter.setLocale('en-GB');
     }
 
-    projectNamesOptions: Observable<string[]> = new Observable()
-    // projectNamesControl = new UntypedFormControl()
+    projectSpecificOptions: Observable<string[]> = new Observable()
 
     ngOnInit(): void {
-        this.projectNamesOptions = getAutocompleteObservable(this.form.controls["projectName"], this.data.projectNames)
+        this.projectSpecificOptions = getAutocompleteObservable(this.form.controls["projectSpecific"], this.data.projectSpecific)
     }
 
     hazardCategories = [
@@ -60,8 +58,7 @@ export class AddChemicalDialogComponent {
         location: new FormControl(''),
         cupboard: new FormControl(''),
         hazards: new FormArray(this.hazardCategories.map(() => new FormControl('')), Validators.required),
-        projectCode: new FormControl(''),
-        projectName: new UntypedFormControl('')
+        projectSpecific: new UntypedFormControl('')
     })
 
     onClose(): void {
