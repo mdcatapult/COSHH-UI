@@ -14,7 +14,6 @@ import {combineLatest, debounceTime, map, Observable, startWith} from 'rxjs';
 import {environment} from 'src/environments/environment';
 import {Chemicals} from './chemicals';
 import {MatCheckboxChange} from "@angular/material/checkbox";
-import {getAutocompleteObservable} from "../utility/utilities";
 
 @Component({
     selector: 'app-coshh',
