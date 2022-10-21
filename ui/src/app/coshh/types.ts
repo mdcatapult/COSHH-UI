@@ -4,7 +4,7 @@ export type Chemical = {
     id: number,
     casNumber: string,
     name: string,
-    photoPath: string,
+    chemicalNumber: string,
     matterState: 'solid' | 'liquid',
     quantity: string,
     added: moment.Moment,
@@ -13,6 +13,8 @@ export type Chemical = {
     coshhLink: string,
     storageTemp: 'Shelf' | '+4' | '-20' | '-80',
     location: string,
+    cupboard: string,
+    projectSpecific: string,
     isArchived: boolean,
     hazards: Hazard[],
     hazardList: HazardListItem[],
@@ -38,7 +40,8 @@ export const columnTypes = [
     'name',
     'hazards',
     'location',
-    'photoPath',
+    'cupboard',
+    'chemicalNumber',
     'matterState',
     'quantity',
     'added',
@@ -46,6 +49,7 @@ export const columnTypes = [
     'safetyDataSheet',
     'coshhLink',
     'storageTemp',
+    'projectSpecific',
     'archive'
 ]
 

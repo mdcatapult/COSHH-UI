@@ -20,14 +20,16 @@ import (
 var chem = chemical.Chemical{
 	CasNumber:       stringPtr("12345678"),
 	Name:            "beans",
-	PhotoPath:       stringPtr("blueberries"),
+	ChemicalNumber:  stringPtr("blueberries"),
 	MatterState:     stringPtr("liquid"),
 	Quantity:        stringPtr("5"),
+	Cupboard:        stringPtr("closet"),
 	Added:           &time.Time{},
 	Expiry:          &time.Time{},
 	SafetyDataSheet: stringPtr(""),
 	StorageTemp:     "+4",
 	IsArchived:      false,
+	ProjectSpecific: stringPtr(""),
 	Hazards:         []string{"Explosive", "Flammable"},
 }
 

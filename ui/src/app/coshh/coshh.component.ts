@@ -1,8 +1,15 @@
-import {Component, Inject, Input, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {allHazards, Chemical, columnTypes, ExpiryColor, Hazard, HazardListItem, red, yellow} from './types';
 import {MatTableDataSource} from '@angular/material/table';
-import {FormControl, UntypedFormArray, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators} from "@angular/forms";
+import {
+    FormControl,
+    UntypedFormArray,
+    UntypedFormBuilder,
+    UntypedFormControl,
+    UntypedFormGroup,
+    Validators
+} from "@angular/forms";
 import {combineLatest, debounceTime, map, Observable, startWith} from 'rxjs';
 import {environment} from 'src/environments/environment';
 import {Chemicals} from './chemicals';
@@ -19,7 +26,10 @@ export class CoshhComponent implements OnInit {
     }
 
     chemicals = new Chemicals() // this represents all the chemicals returned from the API
-    labs: String[] = []
+    labs: String[] = [];
+    projects: {} = {};
+    projectSpecific: string[] = [];
+    freezeColumns = false;
 
     getHazardListForChemical = (chemical: Chemical) => {
             return allHazards().map((hazard: Hazard) => {
@@ -85,10 +95,25 @@ export class CoshhComponent implements OnInit {
             this.labs = labs
         })
 
+        this.http.get<string[][]>(`${environment.backendUrl}/projects`).subscribe(projects => {
+
+
+            this.projectSpecific = projects.reduce((projectsArray: string[], currentValue: string[], currentIndex) => {
+                const projectCode = currentValue[0]
+                const projectName = currentValue[1]
+                // strip out header row and any blank rows
+                if (currentIndex > 0 && projectCode && projectName) {
+                    projectsArray.push(`${projectCode} - ${projectName}`)
+                }
+
+                return projectsArray
+            }, [])
+
+        })
+
         this.formGroup = this.fb.group({
             chemicals: this.formArray
         })
-
 
         this.searchControl.valueChanges.subscribe((value: string) => {
 
@@ -105,6 +130,7 @@ export class CoshhComponent implements OnInit {
             this.formArray.clear()
             this.tableData.data.forEach(chem => this.addChemicalForm(chem))
         })
+
 
         combineLatest([
                 this.hazardFilterControl,
@@ -173,7 +199,7 @@ export class CoshhComponent implements OnInit {
         const formGroup = this.fb.group({
             casNumber: [chemical.casNumber],
             name: [chemical.name, Validators.required],
-            photoPath: [chemical.photoPath],
+            chemicalNumber: [chemical.chemicalNumber],
             matterState: [chemical.matterState],
             quantity: [chemical.quantity],
             added: [chemical.added],
@@ -182,6 +208,8 @@ export class CoshhComponent implements OnInit {
             coshhLink: new FormControl(chemical.coshhLink, {updateOn: 'blur'}),
             storageTemp: [chemical.storageTemp],
             location: [chemical.location],
+            cupboard: [chemical.cupboard],
+            projectSpecific: new FormControl(chemical.projectSpecific)
         })
 
         formGroup.valueChanges.subscribe(changedChemical => {
@@ -225,7 +253,6 @@ export class CoshhComponent implements OnInit {
             )
         )
     }
-
 
     onHazardSelect(chemical: Chemical, event: MatCheckboxChange) {
 

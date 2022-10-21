@@ -76,7 +76,7 @@ func SelectAllChemicals() ([]chemical.Chemical, error) {
 			c.id,
 			c.cas_number,
 			c.chemical_name,
-			c.photo_path,
+			c.chemical_number,
 			c.matter_state,
 			c.quantity,
 			c.added,
@@ -84,8 +84,10 @@ func SelectAllChemicals() ([]chemical.Chemical, error) {
 			c.safety_data_sheet,
 			c.coshh_link,
 			c.lab_location,
+		    c.cupboard,
 			c.storage_temp,
 			c.is_archived,
+		    c.project_specific,
 			string_agg(CAST(c2h.hazard AS VARCHAR(255)), ',') AS hazards 
 		FROM chemical c 
 		LEFT JOIN chemical_to_hazard c2h ON c.id = c2h.id 
@@ -110,7 +112,7 @@ func UpdateChemical(chemical chemical.Chemical) error {
 	SET 
 		cas_number = :cas_number,
 		chemical_name = :chemical_name,
-		photo_path = :photo_path,
+		chemical_number = :chemical_number,
 		matter_state = :matter_state,
 		quantity = :quantity,
 		added = :added,
@@ -118,8 +120,11 @@ func UpdateChemical(chemical chemical.Chemical) error {
 		safety_data_sheet = :safety_data_sheet,
 		coshh_link = :coshh_link,
 		lab_location = :lab_location,
+	    cupboard = :cupboard,
 		storage_temp = :storage_temp,
-		is_archived = :is_archived
+		is_archived = :is_archived,
+		project_specific = :project_specific
+
 	WHERE id = :id
 `
 
@@ -150,7 +155,7 @@ func insertChemical(tx *sqlx.Tx, chemical chemical.Chemical) (id int64, err erro
 	query := `INSERT INTO chemical (
 		cas_number,
 		chemical_name,
-		photo_path,
+		chemical_number,
 		matter_state,
 		quantity,
 		added,
@@ -158,12 +163,14 @@ func insertChemical(tx *sqlx.Tx, chemical chemical.Chemical) (id int64, err erro
 		safety_data_sheet,
 		coshh_link,
 		lab_location,
+        cupboard,
 		storage_temp,
-		is_archived 
+		is_archived,
+        project_specific
 	)VALUES (
 		:cas_number,
 		:chemical_name,
-		:photo_path,
+		:chemical_number,
 		:matter_state,
 		:quantity,
 		:added,
@@ -171,8 +178,10 @@ func insertChemical(tx *sqlx.Tx, chemical chemical.Chemical) (id int64, err erro
 		:safety_data_sheet,
 		:coshh_link,
 		:lab_location,
+		:cupboard,
 		:storage_temp,
-		:is_archived
+		:is_archived,
+		:project_specific
 	) RETURNING id`
 
 	rows, err := tx.NamedQuery(query, chemical)

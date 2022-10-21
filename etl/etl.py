@@ -10,7 +10,7 @@ def get_chemical(lab, chemical) -> dict:
     if lab == 'Lab 1' or lab == 'Lab 2':
         return  {
             "chemicalName": chemical[0],
-            "photo": chemical[1],
+            "chemicalNumber": chemical[1],
             "casNumber": chemical[2],
             "state": chemical[3],
             "quantity": chemical[4],
@@ -21,10 +21,10 @@ def get_chemical(lab, chemical) -> dict:
             "coshh": chemical[9]
         }
 
-    if lab == 'Wolfson':
+    if lab == 'WMIC':
         return  {
             "chemicalName": chemical[0],
-            "photo": chemical[12],
+            "chemicalNumber": chemical[12],
             "casNumber": chemical[2],
             "state": chemical[3],
             "quantity": chemical[4],
@@ -38,7 +38,7 @@ def get_chemical(lab, chemical) -> dict:
     if lab == 'Lab 5':
         return  {
             "chemicalName": chemical[0],
-            "photo": None,
+            "chemicalNumber": None,
             "casNumber": chemical[1],
             "state": chemical[2],
             "quantity": chemical[3],
@@ -51,7 +51,7 @@ def get_chemical(lab, chemical) -> dict:
 
     return  {
         "chemicalName": chemical[0],
-        "photo": None,
+        "chemicalNumber": None,
         "casNumber": chemical[1],
         "state": chemical[2],
         "quantity": chemical[3],
@@ -72,7 +72,7 @@ def insert_chemical(data_frame_row, lab_location):
         INSERT INTO coshh.chemical(
             cas_number,
             chemical_name,
-            photo_path,
+            chemical_number,
             matter_state,
             quantity,
             added,
@@ -92,7 +92,7 @@ def insert_chemical(data_frame_row, lab_location):
         cur.execute(sql, (
             chemical["casNumber"],
             chemical["chemicalName"],
-            chemical["photo"],
+            chemical["chemicalNumber"],
             chemical["state"] if chemical["state"] is not None and str(chemical["state"]).strip() != 'liq' else 'liquid',
             chemical["quantity"],
             chemical["dateAdded"],

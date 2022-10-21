@@ -1,8 +1,10 @@
 import {Component, Inject, Input} from '@angular/core';
-import { FormGroup, Validators, FormControl, FormArray} from '@angular/forms';
+import {FormGroup, Validators, FormControl, FormArray, UntypedFormControl} from '@angular/forms';
 import {DateAdapter} from '@angular/material/core';
 import {MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import * as moment from 'moment';
+import {map, Observable} from "rxjs";
+import {getAutocompleteObservable} from "../utility/utilities";
 
 @Component({
     selector: 'app-add-chemical-dialog',
@@ -14,9 +16,18 @@ export class AddChemicalDialogComponent {
     constructor(
         public dialogRef: MatDialogRef<AddChemicalDialogComponent>,
         private dateAdapter: DateAdapter<Date>,
-        @Inject(MAT_DIALOG_DATA) public data: {labs: string[]},
+        @Inject(MAT_DIALOG_DATA) public data: {
+            labs: string[],
+            projectSpecific: string[]
+        },
     ) {
         this.dateAdapter.setLocale('en-GB');
+    }
+
+    projectSpecificOptions: Observable<string[]> = new Observable()
+
+    ngOnInit(): void {
+        this.projectSpecificOptions = getAutocompleteObservable(this.form.controls["projectSpecific"], this.data.projectSpecific)
     }
 
     hazardCategories = [
@@ -36,17 +47,19 @@ export class AddChemicalDialogComponent {
     form = new FormGroup({
         casNumber: new FormControl('', [Validators.pattern('\\b[1-9]{1}\\d{1,5}-\\d{2}-\\d\\b'), Validators.required]),
         name: new FormControl('', Validators.required),
-        photoPath: new FormControl('', Validators.required),
+        chemicalNumber: new FormControl('', Validators.required),
         matterState: new FormControl('', Validators.required),
         quantity: new FormControl('', Validators.required),
         added: new FormControl(moment(new Date(), "DD-MM-YYY"), Validators.required),
-        expiry: new FormControl(moment(new Date(), "DD-MM-YYY"), Validators.required),
+        expiry: new FormControl(moment(new Date(), "DD-MM-YYY").add(5, 'y'), Validators.required),
         safetyDataSheet: new FormControl('', Validators.required),
         coshhLink: new FormControl(''),
         storageTemp: new FormControl('', Validators.required),
         location: new FormControl(''),
-        hazards: new FormArray(this.hazardCategories.map(() => new FormControl('')), Validators.required)
-    });
+        cupboard: new FormControl(''),
+        hazards: new FormArray(this.hazardCategories.map(() => new FormControl('')), Validators.required),
+        projectSpecific: new UntypedFormControl('')
+    })
 
     onClose(): void {
         const chemical = this.form.value

@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DateAdapter } from '@angular/material/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 import { AddChemicalDialogComponent } from './add-chemical-dialog.component';
 
@@ -18,6 +19,9 @@ describe('AddChemicalDialogComponent', () => {
         { provide: MatDialogRef, useValue: {} },
         { provide: MAT_DIALOG_DATA, useValue: {} },
         DateAdapter,
+      ],
+      imports: [
+        MatAutocompleteModule,
       ]
     })
     .compileComponents();
