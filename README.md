@@ -65,7 +65,7 @@ When writing any new sql queries always remember to commit the transaction!
 
 The app is deployed on https://coshh.wopr.inf.mdc/
 
-The release stage in CI is not working as expected (for the API at least), and as of 25 October 2022 the API deployment uses an image tagged `nick-test-251022-2`. 
+The publish stage in CI is not working as expected (for the API at least), and as of 25 October 2022 the API deployment uses an image tagged `nick-test-251022-2`. 
 This image was built locally and pushed up to the registry manually. 
 Pending fixing the CI this process will need to be repeated for each redeployment instead of using the `latest` tag created in CI:
 
