@@ -117,6 +117,8 @@ export class CoshhComponent implements OnInit {
 
         this.searchControl.valueChanges.subscribe((value: string) => {
 
+            console.log('CHANGED!!!   -->  ', value)
+
             this.tableData.data = value === '' ?
                 this.chemicals.get(
                     this.toggleArchiveControl.value,
