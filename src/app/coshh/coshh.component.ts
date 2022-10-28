@@ -32,13 +32,13 @@ export class CoshhComponent implements OnInit {
     freezeColumns = false;
 
     getHazardListForChemical = (chemical: Chemical) => {
-            return allHazards().map((hazard: Hazard) => {
-                return {
-                    title: hazard,
-                    activated: chemical.hazards ? chemical.hazards.includes(hazard) : false,
-                    value: hazard
-                }
-            })
+        return allHazards().map((hazard: Hazard) => {
+            return {
+                title: hazard,
+                activated: chemical.hazards ? chemical.hazards.includes(hazard) : false,
+                value: hazard
+            }
+        })
     }
 
     selectedHazards: Hazard[] = [];
@@ -117,8 +117,6 @@ export class CoshhComponent implements OnInit {
 
         this.searchControl.valueChanges.subscribe((value: string) => {
 
-            console.log('CHANGED!!!   -->  ', value)
-
             this.tableData.data = value === '' ?
                 this.chemicals.get(
                     this.toggleArchiveControl.value,
@@ -159,6 +157,7 @@ export class CoshhComponent implements OnInit {
     }
 
     refresh(): void {
+
         this.tableData.data = this.chemicals.get(
             this.toggleArchiveControl.value,
             this.hazardFilterControl.value,
@@ -180,7 +179,8 @@ export class CoshhComponent implements OnInit {
     updateHazards(chemical: Chemical): void {
         this.http.put(`${environment.backendUrl}/hazards`, chemical).pipe(
             debounceTime(100)
-        ).subscribe(() => {})
+        ).subscribe(() => {
+        })
     }
 
     onChemicalAdded(chemical: Chemical): void {
@@ -193,7 +193,6 @@ export class CoshhComponent implements OnInit {
             this.tableData.data = this.tableData.data.concat([addedChemical])
             this.addChemicalForm(addedChemical)
             this.searchOptions = this.getSearchObservable()
-            this.refresh()
         })
     }
 
@@ -219,9 +218,9 @@ export class CoshhComponent implements OnInit {
             changedChemical.hazardList = chemical.hazardList
             changedChemical.hazards = chemical.hazards
             // If the links or expiry date have updated then ensure the appropriate UI bits are updated by calling refreshPage
-            let refreshPage = changedChemical.expiry !== chemical.expiry 
-                              || changedChemical.safetyDataSheet !== chemical.safetyDataSheet
-                              || changedChemical.coshhLink !== chemical.coshhLink
+            let refreshPage = changedChemical.expiry !== chemical.expiry
+                || changedChemical.safetyDataSheet !== chemical.safetyDataSheet
+                || changedChemical.coshhLink !== chemical.coshhLink
             this.updateChemical(changedChemical, refreshPage)
             chemical.backgroundColour = this.getExpiryColour(changedChemical)
         })
