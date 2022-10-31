@@ -91,7 +91,7 @@ export class AddChemicalDialogComponent {
                     this.hazardCategoryList.forEach((hazard: HazardCategory) => hazard.selected = false);
                     // recheck 'None' or 'Unknown' accordingly
                     this.hazardCategoryList[index].selected = true;
-                    this.selectedHazardCategories = [`${changedCategory.name}`];
+                    this.selectedHazardCategories = [changedCategory.name];
                     break;
                 default:
                     // remove default 'None' value from selectedHazardCategories if present
@@ -99,14 +99,12 @@ export class AddChemicalDialogComponent {
                         this.selectedHazardCategories.splice(this.selectedHazardCategories.indexOf('None'), 1)
                     }
                     this.selectedHazardCategories.push(changedCategory.name)
-                    // uncheck 'None'
                     const noneIndex = this.hazardCategoryList
                         .findIndex((hazardCategory: HazardCategory) => hazardCategory.name === 'None')
                     this.hazardCategoryList[noneIndex].selected = false
                     this.hazardCategoryList[index].selected = true
             }
         } else {
-            // A box has been unchecked
             this.selectedHazardCategories.splice(this.selectedHazardCategories.indexOf(changedCategory.name), 1)
             this.hazardCategoryList[index].selected = false
         }
