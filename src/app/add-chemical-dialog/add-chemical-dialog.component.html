@@ -138,6 +138,7 @@
 <div class="submit-button-container">
     <span class="spacer"></span>
     <button
+            [disabled]="!this.selectedHazardCategories.length"
             mat-raised-button
             color="primary"
             (click)="onClose()">Submit
