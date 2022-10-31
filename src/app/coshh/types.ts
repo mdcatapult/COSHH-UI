@@ -59,6 +59,7 @@ export function allHazards(): Hazard[] {
 
 const ALL_HAZARDS = [
     'None',
+    'Unknown',
     'Explosive',
     'Flammable',
     'Oxidising',
