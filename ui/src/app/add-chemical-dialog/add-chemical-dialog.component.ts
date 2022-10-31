@@ -81,6 +81,23 @@ export class AddChemicalDialogComponent {
         this.form.valid && this.dialogRef.close(chemical)
     }
 
+    removeHazardFromSelectedHazardList(hazardName: string): void {
+        if (this.selectedHazardCategories.indexOf(hazardName) >= 0) {
+            this.selectedHazardCategories.splice(this.selectedHazardCategories.indexOf(hazardName), 1)
+        }
+    }
+
+    uncheckHazard(hazardName: string): void {
+        const hazardNameIndex = this.hazardCategoryList
+            .findIndex((hazardCategory: HazardCategory) => hazardCategory.name === hazardName)
+        this.hazardCategoryList[hazardNameIndex].selected = false
+    }
+
+    removeHazard(hazardName: string): void {
+        this.removeHazardFromSelectedHazardList(hazardName)
+        this.uncheckHazard(hazardName)
+    }
+
     onCheckboxChange(event: any, index: number): void {
         const changedCategory = this.hazardCategoryList[index]
         if (event.checked) {
@@ -91,21 +108,22 @@ export class AddChemicalDialogComponent {
                     this.hazardCategoryList.forEach((hazard: HazardCategory) => hazard.selected = false);
                     // recheck 'None' or 'Unknown' accordingly
                     this.hazardCategoryList[index].selected = true;
+                    // add the hazard to selectedHazardCategories
                     this.selectedHazardCategories = [changedCategory.name];
                     break;
                 default:
-                    // remove default 'None' value from selectedHazardCategories if present
-                    if (this.selectedHazardCategories.indexOf('None') >= 0) {
-                        this.selectedHazardCategories.splice(this.selectedHazardCategories.indexOf('None'), 1)
-                    }
+                    // remove 'None' and 'Unknown' from selectedHazardList and set selected to false in hazardCategoryList
+                    this.removeHazard('None')
+                    this.removeHazard('Unknown')
+                    // add the hazard to selectedHazardCategories
                     this.selectedHazardCategories.push(changedCategory.name)
-                    const noneIndex = this.hazardCategoryList
-                        .findIndex((hazardCategory: HazardCategory) => hazardCategory.name === 'None')
-                    this.hazardCategoryList[noneIndex].selected = false
+                    // set the selected property of the hazard to true in hazardCategoryList
                     this.hazardCategoryList[index].selected = true
             }
         } else {
+            // remove the unchecked item from selectedHazardCategories
             this.selectedHazardCategories.splice(this.selectedHazardCategories.indexOf(changedCategory.name), 1)
+            // set the selected property of the hazard to false in hazardCategoryList
             this.hazardCategoryList[index].selected = false
         }
     }
