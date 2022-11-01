@@ -255,22 +255,30 @@ export class CoshhComponent implements OnInit {
         )
     }
 
+    // set the activated property of all hazards other than the passed hazard to false and clear hazards from the passed chemical
+    singleSelect(chemical: Chemical, hazardName: Hazard): Chemical {
+        chemical.hazards = [hazardName];
+        chemical.hazardList.forEach(hl => {
+            if (hl.title !== hazardName) {
+                hl.activated = false;
+            }
+        })
+
+        return chemical
+    }
+
     onHazardSelect(chemical: Chemical, event: MatCheckboxChange) {
 
         const checkedHazard = event.source._elementRef.nativeElement.innerText.trim()
         const notHazardous = chemical.hazardList.filter(hazardListItem => hazardListItem.value === 'None')[0]
+        const unknown = chemical.hazardList.filter(hazardListItem => hazardListItem.value === 'Unknown')[0]
 
-        // if 'None' has been selected, set the activated property of all other hazards to false and clear hazards
-        if (notHazardous.activated && checkedHazard === 'None') {
-            chemical.hazards = ['None'];
-            chemical.hazardList.forEach(hl => {
-                if (hl.title !== 'None') {
-                    hl.activated = false;
-                }
-            })
+        // if 'None' or 'Unknown' has been selected, set the activated property of all other hazards to false and clear hazards
+        if ((notHazardous.activated && checkedHazard === 'None') || (unknown.activated && checkedHazard === 'Unknown')) {
+            this.singleSelect(chemical, checkedHazard)
         } else {
             // if any hazard has been selected, set the activated property of the 'None' hazard to false
-            chemical.hazardList.filter(hazardListItem => hazardListItem.value === 'None')
+            chemical.hazardList.filter(hazardListItem => (hazardListItem.value === 'None' || hazardListItem.value === 'Unknown'))
                 .map(hazardListItem => hazardListItem.activated = false)
 
             // set hazards on the chemical to be those the user has selected via the checkboxes
