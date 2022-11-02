@@ -59,6 +59,7 @@ export function allHazards(): Hazard[] {
 
 const ALL_HAZARDS = [
     'None',
+    'Unknown',
     'Explosive',
     'Flammable',
     'Oxidising',
@@ -72,6 +73,13 @@ const ALL_HAZARDS = [
 
 type HazardTuple = typeof ALL_HAZARDS
 export type Hazard = HazardTuple[number]
+
+export type HazardCategory = {
+    id: number,
+    name: string,
+    selected: boolean
+}
+
 
 
 
