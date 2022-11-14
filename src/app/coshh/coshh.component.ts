@@ -26,6 +26,7 @@ export class CoshhComponent implements OnInit {
     }
 
     chemicals = new Chemicals() // this represents all the chemicals returned from the API
+    cupboards: String[] = [];
     labs: String[] = [];
     projects: {} = {};
     projectSpecific: string[] = [];
@@ -51,6 +52,9 @@ export class CoshhComponent implements OnInit {
     labFilterControl = new UntypedFormControl('')
     labFilterValues: string[] = []
 
+    cupboardFilterControl = new UntypedFormControl('All')
+    cupboardFilterValues: string[] = []
+
     expiryFilterControl = new UntypedFormControl('Any')
     expiryFilterValues = ['Any', '< 30 Days', 'Expired']
 
@@ -60,6 +64,12 @@ export class CoshhComponent implements OnInit {
     formGroup = new UntypedFormGroup({}) // form group for table
     formArray = new UntypedFormArray([]) // form array for table rows
 
+    updateCupboardsFilterList = () => {  // TODO add trigger on data change
+        this.http.get<string[]>(`${environment.backendUrl}/cupboards`).subscribe(cupboards => {
+            this.cupboardFilterValues = cupboards.concat('All')
+            this.cupboards = cupboards
+        })
+    }
 
     ngOnInit(): void {
 
@@ -131,6 +141,7 @@ export class CoshhComponent implements OnInit {
             this.tableData.data.forEach(chem => this.addChemicalForm(chem))
         })
 
+        this.updateCupboardsFilterList()
 
         combineLatest([
                 this.hazardFilterControl,
