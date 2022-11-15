@@ -141,8 +141,6 @@ export class CoshhComponent implements OnInit {
             this.tableData.data.forEach(chem => this.addChemicalForm(chem))
         })
 
-        this.updateCupboardsFilterList()
-
         combineLatest([
                 this.hazardFilterControl,
                 this.cupboardFilterControl,
@@ -171,6 +169,8 @@ export class CoshhComponent implements OnInit {
     refresh(): void {
 
         this.tableData.data = this.getChemicals()
+        this.updateCupboardsFilterList()
+
     }
 
     updateChemical(chemical: Chemical, refresh?: boolean): void {
@@ -197,7 +197,8 @@ export class CoshhComponent implements OnInit {
             addedChemical.hazardList = this.getHazardListForChemical(addedChemical)
             addedChemical.backgroundColour = this.getExpiryColour(chemical)
             this.chemicals.add(addedChemical)
-            this.tableData.data = this.tableData.data.concat([addedChemical])
+            // this.tableData.data = this.tableData.data.concat([addedChemical])
+            this.refresh()
             this.addChemicalForm(addedChemical)
             this.searchOptions = this.getSearchObservable()
         })
