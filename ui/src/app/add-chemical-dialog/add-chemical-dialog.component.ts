@@ -30,17 +30,17 @@ export class AddChemicalDialogComponent {
         this.dateAdapter.setLocale('en-GB');
         this.masterCheckbox = false;
         this.hazardCategoryList = [
-            {id: 0, name: 'None', selected: true},
-            {id: 1, name: 'Unknown', selected: false},
-            {id: 2, name: 'Explosive', selected: false},
-            {id: 3, name: 'Flammable', selected: false},
-            {id: 4, name: 'Oxidising', selected: false},
-            {id: 5, name: 'Corrosive', selected: false},
-            {id: 7, name: 'Acute toxicity', selected: false},
-            {id: 8, name: 'Hazardous to the environment', selected: false},
-            {id: 9, name: 'Health hazard/Hazardous to the ozone layer', selected: false},
-            {id: 10, name: 'Serious health hazard', selected: false},
-            {id: 11, name: 'Gas under pressure', selected: false}
+            {name: 'None', selected: true},
+            {name: 'Unknown', selected: false},
+            {name: 'Explosive', selected: false},
+            {name: 'Flammable', selected: false},
+            {name: 'Oxidising', selected: false},
+            {name: 'Corrosive', selected: false},
+            {name: 'Acute toxicity', selected: false},
+            {name: 'Hazardous to the environment', selected: false},
+            {name: 'Health hazard/Hazardous to the ozone layer', selected: false},
+            {name: 'Serious health hazard', selected: false},
+            {name: 'Gas under pressure', selected: false}
         ]
 
         this.form = this.fb.group({

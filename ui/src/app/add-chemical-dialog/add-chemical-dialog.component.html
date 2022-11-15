@@ -54,13 +54,13 @@
         <div class="row">
             <div class="hazard-category-container">
                 <mat-label>Hazard category</mat-label>
-                <div *ngFor="let hazardCategory of hazardCategoryList;">
+                <div *ngFor="let hazardCategory of hazardCategoryList; let i = index;">
                     <mat-checkbox
                             [checked]="hazardCategory.selected"
                             matInput
                             formArrayName="hazards"
                             [value]="hazardCategory.name"
-                            (change)="onCheckboxChange($event, hazardCategory.id)"> {{ hazardCategory.name }}</mat-checkbox>
+                            (change)="onCheckboxChange($event, i)"> {{ hazardCategory.name }}</mat-checkbox>
                 </div>
             </div>
         </div>
