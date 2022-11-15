@@ -25,6 +25,15 @@
                 </div>
 
                 <div class="filter-control">
+                    <mat-form-field className="filter-select" appearance="outline">
+                        <mat-label>Filter by cupboard</mat-label>
+                        <mat-select required [formControl]="cupboardFilterControl">
+                            <mat-option *ngFor="let cupboard of cupboardFilterValues" [value]="cupboard">{{cupboard}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+
+                <div class="filter-control">
                     <mat-form-field appearance="outline">
                         <mat-label>Filter by expiry</mat-label>
                         <mat-select required [formControl]="expiryFilterControl">
