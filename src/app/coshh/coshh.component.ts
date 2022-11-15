@@ -26,6 +26,7 @@ export class CoshhComponent implements OnInit {
     }
 
     chemicals = new Chemicals() // this represents all the chemicals returned from the API
+    cupboards: String[] = [];
     labs: String[] = [];
     projects: {} = {};
     projectSpecific: string[] = [];
@@ -51,6 +52,9 @@ export class CoshhComponent implements OnInit {
     labFilterControl = new UntypedFormControl('')
     labFilterValues: string[] = []
 
+    cupboardFilterControl = new UntypedFormControl('All')
+    cupboardFilterValues: string[] = []
+
     expiryFilterControl = new UntypedFormControl('Any')
     expiryFilterValues = ['Any', '< 30 Days', 'Expired']
 
@@ -60,6 +64,22 @@ export class CoshhComponent implements OnInit {
     formGroup = new UntypedFormGroup({}) // form group for table
     formArray = new UntypedFormArray([]) // form array for table rows
 
+    updateCupboardsFilterList = () => {  // TODO add trigger on data change
+        this.http.get<string[]>(`${environment.backendUrl}/cupboards`).subscribe(cupboards => {
+            this.cupboardFilterValues = cupboards.concat('All')
+            this.cupboards = cupboards
+        })
+    }
+
+    getChemicals = () => {
+        return this.chemicals.get(
+            this.toggleArchiveControl.value,
+            this.cupboardFilterControl.value,
+            this.hazardFilterControl.value,
+            this.labFilterControl.value,
+            this.expiryFilterControl.value
+        )
+    }
 
     ngOnInit(): void {
 
@@ -75,12 +95,7 @@ export class CoshhComponent implements OnInit {
                 })
 
                 this.chemicals.set(res || [])
-                const inStock = this.chemicals.get(
-                    this.toggleArchiveControl.value,
-                    this.hazardFilterControl.value,
-                    this.labFilterControl.value,
-                    this.expiryFilterControl.value
-                )
+                const inStock = this.getChemicals()
                 this.tableData = new MatTableDataSource<Chemical>(inStock)
 
                 inStock.forEach(chem => this.addChemicalForm(chem))
@@ -118,12 +133,7 @@ export class CoshhComponent implements OnInit {
         this.searchControl.valueChanges.subscribe((value: string) => {
 
             this.tableData.data = value === '' ?
-                this.chemicals.get(
-                    this.toggleArchiveControl.value,
-                    this.hazardFilterControl.value,
-                    this.labFilterControl.value,
-                    this.expiryFilterControl.value,
-                ) :
+                this.getChemicals() :
                 this.tableData.data.filter(chemical => chemical.name.toLowerCase().includes(value.toLowerCase()))
 
 
@@ -131,9 +141,9 @@ export class CoshhComponent implements OnInit {
             this.tableData.data.forEach(chem => this.addChemicalForm(chem))
         })
 
-
         combineLatest([
                 this.hazardFilterControl,
+                this.cupboardFilterControl,
                 this.labFilterControl,
                 this.expiryFilterControl,
                 this.toggleArchiveControl
@@ -158,12 +168,9 @@ export class CoshhComponent implements OnInit {
 
     refresh(): void {
 
-        this.tableData.data = this.chemicals.get(
-            this.toggleArchiveControl.value,
-            this.hazardFilterControl.value,
-            this.labFilterControl.value,
-            this.expiryFilterControl.value,
-        )
+        this.tableData.data = this.getChemicals()
+        this.updateCupboardsFilterList()
+
     }
 
     updateChemical(chemical: Chemical, refresh?: boolean): void {
@@ -190,7 +197,8 @@ export class CoshhComponent implements OnInit {
             addedChemical.hazardList = this.getHazardListForChemical(addedChemical)
             addedChemical.backgroundColour = this.getExpiryColour(chemical)
             this.chemicals.add(addedChemical)
-            this.tableData.data = this.tableData.data.concat([addedChemical])
+            // this.tableData.data = this.tableData.data.concat([addedChemical])
+            this.refresh()
             this.addChemicalForm(addedChemical)
             this.searchOptions = this.getSearchObservable()
         })
@@ -245,12 +253,8 @@ export class CoshhComponent implements OnInit {
         return this.searchControl.valueChanges.pipe(
             map(search =>
                 this.chemicals.getNames(
-                    this.toggleArchiveControl.value,
-                    this.hazardFilterControl.value,
-                    search,
-                    this.labFilterControl.value,
-                    this.expiryFilterControl.value
-                )
+                    this.getChemicals(),
+                    search)
             )
         )
     }
