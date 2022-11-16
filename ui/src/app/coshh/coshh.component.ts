@@ -77,7 +77,8 @@ export class CoshhComponent implements OnInit {
             this.cupboardFilterControl.value,
             this.hazardFilterControl.value,
             this.labFilterControl.value,
-            this.expiryFilterControl.value
+            this.expiryFilterControl.value,
+            this.searchControl.value || "",
         )
     }
 
@@ -130,13 +131,8 @@ export class CoshhComponent implements OnInit {
             chemicals: this.formArray
         })
 
-        this.searchControl.valueChanges.subscribe((value: string) => {
-
-            this.tableData.data = value === '' ?
-                this.getChemicals() :
-                this.tableData.data.filter(chemical => chemical.name.toLowerCase().includes(value.toLowerCase()))
-
-
+        this.searchControl.valueChanges.subscribe(() => {
+            this.tableData.data = this.getChemicals()
             this.formArray.clear()
             this.tableData.data.forEach(chem => this.addChemicalForm(chem))
         })
