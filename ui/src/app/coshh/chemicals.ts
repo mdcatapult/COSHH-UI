@@ -4,7 +4,8 @@ import { Chemical, Expiry } from "./types"
 export class Chemicals {
     private chemicals: Chemical[] = []
 
-    get = (includeArchived: boolean, cupboard: string, hazardCategory: string, lab: string, expiry: Expiry): Chemical[] => {
+    get = (includeArchived: boolean, cupboard: string, hazardCategory: string, lab: string, expiry: Expiry, project: string, searchStr: string): Chemical[] => {
+        const searchLower = searchStr.toLowerCase()
         return this.chemicals
             .filter(chemical => includeArchived || !chemical.isArchived)
             .filter(chemical => cupboard === 'All' || chemical.cupboard === cupboard)
@@ -12,6 +13,8 @@ export class Chemicals {
                 chemical.hazards?.map(hazard => hazard.toString()).includes(hazardCategory))
             .filter(chemical => lab === 'All' || chemical.location === lab)
             .filter(chemical => Chemicals.filterExpiryDate(chemical, expiry))
+            .filter(chemical => project === 'Any' || project === 'No' && chemical.projectSpecific === '' || chemical.projectSpecific === project)
+            .filter(chemical => chemical.name.toLowerCase().includes(searchLower) || chemical.chemicalNumber.toLowerCase().includes(searchLower))
             .sort((a, b) => {
                 if (a.name < b.name) {
                     return -1
@@ -25,9 +28,12 @@ export class Chemicals {
     add = (chemical: Chemical) => this.chemicals.push(chemical)
     set = (chemicals: Chemical[]) => this.chemicals = chemicals
     getNames = (chemicals: Chemical[], search: string): string[] => {
+        const searchLower = search.toLowerCase()
         return chemicals
-            .filter(chemical => chemical.name.toLowerCase().includes(search.toLowerCase()))
-            .map(chemical => chemical.name)
+            .flatMap(chemical => [chemical.name, chemical.chemicalNumber])
+            .filter(phrase => phrase.toLowerCase().includes(searchLower))
+            .sort()
+            .filter((item, pos, array) => !pos || item != array[pos - 1])  // deduplication
     }
 
     update = (chemical: Chemical) => {
