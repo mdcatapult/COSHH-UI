@@ -83,241 +83,121 @@
                 </mat-checkbox>
             </div>
 
-
         </mat-toolbar>
     </header>
 
-    <form [formGroup]="formGroup">
-        <div class="table-container">
-            <mat-table *ngIf="tableData.data.length" mat-table [dataSource]="tableData" formArrayName="chemicals">
+    <table mat-table [dataSource]="tableData"
+           class="mat-elevation-z8"><!-- matSort (matSortChange)="announceSortChange($event)" -->
 
-                <ng-container matColumnDef="casNumber" [sticky]=freezeColumns>
-                    <th mat-header-cell *matHeaderCellDef> CAS no.</th>
-                    <td mat-cell *matCellDef="let chemical; let index = index" [formGroupName]="index">
+        <ng-container matColumnDef="casNumber">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by number">
+                CAS no.
+            </th>
+            <td mat-cell *matCellDef="let element"> {{element.casNumber}} </td>
+        </ng-container>
 
-                        <mat-form-field class="cas-number-field" appearance="standard">
-                            <textarea matInput readonly type="text" formControlName="casNumber">
-                                </textarea>
-                        </mat-form-field>
+        <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by name">
+                Chemical Name
+            </th>
+            <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+        </ng-container>
 
-                    </td>
-                </ng-container>
+        <ng-container matColumnDef="hazards">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by symbol">
+                Hazards
+            </th>
+            <td mat-cell *matCellDef="let chemical">
+                <img *ngIf="!chemical.hazards || !chemical.hazards.length" class="img-responsive hazard"
+                     src="assets/unknown.jpg" alt="Unknown" title="Unknown">
 
-                <ng-container matColumnDef="name" [sticky]=freezeColumns>
-                    <th mat-header-cell *matHeaderCellDef> Chemical Name</th>
-                    <td mat-cell *matCellDef="let chemical; let index = index" [formGroupName]="index">
+                <ul>
+                    <li *ngFor="let hazard of chemical.hazardList">
+                        <img *ngIf="hazard.activated" class="img-responsive hazard"
+                             [src]="getHazardPicture(hazard.title)" [alt]="hazard.title" [title]="hazard.title">
+                    </li>
+                </ul>
+            </td>
+        </ng-container>
 
-                        <mat-form-field appearance="standard">
-                            <textarea matInput type="text" formControlName="name">
-                            </textarea>
-                        </mat-form-field>
-                    </td>
-                </ng-container>
+        <ng-container matColumnDef="location">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by symbol">
+                Location
+            </th>
+            <td mat-cell *matCellDef="let element"> {{element.location}} </td>
+        </ng-container>
 
-                <ng-container matColumnDef="hazards">
-                    <th mat-header-cell *matHeaderCellDef> Hazards</th>
-                    <td mat-cell class="hazard-cell" *matCellDef="let chemical">
-                        <img *ngIf="!chemical.hazards || !chemical.hazards.length" class="img-responsive hazard"
-                             src="assets/unknown.jpg" alt="Unknown" title="Unknown">
+        <ng-container matColumnDef="cupboard">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by symbol">
+                Cupboard
+            </th>
+            <td mat-cell *matCellDef="let element"> {{element.cupboard}} </td>
+        </ng-container>
 
-                        <ul>
-                            <li *ngFor="let hazard of chemical.hazardList">
-                                <img *ngIf="hazard.activated" class="img-responsive hazard"
-                                     [src]="getHazardPicture(hazard.title)" [alt]="hazard.title" [title]="hazard.title">
-                            </li>
-                        </ul>
+        <ng-container matColumnDef="chemicalNumber">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by weight">
+                Chemical Number
+            </th>
+            <td mat-cell *matCellDef="let element"> {{element.chemicalNumber}} </td>
+        </ng-container>
 
-                        <button mat-button class="hazard-menu-button" [matMenuTriggerFor]="menu">
-                            <mat-icon>edit</mat-icon>
-                        </button>
-                        <mat-menu #menu="matMenu">
-                            <mat-checkbox class="hazard-checkbox"
-                                          *ngFor="let hazard of chemical.hazardList"
-                                          [(ngModel)]="hazard.activated"
-                                          [ngModelOptions]="{standalone: true}"
-                                          (click)="$event.stopPropagation()"
-                                          (change)="onHazardSelect(chemical, $event)"
-                            >{{ hazard.title }}</mat-checkbox>
-                        </mat-menu>
+        <ng-container matColumnDef="matterState">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by symbol">
+                State
+            </th>
+            <td mat-cell *matCellDef="let element"> {{element.matterState}} </td>
+        </ng-container>
 
-                    </td>
-                </ng-container>
+        <ng-container matColumnDef="quantity">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by symbol">
+                Quantity
+            </th>
+            <td mat-cell *matCellDef="let element"> {{element.quantity}} </td>
+        </ng-container>
 
-                <ng-container matColumnDef="location">
-                    <th mat-header-cell *matHeaderCellDef> Location</th>
-                    <td mat-cell *matCellDef="let chemical; let index = index" [formGroupName]="index">
-                        <mat-form-field>
-                            <mat-select formControlName="location">
-                                <mat-option *ngFor="let lab of labs" [value]="lab">{{lab}}</mat-option>
-                            </mat-select>
-                        </mat-form-field>
-                    </td>
-                </ng-container>
+        <ng-container matColumnDef="added">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by symbol">
+                Added
+            </th>
+            <td mat-cell *matCellDef="let element"> {{element.added}} </td>
+        </ng-container>
 
-                <ng-container matColumnDef="cupboard">
-                    <th mat-header-cell *matHeaderCellDef> Cupboard</th>
-                    <td mat-cell *matCellDef="let chemical; let index = index" [formGroupName]="index">
-                        <mat-form-field class="quantity-form-field" appearance="standard">
-                            <input matInput type="text" formControlName="cupboard">
-                        </mat-form-field>
-                    </td>
-                </ng-container>
+        <ng-container matColumnDef="Expiry">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by symbol">
+                expiry
+            </th>
+            <td mat-cell *matCellDef="let element"> {{element.Expiry}} </td>
+        </ng-container>
 
-                <ng-container matColumnDef="chemicalNumber">
-                    <th mat-header-cell *matHeaderCellDef>Chemical Number</th>
-                    <td mat-cell *matCellDef="let chemical; let index = index" [formGroupName]="index">
-                        <mat-form-field class="example-form-field" appearance="standard">
-                            <input matInput type="text" formControlName="chemicalNumber">
-                        </mat-form-field>
-                    </td>
-                </ng-container>
+        <ng-container matColumnDef="safetyDataSheet">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by symbol">
+                SDS
+            </th>
+            <td mat-cell *matCellDef="let element"> {{element.safetyDataSheet}} </td>
+        </ng-container>
 
-                <ng-container matColumnDef="matterState">
-                    <th mat-header-cell *matHeaderCellDef>State</th>
-                    <td mat-cell *matCellDef="let chemical; let index=index" [formGroupName]="index">
+        <ng-container matColumnDef="coshhLink">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by symbol">
+                COSHH
+            </th>
+            <td mat-cell *matCellDef="let element"> {{element.coshhLink}} </td>
+        </ng-container>
 
-                        <mat-form-field class="state-form-field" appearance="standard">
-                            <mat-select required formControlName="matterState">
-                                <mat-option value="liquid">Liquid</mat-option>
-                                <mat-option value="solid">Solid</mat-option>
-                            </mat-select>
-                        </mat-form-field>
+        <ng-container matColumnDef="storageTemp">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by symbol">
+                Storage Temp.
+            </th>
+            <td mat-cell *matCellDef="let element"> {{element.storageTemp}} </td>
+        </ng-container>
 
-                    </td>
-                </ng-container>
-
-                <ng-container matColumnDef="quantity">
-                    <th mat-header-cell *matHeaderCellDef> Quantity</th>
-                    <td mat-cell *matCellDef="let chemical; let index = index" [formGroupName]="index">
-
-                        <mat-form-field class="quantity-form-field" appearance="standard">
-                            <input matInput type="text" formControlName="quantity">
-                        </mat-form-field>
-
-                    </td>
-                </ng-container>
-
-                <ng-container matColumnDef="added">
-                    <th mat-header-cell *matHeaderCellDef> Added</th>
-                    <td mat-cell *matCellDef="let chemical; let index=index" [formGroupName]="index">
-
-                        <mat-form-field class="date-form-field" appearance="standard">
-                            <input readonly matInput [matDatepicker]="addedPicker" formControlName="added">
-                            <mat-datepicker-toggle matSuffix [for]="addedPicker"></mat-datepicker-toggle>
-                            <mat-datepicker #addedPicker></mat-datepicker>
-                        </mat-form-field>
-
-                    </td>
-                </ng-container>
-
-                <ng-container matColumnDef="expiry">
-                    <th mat-header-cell *matHeaderCellDef> Expiry</th>
-                    <td mat-cell *matCellDef="let chemical; let index=index" [formGroupName]="index">
-
-                        <mat-form-field class="date-form-field" appearance="standard">
-                            <input readonly matInput [matDatepicker]="expiryPicker" formControlName="expiry"
-                                   [style.background-color]="chemical.backgroundColour">
-                            <mat-datepicker-toggle matSuffix [for]="expiryPicker"></mat-datepicker-toggle>
-                            <mat-datepicker #expiryPicker></mat-datepicker>
-                        </mat-form-field>
-                    </td>
-                </ng-container>
-
-                <ng-container matColumnDef="safetyDataSheet">
-                    <th mat-header-cell *matHeaderCellDef> SDS</th>
-                    <td mat-cell *matCellDef="let chemical; let index = index" [formGroupName]="index">
-                        <ng-template [ngIf]="!chemical.editSDS">
-                            <a [href]="chemical.safetyDataSheet" target="_blank" title="Open Safety Data Sheet in new tab">
-                                <mat-icon aria-hidden="false" aria-label="Link to safety data sheet" class="inline">open_in_new</mat-icon>
-                            </a>
-                            <button mat-button class="hazard-menu-button padding-left-small" (click)="chemical.editSDS = !chemical.editSDS" aria-label="Edit safety data sheet link" title="Edit safety data sheet link">
-                                <mat-icon>edit</mat-icon>
-                            </button>
-                        </ng-template>
-                        <ng-template [ngIf]="chemical.editSDS">
-                            <mat-form-field class="sds-coshh-form-field" appearance="standard">
-                                <button mat-button matPrefix class="hazard-menu-button padding-right-small" (click)="chemical.editSDS = !chemical.editSDS" aria-label="Update the safety data sheet link with new value" title="Update the safety data sheet link with new value">
-                                    <mat-icon>save</mat-icon>
-                                </button>
-                                <input placeholder="Link to Safety Data Sheet" title="Update the safety data sheet and then click button to save" aria-placeholder="Link to Safety Data Sheet" aria-label="Update the safety data sheet and then click button to save" matInput type="text" formControlName="safetyDataSheet">
-                            </mat-form-field>
-                        </ng-template>
-                    </td>
-                </ng-container>
-
-                <ng-container matColumnDef="coshhLink">
-                    <th mat-header-cell *matHeaderCellDef> COSHH</th>
-                    <td mat-cell *matCellDef="let chemical; let index = index" [formGroupName]="index">
-                        <ng-template [ngIf]="!chemical.editCoshh">
-                            <a [href]="chemical.coshhLink" target="_blank" title="Open MDC Coshh info in new tab">
-                                <mat-icon aria-hidden="false" aria-label="Link to safety data sheet" class="inline">open_in_new</mat-icon>
-                            </a>
-                            <button mat-button class="hazard-menu-button padding-left-small" (click)="chemical.editCoshh = !chemical.editCoshh" aria-label="Edit MDC COSHH info link" title="Edit MDC COSHH info link">
-                                <mat-icon>edit</mat-icon>
-                            </button>
-                        </ng-template>
-                        <ng-template [ngIf]="chemical.editCoshh">
-                            <mat-form-field class="sds-coshh-form-field" appearance="standard">
-                                <button mat-button matPrefix class="hazard-menu-button padding-right-small" (click)="chemical.editCoshh = !chemical.editCoshh" aria-label="Update the MDC COSHH link with new value" title="Update the MDC COSHH link with new value">
-                                    <mat-icon>save</mat-icon>
-                                </button>
-                                <input placeholder="Link to MDC COSHH info" title="Update the MDC COSHH info link and then click button to save" aria-placeholder="Update link to MDC COSHH link" aria-label="Update the MDC COSHH link and then click button to save" matInput type="text" formControlName="coshhLink">
-                            </mat-form-field>
-                        </ng-template>
-                    </td>
-                </ng-container>
-
-                <ng-container matColumnDef="storageTemp">
-                    <th mat-header-cell *matHeaderCellDef> Storage Temp.</th>
-                    <td mat-cell *matCellDef="let chemical; let index=index" [formGroupName]="index">
-
-                        <mat-form-field class="storage-temp-form-field" appearance="standard">
-                            <mat-select required formControlName="storageTemp">
-                                <mat-option value="Shelf">Shelf</mat-option>
-                                <mat-option value="+4">+4</mat-option>
-                                <mat-option value="-20">-20</mat-option>
-                                <mat-option value="-80">-80</mat-option>
-                            </mat-select>
-                        </mat-form-field>
-
-                    </td>
-                </ng-container>
-
-                <ng-container matColumnDef="projectSpecific">
-                    <th mat-header-cell *matHeaderCellDef>Project Specific?</th>
-                    <td mat-cell *matCellDef="let chemical; let index = index" [formGroupName]="index">
-                        <mat-form-field>
-                            <mat-select formControlName="projectSpecific">
-                                <mat-option>None</mat-option>
-                                <mat-option *ngFor="let project of projectSpecific" [value]="project">{{project}}</mat-option>
-                            </mat-select>
-                        </mat-form-field>
-                    </td>
-                </ng-container>
-
-                <ng-container matColumnDef="archive">
-                    <th mat-header-cell *matHeaderCellDef></th>
-                    <td mat-cell *matCellDef="let chemical" class="coshh-archive-cell">
-                        <button
-                                matTooltip="Archive this chemical"
-                                matTooltipPosition="above"
-                                class="archive-button"
-                                mat-mini-fab
-                                color="warn"
-                                (click)="archive(chemical)"
-                        >
-                            <mat-icon>delete</mat-icon>
-                        </button>
-                    </td>
-                </ng-container>
+        <ng-container matColumnDef="projectSpecific">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by symbol">
+                Project Specific?
+            </th>
+            <td mat-cell *matCellDef="let element"> {{element.projectSpecific}} </td>
+        </ng-container>
 
 
-                <mat-header-row *matHeaderRowDef="columns; sticky:true"></mat-header-row>
-                <tr mat-row *matRowDef="let row; columns: columns; let i = index"></tr>
-            </mat-table>
-
-        </div>
-    </form>
-
-</div>
-
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
