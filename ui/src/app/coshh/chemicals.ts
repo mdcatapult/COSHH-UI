@@ -4,9 +4,10 @@ import { Chemical, Expiry } from "./types"
 export class Chemicals {
     private chemicals: Chemical[] = []
 
-    get = (includeArchived: boolean, hazardCategory: string, lab: string, expiry: Expiry): Chemical[] => {
+    get = (includeArchived: boolean, cupboard: string, hazardCategory: string, lab: string, expiry: Expiry): Chemical[] => {
         return this.chemicals
             .filter(chemical => includeArchived || !chemical.isArchived)
+            .filter(chemical => cupboard === 'All' || chemical.cupboard === cupboard)
             .filter(chemical => hazardCategory === 'All' ||
                 chemical.hazards?.map(hazard => hazard.toString()).includes(hazardCategory))
             .filter(chemical => lab === 'All' || chemical.location === lab)
@@ -23,8 +24,8 @@ export class Chemicals {
     }
     add = (chemical: Chemical) => this.chemicals.push(chemical)
     set = (chemicals: Chemical[]) => this.chemicals = chemicals
-    getNames = (includeArchived: boolean, hazardCategory: string, search: string, lab: string, expiry: Expiry): string[] => {
-        return this.get(includeArchived, hazardCategory, lab, expiry)
+    getNames = (chemicals: Chemical[], search: string): string[] => {
+        return chemicals
             .filter(chemical => chemical.name.toLowerCase().includes(search.toLowerCase()))
             .map(chemical => chemical.name)
     }

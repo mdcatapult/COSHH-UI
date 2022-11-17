@@ -26,19 +26,20 @@ export class CoshhComponent implements OnInit {
     }
 
     chemicals = new Chemicals() // this represents all the chemicals returned from the API
+    cupboards: String[] = [];
     labs: String[] = [];
     projects: {} = {};
     projectSpecific: string[] = [];
     freezeColumns = false;
 
     getHazardListForChemical = (chemical: Chemical) => {
-            return allHazards().map((hazard: Hazard) => {
-                return {
-                    title: hazard,
-                    activated: chemical.hazards ? chemical.hazards.includes(hazard) : false,
-                    value: hazard
-                }
-            })
+        return allHazards().map((hazard: Hazard) => {
+            return {
+                title: hazard,
+                activated: chemical.hazards ? chemical.hazards.includes(hazard) : false,
+                value: hazard
+            }
+        })
     }
 
     selectedHazards: Hazard[] = [];
@@ -51,6 +52,9 @@ export class CoshhComponent implements OnInit {
     labFilterControl = new UntypedFormControl('')
     labFilterValues: string[] = []
 
+    cupboardFilterControl = new UntypedFormControl('All')
+    cupboardFilterValues: string[] = []
+
     expiryFilterControl = new UntypedFormControl('Any')
     expiryFilterValues = ['Any', '< 30 Days', 'Expired']
 
@@ -60,6 +64,22 @@ export class CoshhComponent implements OnInit {
     formGroup = new UntypedFormGroup({}) // form group for table
     formArray = new UntypedFormArray([]) // form array for table rows
 
+    updateCupboardsFilterList = () => {  // TODO add trigger on data change
+        this.http.get<string[]>(`${environment.backendUrl}/cupboards`).subscribe(cupboards => {
+            this.cupboardFilterValues = cupboards.concat('All')
+            this.cupboards = cupboards
+        })
+    }
+
+    getChemicals = () => {
+        return this.chemicals.get(
+            this.toggleArchiveControl.value,
+            this.cupboardFilterControl.value,
+            this.hazardFilterControl.value,
+            this.labFilterControl.value,
+            this.expiryFilterControl.value
+        )
+    }
 
     ngOnInit(): void {
 
@@ -75,12 +95,7 @@ export class CoshhComponent implements OnInit {
                 })
 
                 this.chemicals.set(res || [])
-                const inStock = this.chemicals.get(
-                    this.toggleArchiveControl.value,
-                    this.hazardFilterControl.value,
-                    this.labFilterControl.value,
-                    this.expiryFilterControl.value
-                )
+                const inStock = this.getChemicals()
                 this.tableData = new MatTableDataSource<Chemical>(inStock)
 
                 inStock.forEach(chem => this.addChemicalForm(chem))
@@ -118,12 +133,7 @@ export class CoshhComponent implements OnInit {
         this.searchControl.valueChanges.subscribe((value: string) => {
 
             this.tableData.data = value === '' ?
-                this.chemicals.get(
-                    this.toggleArchiveControl.value,
-                    this.hazardFilterControl.value,
-                    this.labFilterControl.value,
-                    this.expiryFilterControl.value,
-                ) :
+                this.getChemicals() :
                 this.tableData.data.filter(chemical => chemical.name.toLowerCase().includes(value.toLowerCase()))
 
 
@@ -131,9 +141,9 @@ export class CoshhComponent implements OnInit {
             this.tableData.data.forEach(chem => this.addChemicalForm(chem))
         })
 
-
         combineLatest([
                 this.hazardFilterControl,
+                this.cupboardFilterControl,
                 this.labFilterControl,
                 this.expiryFilterControl,
                 this.toggleArchiveControl
@@ -157,12 +167,10 @@ export class CoshhComponent implements OnInit {
     }
 
     refresh(): void {
-        this.tableData.data = this.chemicals.get(
-            this.toggleArchiveControl.value,
-            this.hazardFilterControl.value,
-            this.labFilterControl.value,
-            this.expiryFilterControl.value,
-        )
+
+        this.tableData.data = this.getChemicals()
+        this.updateCupboardsFilterList()
+
     }
 
     updateChemical(chemical: Chemical, refresh?: boolean): void {
@@ -178,7 +186,8 @@ export class CoshhComponent implements OnInit {
     updateHazards(chemical: Chemical): void {
         this.http.put(`${environment.backendUrl}/hazards`, chemical).pipe(
             debounceTime(100)
-        ).subscribe(() => {})
+        ).subscribe(() => {
+        })
     }
 
     onChemicalAdded(chemical: Chemical): void {
@@ -188,10 +197,10 @@ export class CoshhComponent implements OnInit {
             addedChemical.hazardList = this.getHazardListForChemical(addedChemical)
             addedChemical.backgroundColour = this.getExpiryColour(chemical)
             this.chemicals.add(addedChemical)
-            this.tableData.data = this.tableData.data.concat([addedChemical])
+            // this.tableData.data = this.tableData.data.concat([addedChemical])
+            this.refresh()
             this.addChemicalForm(addedChemical)
             this.searchOptions = this.getSearchObservable()
-            this.refresh()
         })
     }
 
@@ -217,9 +226,9 @@ export class CoshhComponent implements OnInit {
             changedChemical.hazardList = chemical.hazardList
             changedChemical.hazards = chemical.hazards
             // If the links or expiry date have updated then ensure the appropriate UI bits are updated by calling refreshPage
-            let refreshPage = changedChemical.expiry !== chemical.expiry 
-                              || changedChemical.safetyDataSheet !== chemical.safetyDataSheet
-                              || changedChemical.coshhLink !== chemical.coshhLink
+            let refreshPage = changedChemical.expiry !== chemical.expiry
+                || changedChemical.safetyDataSheet !== chemical.safetyDataSheet
+                || changedChemical.coshhLink !== chemical.coshhLink
             this.updateChemical(changedChemical, refreshPage)
             chemical.backgroundColour = this.getExpiryColour(changedChemical)
         })
@@ -244,32 +253,36 @@ export class CoshhComponent implements OnInit {
         return this.searchControl.valueChanges.pipe(
             map(search =>
                 this.chemicals.getNames(
-                    this.toggleArchiveControl.value,
-                    this.hazardFilterControl.value,
-                    search,
-                    this.labFilterControl.value,
-                    this.expiryFilterControl.value
-                )
+                    this.getChemicals(),
+                    search)
             )
         )
+    }
+
+    // set the activated property of all hazards other than the passed hazard to false and clear hazards from the passed chemical
+    singleSelect(chemical: Chemical, hazardName: Hazard): Chemical {
+        chemical.hazards = [hazardName];
+        chemical.hazardList.forEach(hl => {
+            if (hl.title !== hazardName) {
+                hl.activated = false;
+            }
+        })
+
+        return chemical
     }
 
     onHazardSelect(chemical: Chemical, event: MatCheckboxChange) {
 
         const checkedHazard = event.source._elementRef.nativeElement.innerText.trim()
         const notHazardous = chemical.hazardList.filter(hazardListItem => hazardListItem.value === 'None')[0]
+        const unknown = chemical.hazardList.filter(hazardListItem => hazardListItem.value === 'Unknown')[0]
 
-        // if 'None' has been selected, set the activated property of all other hazards to false and clear hazards
-        if (notHazardous.activated && checkedHazard === 'None') {
-            chemical.hazards = ['None'];
-            chemical.hazardList.forEach(hl => {
-                if (hl.title !== 'None') {
-                    hl.activated = false;
-                }
-            })
+        // if 'None' or 'Unknown' has been selected, set the activated property of all other hazards to false and clear hazards
+        if ((notHazardous.activated && checkedHazard === 'None') || (unknown.activated && checkedHazard === 'Unknown')) {
+            this.singleSelect(chemical, checkedHazard)
         } else {
             // if any hazard has been selected, set the activated property of the 'None' hazard to false
-            chemical.hazardList.filter(hazardListItem => hazardListItem.value === 'None')
+            chemical.hazardList.filter(hazardListItem => (hazardListItem.value === 'None' || hazardListItem.value === 'Unknown'))
                 .map(hazardListItem => hazardListItem.activated = false)
 
             // set hazards on the chemical to be those the user has selected via the checkboxes

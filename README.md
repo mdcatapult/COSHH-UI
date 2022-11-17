@@ -60,3 +60,16 @@ files at build time.  *If you want to change the API URL you will need to build 
 ### Gotchas
 
 When writing any new sql queries always remember to commit the transaction!
+
+### CI and wopr deployment
+
+The app is deployed on https://coshh.wopr.inf.mdc/
+
+There was a glitch in the publish API stage in CI in October 2022 (which has since resolved itself) which meant that in order to deploy the API  the image 
+had to be  built locally and pushed up to the registry manually.  In the event this should happen again use this command:
+
+```docker build -t registry.mdcatapult.io/informatics/software-engineering/coshh/api:<tag name> . && docker push registry.mdcatapult.io/informatics/software-engineering/coshh/api:<tag name>```
+
+N.B Mac M1 users will need to build the image for amd64 (as opposed to arm64) with `--platform linux/amd64`  
+
+Once you have checked the image has successfully been pushed to the registry (see [here](https://gitlab.mdcatapult.io/informatics/software-engineering/coshh/container_registry/249)) the `coshh-api` workload can be updated to use the new image.
