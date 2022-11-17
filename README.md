@@ -65,9 +65,8 @@ When writing any new sql queries always remember to commit the transaction!
 
 The app is deployed on https://coshh.wopr.inf.mdc/
 
-The publish stage in CI is not working as expected (for the API at least), and as of 25 October 2022 the API deployment uses an image tagged `nick-test-251022-2`. 
-This image was built locally and pushed up to the registry manually. 
-Pending fixing the CI this process will need to be repeated for each redeployment instead of using the `latest` tag created in CI:
+There was a glitch in the publish API stage in CI in October 2022 (which has since resolved itself) which meant that in order to deploy the API  the image 
+had to be  built locally and pushed up to the registry manually.  In the event this should happen again use this command:
 
 ```docker build -t registry.mdcatapult.io/informatics/software-engineering/coshh/api:<tag name> . && docker push registry.mdcatapult.io/informatics/software-engineering/coshh/api:<tag name>```
 
