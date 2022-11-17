@@ -64,29 +64,10 @@ export class CoshhComponent implements OnInit {
     formGroup = new UntypedFormGroup({}) // form group for table
     formArray = new UntypedFormArray([]) // form array for table rows
 
-    updateCupboardsFilterList(): void {
-        this.http.get<string[]>(`${environment.backendUrl}/cupboards`).subscribe(cupboards => {
-            this.cupboardFilterValues = cupboards.concat('All')
-            this.cupboards = cupboards
-        })
-    }
-
-    getChemicals(): Chemical[] {
-        return this.chemicals.get(
-            this.toggleArchiveControl.value,
-            this.cupboardFilterControl.value,
-            this.hazardFilterControl.value,
-            this.labFilterControl.value,
-            this.expiryFilterControl.value,
-            this.searchControl.value || "",
-        )
-    }
-
     ngOnInit(): void {
 
         this.http.get<Array<Chemical>>(`${environment.backendUrl}/chemicals`)
             .subscribe((res: Array<Chemical>) => {
-
                 res = res?.map((chem: Chemical) => {
                     chem.editSDS = false
                     chem.editCoshh = false
@@ -154,6 +135,17 @@ export class CoshhComponent implements OnInit {
 
     }
 
+    getChemicals(): Chemical[] {
+        return this.chemicals.get(
+            this.toggleArchiveControl.value,
+            this.cupboardFilterControl.value,
+            this.hazardFilterControl.value,
+            this.labFilterControl.value,
+            this.expiryFilterControl.value,
+            this.searchControl.value || "",
+        )
+    }
+
 
     archive(chemical: Chemical): void {
         chemical.isArchived = true
@@ -165,8 +157,15 @@ export class CoshhComponent implements OnInit {
     refresh(): void {
 
         this.tableData.data = this.getChemicals()
-        this.updateCupboardsFilterList()
+        this.refreshCupboardsFilterList()
 
+    }
+
+    refreshCupboardsFilterList(): void {
+        this.http.get<string[]>(`${environment.backendUrl}/cupboards`).subscribe(cupboards => {
+            this.cupboardFilterValues = cupboards.concat('All')
+            this.cupboards = cupboards
+        })
     }
 
     updateChemical(chemical: Chemical, refresh?: boolean): void {
@@ -193,7 +192,6 @@ export class CoshhComponent implements OnInit {
             addedChemical.hazardList = this.getHazardListForChemical(addedChemical)
             addedChemical.backgroundColour = this.getExpiryColour(chemical)
             this.chemicals.add(addedChemical)
-            // this.tableData.data = this.tableData.data.concat([addedChemical])
             this.refresh()
             this.addChemicalForm(addedChemical)
             this.searchOptions = this.getSearchObservable()
