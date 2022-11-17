@@ -99,7 +99,7 @@ export class CoshhComponent implements OnInit {
                 // strip out header row and empty rows
                 (elem, index) => index && elem[0] && elem[1]
             ).map(elem => `${elem[0]} - ${elem[1]}`)
-            this.projectFilterValues = this.projectSpecific.concat('Any')
+            this.projectFilterValues = this.projectSpecific.concat('No', 'Any')
             this.projectFilterControl.setValue('Any')
         })
 

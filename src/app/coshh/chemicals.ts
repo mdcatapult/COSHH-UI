@@ -13,7 +13,7 @@ export class Chemicals {
                 chemical.hazards?.map(hazard => hazard.toString()).includes(hazardCategory))
             .filter(chemical => lab === 'All' || chemical.location === lab)
             .filter(chemical => Chemicals.filterExpiryDate(chemical, expiry))
-            .filter(chemical => project === 'Any' || chemical.projectSpecific === project)
+            .filter(chemical => project === 'Any' || project === 'No' && chemical.projectSpecific === '' || chemical.projectSpecific === project)
             .filter(chemical => chemical.name.toLowerCase().includes(searchLower) || chemical.chemicalNumber.toLowerCase().includes(searchLower))
             .sort((a, b) => {
                 if (a.name < b.name) {
