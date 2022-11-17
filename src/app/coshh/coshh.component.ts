@@ -3,12 +3,8 @@ import {HttpClient} from '@angular/common/http';
 import {allHazards, Chemical, columnTypes, ExpiryColor, Hazard, HazardListItem, red, yellow} from './types';
 import {MatTableDataSource} from '@angular/material/table';
 import {
-    FormControl,
-    UntypedFormArray,
     UntypedFormBuilder,
     UntypedFormControl,
-    UntypedFormGroup,
-    Validators
 } from "@angular/forms";
 import {combineLatest, debounceTime, map, Observable, startWith} from 'rxjs';
 import {environment} from 'src/environments/environment';
@@ -31,6 +27,7 @@ export class CoshhComponent implements OnInit {
     projects: {} = {};
     projectSpecific: string[] = [];
     freezeColumns = false;
+    displayedColumns = ["casNumber", "name", "hazards", "location", "cupboard", "chemicalNumber", "matterState", "quantity", "added", "Expiry", "safetyDataSheet", "coshhLink", "storageTemp", "projectSpecific"]
 
     getHazardListForChemical = (chemical: Chemical) => {
         return allHazards().map((hazard: Hazard) => {
@@ -60,9 +57,6 @@ export class CoshhComponent implements OnInit {
 
     searchOptions: Observable<string[]> = new Observable()
     searchControl = new UntypedFormControl()
-
-    formGroup = new UntypedFormGroup({}) // form group for table
-    formArray = new UntypedFormArray([]) // form array for table rows
 
     updateCupboardsFilterList = () => {  // TODO add trigger on data change
         this.http.get<string[]>(`${environment.backendUrl}/cupboards`).subscribe(cupboards => {
@@ -98,8 +92,6 @@ export class CoshhComponent implements OnInit {
                 const inStock = this.getChemicals()
                 this.tableData = new MatTableDataSource<Chemical>(inStock)
 
-                inStock.forEach(chem => this.addChemicalForm(chem))
-
                 this.searchOptions = this.getSearchObservable()
 
             })
@@ -126,19 +118,11 @@ export class CoshhComponent implements OnInit {
 
         })
 
-        this.formGroup = this.fb.group({
-            chemicals: this.formArray
-        })
-
         this.searchControl.valueChanges.subscribe((value: string) => {
 
             this.tableData.data = value === '' ?
                 this.getChemicals() :
                 this.tableData.data.filter(chemical => chemical.name.toLowerCase().includes(value.toLowerCase()))
-
-
-            this.formArray.clear()
-            this.tableData.data.forEach(chem => this.addChemicalForm(chem))
         })
 
         combineLatest([
@@ -150,9 +134,6 @@ export class CoshhComponent implements OnInit {
             ].map(control => control.valueChanges.pipe(startWith(control.value)))
         ).subscribe(() => {
             this.refresh()
-
-            this.formArray.clear()
-            this.tableData.data.forEach(chem => this.addChemicalForm(chem))
             this.searchOptions = this.getSearchObservable()
         })
 
@@ -167,10 +148,8 @@ export class CoshhComponent implements OnInit {
     }
 
     refresh(): void {
-
         this.tableData.data = this.getChemicals()
         this.updateCupboardsFilterList()
-
     }
 
     updateChemical(chemical: Chemical, refresh?: boolean): void {
@@ -199,41 +178,8 @@ export class CoshhComponent implements OnInit {
             this.chemicals.add(addedChemical)
             // this.tableData.data = this.tableData.data.concat([addedChemical])
             this.refresh()
-            this.addChemicalForm(addedChemical)
             this.searchOptions = this.getSearchObservable()
         })
-    }
-
-    addChemicalForm(chemical: Chemical): void {
-        const formGroup = this.fb.group({
-            casNumber: [chemical.casNumber],
-            name: [chemical.name, Validators.required],
-            chemicalNumber: [chemical.chemicalNumber],
-            matterState: [chemical.matterState],
-            quantity: [chemical.quantity],
-            added: [chemical.added],
-            expiry: [chemical.expiry],
-            safetyDataSheet: new FormControl(chemical.safetyDataSheet, {updateOn: 'blur'}),
-            coshhLink: new FormControl(chemical.coshhLink, {updateOn: 'blur'}),
-            storageTemp: [chemical.storageTemp],
-            location: [chemical.location],
-            cupboard: [chemical.cupboard],
-            projectSpecific: new FormControl(chemical.projectSpecific)
-        })
-
-        formGroup.valueChanges.subscribe(changedChemical => {
-            changedChemical.id = chemical.id
-            changedChemical.hazardList = chemical.hazardList
-            changedChemical.hazards = chemical.hazards
-            // If the links or expiry date have updated then ensure the appropriate UI bits are updated by calling refreshPage
-            let refreshPage = changedChemical.expiry !== chemical.expiry
-                || changedChemical.safetyDataSheet !== chemical.safetyDataSheet
-                || changedChemical.coshhLink !== chemical.coshhLink
-            this.updateChemical(changedChemical, refreshPage)
-            chemical.backgroundColour = this.getExpiryColour(changedChemical)
-        })
-
-        this.formArray.push(formGroup)
     }
 
     getExpiryColour(chemical: Chemical): ExpiryColor {
