@@ -58,6 +58,9 @@ export class CoshhComponent implements OnInit {
     expiryFilterControl = new UntypedFormControl('Any')
     expiryFilterValues = ['Any', '< 30 Days', 'Expired']
 
+    projectFilterControl = new UntypedFormControl('Any')
+    projectFilterValues: string[] = []
+
     searchOptions: Observable<string[]> = new Observable()
     searchControl = new UntypedFormControl()
 
@@ -83,7 +86,6 @@ export class CoshhComponent implements OnInit {
                 inStock.forEach(chem => this.addChemicalForm(chem))
 
                 this.searchOptions = this.getSearchObservable()
-
             })
 
         this.http.get<string[]>(`${environment.backendUrl}/labs`).subscribe(labs => {
@@ -93,19 +95,12 @@ export class CoshhComponent implements OnInit {
         })
 
         this.http.get<string[][]>(`${environment.backendUrl}/projects`).subscribe(projects => {
-
-
-            this.projectSpecific = projects.reduce((projectsArray: string[], currentValue: string[], currentIndex) => {
-                const projectCode = currentValue[0]
-                const projectName = currentValue[1]
-                // strip out header row and any blank rows
-                if (currentIndex > 0 && projectCode && projectName) {
-                    projectsArray.push(`${projectCode} - ${projectName}`)
-                }
-
-                return projectsArray
-            }, [])
-
+            this.projectSpecific = projects.filter(
+                // strip out header row and empty rows
+                (elem, index) => index && elem[0] && elem[1]
+            ).map(elem => `${elem[0]} - ${elem[1]}`)
+            this.projectFilterValues = this.projectSpecific.concat('Any')
+            this.projectFilterControl.setValue('Any')
         })
 
         this.formGroup = this.fb.group({
@@ -123,6 +118,7 @@ export class CoshhComponent implements OnInit {
                 this.cupboardFilterControl,
                 this.labFilterControl,
                 this.expiryFilterControl,
+                this.projectFilterControl,
                 this.toggleArchiveControl
             ].map(control => control.valueChanges.pipe(startWith(control.value)))
         ).subscribe(() => {
@@ -142,6 +138,7 @@ export class CoshhComponent implements OnInit {
             this.hazardFilterControl.value,
             this.labFilterControl.value,
             this.expiryFilterControl.value,
+            this.projectFilterControl.value,
             this.searchControl.value || "",
         )
     }
