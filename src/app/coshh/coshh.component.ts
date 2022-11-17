@@ -64,14 +64,14 @@ export class CoshhComponent implements OnInit {
     formGroup = new UntypedFormGroup({}) // form group for table
     formArray = new UntypedFormArray([]) // form array for table rows
 
-    updateCupboardsFilterList = () => {  // TODO add trigger on data change
+    updateCupboardsFilterList(): void {
         this.http.get<string[]>(`${environment.backendUrl}/cupboards`).subscribe(cupboards => {
             this.cupboardFilterValues = cupboards.concat('All')
             this.cupboards = cupboards
         })
     }
 
-    getChemicals = () => {
+    getChemicals(): Chemical[] {
         return this.chemicals.get(
             this.toggleArchiveControl.value,
             this.cupboardFilterControl.value,
