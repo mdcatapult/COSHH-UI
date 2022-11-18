@@ -54,7 +54,16 @@
 
                 <div class="filter-control">
                     <mat-form-field appearance="outline">
-                        <mat-label>Search by name</mat-label>
+                        <mat-label>Project specific?</mat-label>
+                        <mat-select required [formControl]="projectFilterControl">
+                            <mat-option *ngFor="let project of projectFilterValues" [value]="project">{{project}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+
+                <div class="filter-control">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Name / Chem no</mat-label>
                         <input type="text"
                                placeholder="Type to search..."
                                aria-label="Search"

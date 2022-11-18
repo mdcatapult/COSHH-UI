@@ -55,31 +55,17 @@ export class CoshhComponent implements OnInit {
     expiryFilterControl = new UntypedFormControl('Any')
     expiryFilterValues = ['Any', '< 30 Days', 'Expired']
 
+    projectFilterControl = new UntypedFormControl('Any')
+    projectFilterValues: string[] = []
+
     searchOptions: Observable<string[]> = new Observable()
     searchControl = new UntypedFormControl()
 
-    updateCupboardsFilterList = () => {  // TODO add trigger on data change
-        this.http.get<string[]>(`${environment.backendUrl}/cupboards`).subscribe(cupboards => {
-            this.cupboardFilterValues = cupboards.concat('All')
-            this.cupboards = cupboards
-        })
-    }
-
-    getChemicals = () => {
-        return this.chemicals.get(
-            this.toggleArchiveControl.value,
-            this.cupboardFilterControl.value,
-            this.hazardFilterControl.value,
-            this.labFilterControl.value,
-            this.expiryFilterControl.value
-        )
-    }
 
     ngOnInit(): void {
 
         this.http.get<Array<Chemical>>(`${environment.backendUrl}/chemicals`)
             .subscribe((res: Array<Chemical>) => {
-
                 res = res?.map((chem: Chemical) => {
                     chem.editSDS = false
                     chem.editCoshh = false
@@ -93,7 +79,6 @@ export class CoshhComponent implements OnInit {
                 this.tableData = new MatTableDataSource<Chemical>(inStock)
 
                 this.searchOptions = this.getSearchObservable()
-
             })
 
         this.http.get<string[]>(`${environment.backendUrl}/labs`).subscribe(labs => {
@@ -103,19 +88,12 @@ export class CoshhComponent implements OnInit {
         })
 
         this.http.get<string[][]>(`${environment.backendUrl}/projects`).subscribe(projects => {
-
-
-            this.projectSpecific = projects.reduce((projectsArray: string[], currentValue: string[], currentIndex) => {
-                const projectCode = currentValue[0]
-                const projectName = currentValue[1]
-                // strip out header row and any blank rows
-                if (currentIndex > 0 && projectCode && projectName) {
-                    projectsArray.push(`${projectCode} - ${projectName}`)
-                }
-
-                return projectsArray
-            }, [])
-
+            this.projectSpecific = projects.filter(
+                // strip out header row and empty rows
+                (elem, index) => index && elem[0] && elem[1]
+            ).map(elem => `${elem[0]} - ${elem[1]}`)
+            this.projectFilterValues = this.projectSpecific.concat('No', 'Any')
+            this.projectFilterControl.setValue('Any')
         })
 
         this.searchControl.valueChanges.subscribe((value: string) => {
@@ -130,6 +108,7 @@ export class CoshhComponent implements OnInit {
                 this.cupboardFilterControl,
                 this.labFilterControl,
                 this.expiryFilterControl,
+                this.projectFilterControl,
                 this.toggleArchiveControl
             ].map(control => control.valueChanges.pipe(startWith(control.value)))
         ).subscribe(() => {
@@ -137,6 +116,18 @@ export class CoshhComponent implements OnInit {
             this.searchOptions = this.getSearchObservable()
         })
 
+    }
+
+    getChemicals(): Chemical[] {
+        return this.chemicals.get(
+            this.toggleArchiveControl.value,
+            this.cupboardFilterControl.value,
+            this.hazardFilterControl.value,
+            this.labFilterControl.value,
+            this.expiryFilterControl.value,
+            this.projectFilterControl.value,
+            this.searchControl.value || "",
+        )
     }
 
 
@@ -149,7 +140,15 @@ export class CoshhComponent implements OnInit {
 
     refresh(): void {
         this.tableData.data = this.getChemicals()
-        this.updateCupboardsFilterList()
+        this.refreshCupboardsFilterList()
+
+    }
+
+    refreshCupboardsFilterList(): void {
+        this.http.get<string[]>(`${environment.backendUrl}/cupboards`).subscribe(cupboards => {
+            this.cupboardFilterValues = cupboards.concat('All')
+            this.cupboards = cupboards
+        })
     }
 
     updateChemical(chemical: Chemical, refresh?: boolean): void {
@@ -176,7 +175,6 @@ export class CoshhComponent implements OnInit {
             addedChemical.hazardList = this.getHazardListForChemical(addedChemical)
             addedChemical.backgroundColour = this.getExpiryColour(chemical)
             this.chemicals.add(addedChemical)
-            // this.tableData.data = this.tableData.data.concat([addedChemical])
             this.refresh()
             this.searchOptions = this.getSearchObservable()
         })
