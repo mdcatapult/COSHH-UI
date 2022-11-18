@@ -27,7 +27,7 @@ export class CoshhComponent implements OnInit {
     projects: {} = {};
     projectSpecific: string[] = [];
     freezeColumns = false;
-    displayedColumns = ["casNumber", "name", "hazards", "location", "cupboard", "chemicalNumber", "matterState", "quantity", "added", "Expiry", "safetyDataSheet", "coshhLink", "storageTemp", "projectSpecific"]
+    displayedColumns = ["casNumber", "name", "hazards", "location", "cupboard", "chemicalNumber", "matterState", "quantity", "added", "Expiry", "safetyDataSheet", "coshhLink", "storageTemp", "projectSpecific", "archive"]
 
     getHazardListForChemical = (chemical: Chemical) => {
         return allHazards().map((hazard: Hazard) => {
