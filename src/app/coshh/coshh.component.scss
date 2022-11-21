@@ -147,3 +147,8 @@ header {
 th.mat-sort-header-sorted {
   color: black;
 }
+
+.archived {
+  text-decoration: line-through;
+  text-decoration-thickness: 1.5px;
+}
