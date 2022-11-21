@@ -116,7 +116,7 @@
         </ng-container>
 
         <ng-container matColumnDef="hazards">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by symbol">
+            <th mat-header-cell *matHeaderCellDef>
                 Hazards
             </th>
             <td mat-cell *matCellDef="let chemical">
@@ -174,9 +174,9 @@
             <td mat-cell *matCellDef="let element"> {{element.added | DateTimeFormat}} </td>
         </ng-container>
 
-        <ng-container matColumnDef="Expiry">
+        <ng-container matColumnDef="expiry">
             <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by expiry">
-                expiry
+                Expiry
             </th>
             <td mat-cell *matCellDef="let element"> {{element.expiry | DateTimeFormat}} </td>
         </ng-container>
