@@ -30,7 +30,6 @@ export class CoshhComponent implements OnInit {
     labs: String[] = [];
     projects: {} = {};
     projectSpecific: string[] = [];
-    freezeColumns = false;
 
     getHazardListForChemical = (chemical: Chemical) => {
         return allHazards().map((hazard: Hazard) => {
