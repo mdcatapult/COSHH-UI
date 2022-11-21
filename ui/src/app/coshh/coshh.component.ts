@@ -1,24 +1,28 @@
-import {Component, OnInit} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {allHazards, Chemical, columnTypes, ExpiryColor, Hazard, HazardListItem, red, yellow} from './types';
-import {MatTableDataSource} from '@angular/material/table';
-import {
-    UntypedFormBuilder,
-    UntypedFormControl,
-} from "@angular/forms";
-import {combineLatest, debounceTime, map, Observable, startWith} from 'rxjs';
-import {environment} from 'src/environments/environment';
-import {Chemicals} from './chemicals';
-import {MatCheckboxChange} from "@angular/material/checkbox";
+import { LiveAnnouncer } from '@angular/cdk/a11y';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+
+import { UntypedFormBuilder, UntypedFormControl } from "@angular/forms";
+
+import { MatCheckboxChange } from "@angular/material/checkbox";
+import { MatSort, Sort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
+
+import { allHazards, Chemical, columnTypes, ExpiryColor, Hazard, HazardListItem, red, yellow } from './types';
+import { combineLatest, debounceTime, map, Observable, startWith } from 'rxjs';
+import { environment } from 'src/environments/environment';
+import { Chemicals } from './chemicals';
 
 @Component({
     selector: 'app-coshh',
     templateUrl: './coshh.component.html',
     styleUrls: ['./coshh.component.scss']
 })
-export class CoshhComponent implements OnInit {
+export class CoshhComponent implements OnInit, AfterViewInit {
 
-    constructor(private http: HttpClient, private fb: UntypedFormBuilder) {
+    displayedColumns = ["casNumber", "name", "hazards", "location", "cupboard", "chemicalNumber", "matterState", "quantity", "added", "Expiry", "safetyDataSheet", "coshhLink", "storageTemp", "projectSpecific", "archive"]
+
+    constructor(private http: HttpClient, private fb: UntypedFormBuilder, private _liveAnnouncer: LiveAnnouncer) {
     }
 
     chemicals = new Chemicals() // this represents all the chemicals returned from the API
@@ -27,7 +31,6 @@ export class CoshhComponent implements OnInit {
     projects: {} = {};
     projectSpecific: string[] = [];
     freezeColumns = false;
-    displayedColumns = ["casNumber", "name", "hazards", "location", "cupboard", "chemicalNumber", "matterState", "quantity", "added", "Expiry", "safetyDataSheet", "coshhLink", "storageTemp", "projectSpecific", "archive"]
 
     getHazardListForChemical = (chemical: Chemical) => {
         return allHazards().map((hazard: Hazard) => {
@@ -61,6 +64,7 @@ export class CoshhComponent implements OnInit {
     searchOptions: Observable<string[]> = new Observable()
     searchControl = new UntypedFormControl()
 
+    @ViewChild(MatSort) sort!: MatSort;
 
     ngOnInit(): void {
 
@@ -104,18 +108,22 @@ export class CoshhComponent implements OnInit {
         })
 
         combineLatest([
-                this.hazardFilterControl,
-                this.cupboardFilterControl,
-                this.labFilterControl,
-                this.expiryFilterControl,
-                this.projectFilterControl,
-                this.toggleArchiveControl
-            ].map(control => control.valueChanges.pipe(startWith(control.value)))
+            this.hazardFilterControl,
+            this.cupboardFilterControl,
+            this.labFilterControl,
+            this.expiryFilterControl,
+            this.projectFilterControl,
+            this.toggleArchiveControl
+        ].map(control => control.valueChanges.pipe(startWith(control.value)))
         ).subscribe(() => {
             this.refresh()
             this.searchOptions = this.getSearchObservable()
         })
 
+    }
+
+    ngAfterViewInit(): void {
+        this.tableData.sort = this.sort;
     }
 
     getChemicals(): Chemical[] {
@@ -267,5 +275,17 @@ export class CoshhComponent implements OnInit {
         }
     }
 
+    /** Announce the change in sort state for assistive technology. */
+    announceSortChange(sortState: Sort) {
+        // This example uses English messages. If your application supports
+        // multiple language, you would internationalize these strings.
+        // Furthermore, you can customize the message to add additional
+        // details about the values being sorted.
+        if (sortState.direction) {
+            this._liveAnnouncer.announce(`Sorted ${sortState.direction}ending`);
+        } else {
+            this._liveAnnouncer.announce('Sorting cleared');
+        }
+    }
 
 }

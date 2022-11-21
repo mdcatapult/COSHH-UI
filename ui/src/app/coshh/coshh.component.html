@@ -98,7 +98,8 @@
     <br />
 
     <table mat-table [dataSource]="tableData"
-           class="mat-elevation-z8"><!-- matSort (matSortChange)="announceSortChange($event)" -->
+           matSort (matSortChange)="announceSortChange($event)"
+           class="mat-elevation-z8">
 
         <ng-container matColumnDef="casNumber">
             <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by number">
@@ -132,77 +133,77 @@
         </ng-container>
 
         <ng-container matColumnDef="location">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by symbol">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by location">
                 Location
             </th>
             <td mat-cell *matCellDef="let element"> {{element.location}} </td>
         </ng-container>
 
         <ng-container matColumnDef="cupboard">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by symbol">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by cupboard">
                 Cupboard
             </th>
             <td mat-cell *matCellDef="let element"> {{element.cupboard}} </td>
         </ng-container>
 
         <ng-container matColumnDef="chemicalNumber">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by weight">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by chemical number">
                 Chemical Number
             </th>
             <td mat-cell *matCellDef="let element"> {{element.chemicalNumber}} </td>
         </ng-container>
 
         <ng-container matColumnDef="matterState">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by symbol">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by state">
                 State
             </th>
             <td mat-cell *matCellDef="let element"> {{element.matterState}} </td>
         </ng-container>
 
         <ng-container matColumnDef="quantity">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by symbol">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by quantity">
                 Quantity
             </th>
             <td mat-cell *matCellDef="let element"> {{element.quantity}} </td>
         </ng-container>
 
         <ng-container matColumnDef="added">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by symbol">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by added date">
                 Added
             </th>
-            <td mat-cell *matCellDef="let element"> {{element.added}} </td>
+            <td mat-cell *matCellDef="let element"> {{element.added | DateTimeFormat}} </td>
         </ng-container>
 
         <ng-container matColumnDef="Expiry">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by symbol">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by expiry">
                 expiry
             </th>
-            <td mat-cell *matCellDef="let element"> {{element.Expiry}} </td>
+            <td mat-cell *matCellDef="let element"> {{element.expiry | DateTimeFormat}} </td>
         </ng-container>
 
         <ng-container matColumnDef="safetyDataSheet">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by symbol">
+            <th mat-header-cell *matHeaderCellDef>
                 SDS
             </th>
             <td mat-cell *matCellDef="let element"> {{element.safetyDataSheet}} </td>
         </ng-container>
 
         <ng-container matColumnDef="coshhLink">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by symbol">
+            <th mat-header-cell *matHeaderCellDef>
                 COSHH
             </th>
             <td mat-cell *matCellDef="let element"> {{element.coshhLink}} </td>
         </ng-container>
 
         <ng-container matColumnDef="storageTemp">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by symbol">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by storage temperature">
                 Storage Temp.
             </th>
             <td mat-cell *matCellDef="let element"> {{element.storageTemp}} </td>
         </ng-container>
 
         <ng-container matColumnDef="projectSpecific">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by symbol">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by project">
                 Project Specific?
             </th>
             <td mat-cell *matCellDef="let element"> {{element.projectSpecific}} </td>

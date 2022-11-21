@@ -3,6 +3,7 @@ import {BrowserModule} from '@angular/platform-browser';
 
 import {AppComponent} from './app.component';
 import {CoshhComponent} from './coshh/coshh.component';
+import {DateTimeFormatPipe} from './utility/pipes/my-datetime-format.pipe'
 import {HttpClientModule} from '@angular/common/http';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MatTableModule} from "@angular/material/table";
@@ -17,6 +18,7 @@ import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatNativeDateModule, MatOptionModule, MAT_DATE_LOCALE} from '@angular/material/core';
 import {MatMomentDateModule, MAT_MOMENT_DATE_ADAPTER_OPTIONS} from '@angular/material-moment-adapter';
 import {MatCheckboxModule} from "@angular/material/checkbox";
+import {MatSortModule} from '@angular/material/sort';
 import {MatToolbarModule} from "@angular/material/toolbar";
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
@@ -31,6 +33,7 @@ import {MatSelectModule} from "@angular/material/select";
         CoshhComponent,
         AddChemicalComponent,
         AddChemicalDialogComponent,
+        DateTimeFormatPipe,
     ],
     imports: [
         BrowserModule,
@@ -47,6 +50,7 @@ import {MatSelectModule} from "@angular/material/select";
         MatNativeDateModule,
         MatMomentDateModule,
         MatCheckboxModule,
+        MatSortModule,
         MatToolbarModule,
         MatTooltipModule,
         MatOptionModule,
