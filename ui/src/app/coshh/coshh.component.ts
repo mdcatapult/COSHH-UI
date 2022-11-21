@@ -1,5 +1,5 @@
 import { LiveAnnouncer } from '@angular/cdk/a11y';
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 import { UntypedFormBuilder, UntypedFormControl } from "@angular/forms";
@@ -18,9 +18,9 @@ import { Chemicals } from './chemicals';
     templateUrl: './coshh.component.html',
     styleUrls: ['./coshh.component.scss']
 })
-export class CoshhComponent implements OnInit, AfterViewInit {
+export class CoshhComponent implements OnInit {
 
-    displayedColumns = ["casNumber", "name", "hazards", "location", "cupboard", "chemicalNumber", "matterState", "quantity", "added", "Expiry", "safetyDataSheet", "coshhLink", "storageTemp", "projectSpecific", "archive"]
+    displayedColumns = ["casNumber", "name", "hazards", "location", "cupboard", "chemicalNumber", "matterState", "quantity", "added", "expiry", "safetyDataSheet", "coshhLink", "storageTemp", "projectSpecific", "archive"]
 
     constructor(private http: HttpClient, private fb: UntypedFormBuilder, private _liveAnnouncer: LiveAnnouncer) {
     }
@@ -81,6 +81,7 @@ export class CoshhComponent implements OnInit, AfterViewInit {
                 this.chemicals.set(res || [])
                 const inStock = this.getChemicals()
                 this.tableData = new MatTableDataSource<Chemical>(inStock)
+                this.tableData.sort = this.sort;
 
                 this.searchOptions = this.getSearchObservable()
             })
@@ -120,10 +121,6 @@ export class CoshhComponent implements OnInit, AfterViewInit {
             this.searchOptions = this.getSearchObservable()
         })
 
-    }
-
-    ngAfterViewInit(): void {
-        this.tableData.sort = this.sort;
     }
 
     getChemicals(): Chemical[] {
