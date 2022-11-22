@@ -1,6 +1,6 @@
 {
   "name": "coshh",
-  "version": "0.0.43",
+  "version": "0.0.47",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
