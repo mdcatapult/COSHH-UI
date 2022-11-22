@@ -101,10 +101,7 @@ export class CoshhComponent implements OnInit {
         })
 
         this.searchControl.valueChanges.subscribe((value: string) => {
-
-            this.tableData.data = value === '' ?
-                this.getChemicals() :
-                this.tableData.data.filter(chemical => chemical.name.toLowerCase().includes(value.toLowerCase()))
+            this.tableData.data = this.getChemicals()
         })
 
         combineLatest([
