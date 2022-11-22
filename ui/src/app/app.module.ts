@@ -9,6 +9,7 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MatTableModule} from "@angular/material/table";
 import {MatIconModule} from "@angular/material/icon";
 import {AddChemicalComponent} from './add-chemical/add-chemical.component';
+import {EditChemicalComponent} from './edit-chemical/edit-chemical.component';
 import {ChemicalDialogComponent} from './chemical-dialog/chemical-dialog.component';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatFormFieldModule} from '@angular/material/form-field';
@@ -32,6 +33,7 @@ import {MatSelectModule} from "@angular/material/select";
         AppComponent,
         CoshhComponent,
         AddChemicalComponent,
+        EditChemicalComponent,
         ChemicalDialogComponent,
         DateTimeFormatPipe,
     ],
