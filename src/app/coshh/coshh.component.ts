@@ -153,6 +153,7 @@ export class CoshhComponent implements OnInit {
     }
 
     updateChemical(chemical: Chemical, refresh?: boolean): void {
+        this.updateHazards(chemical)
         this.http.put(`${environment.backendUrl}/chemical`, chemical).pipe(
             debounceTime(100)
         ).subscribe(() => {
@@ -168,9 +169,7 @@ export class CoshhComponent implements OnInit {
         ).subscribe(() => {
         })
     }
-
-    onChemicalAdded(chemical: Chemical): void {
-        this.http.post<Chemical>(`${environment.backendUrl}/chemical`, chemical).subscribe((addedChemical: Chemical) => {
+onChemicalAdded(chemical: Chemical): void {this.http.post<Chemical>(`${environment.backendUrl}/chemical`, chemical).subscribe((addedChemical: Chemical) => {
             addedChemical.editSDS = false
             addedChemical.editCoshh = false
             addedChemical.hazardList = this.getHazardListForChemical(addedChemical)
@@ -179,6 +178,19 @@ export class CoshhComponent implements OnInit {
             this.refresh()
             this.searchOptions = this.getSearchObservable()
         })
+    }
+
+    onChemicalEditted(chemical: Chemical): void {
+        this.updateChemical(chemical, true)
+        // this.http.post<Chemical>(`${environment.backendUrl}/chemical`, chemical).subscribe((addedChemical: Chemical) => {
+        //     addedChemical.editSDS = false
+        //     addedChemical.editCoshh = false
+        //     addedChemical.hazardList = this.getHazardListForChemical(addedChemical)
+        //     addedChemical.backgroundColour = this.getExpiryColour(chemical)
+        //     this.chemicals.add(addedChemical)
+        //     this.refresh()
+        //     this.searchOptions = this.getSearchObservable()
+        // })
     }
 
     getExpiryColour(chemical: Chemical): ExpiryColor {
@@ -214,30 +226,6 @@ export class CoshhComponent implements OnInit {
         })
 
         return chemical
-    }
-
-    onHazardSelect(chemical: Chemical, event: MatCheckboxChange) {
-
-        const checkedHazard = event.source._elementRef.nativeElement.innerText.trim()
-        const notHazardous = chemical.hazardList.filter(hazardListItem => hazardListItem.value === 'None')[0]
-        const unknown = chemical.hazardList.filter(hazardListItem => hazardListItem.value === 'Unknown')[0]
-
-        // if 'None' or 'Unknown' has been selected, set the activated property of all other hazards to false and clear hazards
-        if ((notHazardous.activated && checkedHazard === 'None') || (unknown.activated && checkedHazard === 'Unknown')) {
-            this.singleSelect(chemical, checkedHazard)
-        } else {
-            // if any hazard has been selected, set the activated property of the 'None' hazard to false
-            chemical.hazardList.filter(hazardListItem => (hazardListItem.value === 'None' || hazardListItem.value === 'Unknown'))
-                .map(hazardListItem => hazardListItem.activated = false)
-
-            // set hazards on the chemical to be those the user has selected via the checkboxes
-            chemical.hazards = chemical.hazardList.reduce((hazardList: Hazard[], hazard: HazardListItem) => {
-                return hazard.activated ? hazardList.concat(hazard.title) : hazardList
-            }, [])
-        }
-
-        // update the chemical in the database
-        this.updateHazards(chemical)
     }
 
 
