@@ -4,16 +4,16 @@ import {DateAdapter} from '@angular/material/core';
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 
-import {AddChemicalDialogComponent} from './add-chemical-dialog.component';
+import {ChemicalDialogComponent} from './chemical-dialog.component';
 import {ReactiveFormsModule} from "@angular/forms";
 
-describe('AddChemicalDialogComponent', () => {
-    let component: AddChemicalDialogComponent;
-    let fixture: ComponentFixture<AddChemicalDialogComponent>;
+describe('ChemicalDialogComponent', () => {
+    let component: ChemicalDialogComponent;
+    let fixture: ComponentFixture<ChemicalDialogComponent>;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [AddChemicalDialogComponent],
+            declarations: [ChemicalDialogComponent],
             providers: [
                 MatDialog,
                 HttpClient,
@@ -30,7 +30,7 @@ describe('AddChemicalDialogComponent', () => {
     });
 
     beforeEach(() => {
-        fixture = TestBed.createComponent(AddChemicalDialogComponent);
+        fixture = TestBed.createComponent(ChemicalDialogComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
     });

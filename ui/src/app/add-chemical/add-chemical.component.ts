@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
-import {AddChemicalDialogComponent} from '../add-chemical-dialog/add-chemical-dialog.component';
+import {ChemicalDialogComponent} from '../chemical-dialog/chemical-dialog.component';
 import {Chemical} from '../coshh/types';
 
 
@@ -22,7 +22,7 @@ export class AddChemicalComponent implements OnInit {
     }
 
     addChemical(): void {
-        const dialogRef = this.dialog.open(AddChemicalDialogComponent, {
+        const dialogRef = this.dialog.open(ChemicalDialogComponent, {
             width: '50vw',
             data: {
                 labs: this.labs,
