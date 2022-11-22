@@ -8,18 +8,18 @@ import {getAutocompleteObservable} from "../utility/utilities";
 import {HazardCategory} from "../coshh/types"
 
 @Component({
-    selector: 'app-add-chemical-dialog',
-    templateUrl: './add-chemical-dialog.component.html',
-    styleUrls: ['./add-chemical-dialog.component.scss']
+    selector: 'app-chemical-dialog',
+    templateUrl: './chemical-dialog.component.html',
+    styleUrls: ['./chemical-dialog.component.scss']
 })
-export class AddChemicalDialogComponent {
+export class ChemicalDialogComponent {
 
     hazardCategoryList: HazardCategory[]
     masterCheckbox: boolean
     form: any
 
     constructor(
-        public dialogRef: MatDialogRef<AddChemicalDialogComponent>,
+        public dialogRef: MatDialogRef<ChemicalDialogComponent>,
         private dateAdapter: DateAdapter<Date>,
         private fb: FormBuilder,
         @Inject(MAT_DIALOG_DATA) public data: {
