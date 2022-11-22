@@ -2,6 +2,7 @@ import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
 import {ChemicalDialogComponent} from '../chemical-dialog/chemical-dialog.component';
 import {Chemical} from '../coshh/types';
+import * as moment from 'moment';
 
 
 @Component({
@@ -22,11 +23,28 @@ export class AddChemicalComponent implements OnInit {
     }
 
     addChemical(): void {
+        let chemical = {
+            casNumber: '',
+            name: '',
+            chemicalNumber: '',
+            matterState: '',
+            quantity: '',
+            added: moment(new Date(), "DD-MM-YYY"),
+            expiry: moment(new Date(), "DD-MM-YYY").add(5, 'y'),
+            safetyDataSheet: '',
+            coshhLink: '',
+            storageTemp: '',
+            location: '',
+            cupboard: '',
+            hazards: ['Unknown'],
+            projectSpecific: '',
+        }
         const dialogRef = this.dialog.open(ChemicalDialogComponent, {
             width: '50vw',
             data: {
                 labs: this.labs,
                 projectSpecific: this.projectSpecific,
+                chemical: chemical,
             },
         })
 

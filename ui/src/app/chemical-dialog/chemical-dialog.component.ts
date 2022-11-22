@@ -5,7 +5,7 @@ import {MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import * as moment from 'moment';
 import {Observable} from "rxjs";
 import {getAutocompleteObservable} from "../utility/utilities";
-import {HazardCategory} from "../coshh/types"
+import {Chemical, HazardCategory, allHazards} from "../coshh/types"
 
 @Component({
     selector: 'app-chemical-dialog',
@@ -17,6 +17,7 @@ export class ChemicalDialogComponent {
     hazardCategoryList: HazardCategory[]
     masterCheckbox: boolean
     form: any
+    selectedHazardCategories: string[]
 
     constructor(
         public dialogRef: MatDialogRef<ChemicalDialogComponent>,
@@ -24,40 +25,36 @@ export class ChemicalDialogComponent {
         private fb: FormBuilder,
         @Inject(MAT_DIALOG_DATA) public data: {
             labs: string[],
-            projectSpecific: string[]
+            projectSpecific: string[],
+            chemical: Chemical,
         },
     ) {
+        const chemical = this.data.chemical
+
         this.dateAdapter.setLocale('en-GB');
         this.masterCheckbox = false;
-        this.hazardCategoryList = [
-            {name: 'None', selected: true},
-            {name: 'Unknown', selected: false},
-            {name: 'Explosive', selected: false},
-            {name: 'Flammable', selected: false},
-            {name: 'Oxidising', selected: false},
-            {name: 'Corrosive', selected: false},
-            {name: 'Acute toxicity', selected: false},
-            {name: 'Hazardous to the environment', selected: false},
-            {name: 'Health hazard/Hazardous to the ozone layer', selected: false},
-            {name: 'Serious health hazard', selected: false},
-            {name: 'Gas under pressure', selected: false}
-        ]
+        this.hazardCategoryList = allHazards().map(hazard => {
+            return { name: hazard,
+                     selected: chemical.hazards.includes(hazard)}
+        })
+
+        this.selectedHazardCategories = ['None']
 
         this.form = this.fb.group({
-            casNumber: new FormControl('', [Validators.pattern('\\b[1-9]{1}\\d{1,5}-\\d{2}-\\d\\b'), Validators.required]),
-            name: new FormControl('', Validators.required),
-            chemicalNumber: new FormControl('', Validators.required),
-            matterState: new FormControl('', Validators.required),
-            quantity: new FormControl('', Validators.required),
-            added: new FormControl(moment(new Date(), "DD-MM-YYY"), Validators.required),
-            expiry: new FormControl(moment(new Date(), "DD-MM-YYY").add(5, 'y'), Validators.required),
-            safetyDataSheet: new FormControl('', Validators.required),
-            coshhLink: new FormControl(''),
-            storageTemp: new FormControl('', Validators.required),
-            location: new FormControl(''),
-            cupboard: new FormControl(''),
-            hazards: this.buildHazards(),
-            projectSpecific: new UntypedFormControl('')
+            casNumber: new FormControl(chemical.casNumber, [Validators.pattern('\\b[1-9]{1}\\d{1,5}-\\d{2}-\\d\\b'), Validators.required]),
+            name: new FormControl(chemical.name, Validators.required),
+            chemicalNumber: new FormControl(chemical.chemicalNumber, Validators.required),
+            matterState: new FormControl(chemical.matterState, Validators.required),
+            quantity: new FormControl(chemical.quantity, Validators.required),
+            added: new FormControl(chemical.added, Validators.required),
+            expiry: new FormControl(chemical.expiry, Validators.required),
+            safetyDataSheet: new FormControl(chemical.safetyDataSheet, Validators.required),
+            coshhLink: new FormControl(chemical.coshhLink),
+            storageTemp: new FormControl(chemical.storageTemp, Validators.required),
+            location: new FormControl(chemical.location),
+            cupboard: new FormControl(chemical.cupboard),
+            hazards: this.buildHazards(chemical),
+            projectSpecific: new UntypedFormControl(chemical.projectSpecific)
         })
     }
 
@@ -67,16 +64,16 @@ export class ChemicalDialogComponent {
         this.projectSpecificOptions = getAutocompleteObservable(this.form.controls["projectSpecific"], this.data.projectSpecific)
     }
 
-    buildHazards() {
+    buildHazards(chemical: Chemical) {
         const hazards = this.hazardCategoryList.map(hazard => this.fb.control(hazard.selected));
 
         return this.fb.array(hazards);
     }
 
-    selectedHazardCategories: string[] = ['None']
 
     onClose(): void {
-        const chemical = this.form.value
+        const chemical = {...this.data.chemical,
+                          ...this.form.value}
         chemical.hazards = this.selectedHazardCategories
         this.form.valid && this.dialogRef.close(chemical)
     }
