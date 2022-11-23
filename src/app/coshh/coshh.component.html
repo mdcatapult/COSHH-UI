@@ -85,7 +85,12 @@
                         [formControl]="toggleArchiveControl"
                         color="primary">Display archived chemicals
                 </mat-checkbox>
-            </div>
+                <mat-checkbox
+                        class="coshh-checkbox"
+                        [(ngModel)]="freezeColumns"
+                        color="primary">Freeze 'Name' and 'CAS' columns
+                </mat-checkbox>
+        </div>
 
         </mat-toolbar>
     </header>
