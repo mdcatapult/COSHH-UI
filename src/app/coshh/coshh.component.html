@@ -97,134 +97,144 @@
 
     <br />
 
-    <table mat-table [dataSource]="tableData"
-           matSort (matSortChange)="announceSortChange($event)"
-           class="mat-elevation-z8">
+    <div style="overflow-x:auto;">
+        <table mat-table [dataSource]="tableData"
+               matSort (matSortChange)="announceSortChange($event)"
+               class="mat-elevation-z8">
 
-        <ng-container matColumnDef="casNumber">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by number">
-                CAS no.
-            </th>
-            <td mat-cell *matCellDef="let element"> {{element.casNumber}} </td>
-        </ng-container>
+            <ng-container matColumnDef="casNumber">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by number"
+                    [ngStyle]="{'position': freezeColumns ? 'sticky' : ''}">
+                    CAS no.
+                </th>
+                <td mat-cell *matCellDef="let element"
+                    [ngStyle]="{'position': freezeColumns ? 'sticky' : ''}">
+                    {{element.casNumber}}
+                </td>
+            </ng-container>
 
-        <ng-container matColumnDef="name">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by name">
-                Chemical Name
-            </th>
-            <td mat-cell *matCellDef="let element"> {{element.name}} </td>
-        </ng-container>
+            <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by name"
+                    [ngStyle]="{'position': freezeColumns ? 'sticky' : ''}">
+                    Chemical Name
+                </th>
+                <td mat-cell *matCellDef="let element"
+                    [ngStyle]="{'position': freezeColumns ? 'sticky' : ''}">
+                    {{element.name}}
+                </td>
+            </ng-container>
 
-        <ng-container matColumnDef="hazards">
-            <th mat-header-cell *matHeaderCellDef>
-                Hazards
-            </th>
-            <td mat-cell *matCellDef="let chemical">
-                <img *ngIf="!chemical.hazards || !chemical.hazards.length" class="img-responsive hazard"
-                     src="assets/unknown.jpg" alt="Unknown" title="Unknown">
+            <ng-container matColumnDef="hazards">
+                <th mat-header-cell *matHeaderCellDef>
+                    Hazards
+                </th>
+                <td mat-cell *matCellDef="let chemical">
+                    <img *ngIf="!chemical.hazards || !chemical.hazards.length" class="img-responsive hazard"
+                         src="assets/unknown.jpg" alt="Unknown" title="Unknown">
 
-                <ul>
-                    <li *ngFor="let hazard of chemical.hazardList">
-                        <img *ngIf="hazard.activated" class="img-responsive hazard"
-                             [src]="getHazardPicture(hazard.title)" [alt]="hazard.title" [title]="hazard.title">
-                    </li>
-                </ul>
-            </td>
-        </ng-container>
+                    <ul>
+                        <li *ngFor="let hazard of chemical.hazardList">
+                            <img *ngIf="hazard.activated" class="img-responsive hazard"
+                                 [src]="getHazardPicture(hazard.title)" [alt]="hazard.title" [title]="hazard.title">
+                        </li>
+                    </ul>
+                </td>
+            </ng-container>
 
-        <ng-container matColumnDef="location">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by location">
-                Location
-            </th>
-            <td mat-cell *matCellDef="let element"> {{element.location}} </td>
-        </ng-container>
+            <ng-container matColumnDef="location">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by location">
+                    Location
+                </th>
+                <td mat-cell *matCellDef="let element"> {{element.location}} </td>
+            </ng-container>
 
-        <ng-container matColumnDef="cupboard">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by cupboard">
-                Cupboard
-            </th>
-            <td mat-cell *matCellDef="let element"> {{element.cupboard}} </td>
-        </ng-container>
+            <ng-container matColumnDef="cupboard">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by cupboard">
+                    Cupboard
+                </th>
+                <td mat-cell *matCellDef="let element"> {{element.cupboard}} </td>
+            </ng-container>
 
-        <ng-container matColumnDef="chemicalNumber">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by chemical number">
-                Chemical Number
-            </th>
-            <td mat-cell *matCellDef="let element"> {{element.chemicalNumber}} </td>
-        </ng-container>
+            <ng-container matColumnDef="chemicalNumber">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by chemical number">
+                    Chemical Number
+                </th>
+                <td mat-cell *matCellDef="let element"> {{element.chemicalNumber}} </td>
+            </ng-container>
 
-        <ng-container matColumnDef="matterState">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by state">
-                State
-            </th>
-            <td mat-cell *matCellDef="let element"> {{element.matterState}} </td>
-        </ng-container>
+            <ng-container matColumnDef="matterState">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by state">
+                    State
+                </th>
+                <td mat-cell *matCellDef="let element"> {{element.matterState}} </td>
+            </ng-container>
 
-        <ng-container matColumnDef="quantity">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by quantity">
-                Quantity
-            </th>
-            <td mat-cell *matCellDef="let element"> {{element.quantity}} </td>
-        </ng-container>
+            <ng-container matColumnDef="quantity">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by quantity">
+                    Quantity
+                </th>
+                <td mat-cell *matCellDef="let element"> {{element.quantity}} </td>
+            </ng-container>
 
-        <ng-container matColumnDef="added">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by added date">
-                Added
-            </th>
-            <td mat-cell *matCellDef="let element"> {{element.added | DateTimeFormat}} </td>
-        </ng-container>
+            <ng-container matColumnDef="added">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by added date">
+                    Added
+                </th>
+                <td mat-cell *matCellDef="let element"> {{element.added | DateTimeFormat}} </td>
+            </ng-container>
 
-        <ng-container matColumnDef="expiry">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by expiry">
-                Expiry
-            </th>
-            <td mat-cell *matCellDef="let element" [style.background-color]="element.backgroundColour"> {{element.expiry | DateTimeFormat}} </td>
-        </ng-container>
+            <ng-container matColumnDef="expiry">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by expiry">
+                    Expiry
+                </th>
+                <td mat-cell *matCellDef="let element" [style.background-color]="element.backgroundColour"> {{element.expiry | DateTimeFormat}} </td>
+            </ng-container>
 
-        <ng-container matColumnDef="safetyDataSheet">
-            <th mat-header-cell *matHeaderCellDef>
-                SDS
-            </th>
-            <td mat-cell *matCellDef="let element"> {{element.safetyDataSheet}} </td>
-        </ng-container>
+            <ng-container matColumnDef="safetyDataSheet">
+                <th mat-header-cell *matHeaderCellDef>
+                    SDS
+                </th>
+                <td mat-cell *matCellDef="let element"> {{element.safetyDataSheet}} </td>
+            </ng-container>
 
-        <ng-container matColumnDef="coshhLink">
-            <th mat-header-cell *matHeaderCellDef>
-                COSHH
-            </th>
-            <td mat-cell *matCellDef="let element"> {{element.coshhLink}} </td>
-        </ng-container>
+            <ng-container matColumnDef="coshhLink">
+                <th mat-header-cell *matHeaderCellDef>
+                    COSHH
+                </th>
+                <td mat-cell *matCellDef="let element"> {{element.coshhLink}} </td>
+            </ng-container>
 
-        <ng-container matColumnDef="storageTemp">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by storage temperature">
-                Storage Temp.
-            </th>
-            <td mat-cell *matCellDef="let element"> {{element.storageTemp}} </td>
-        </ng-container>
+            <ng-container matColumnDef="storageTemp">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by storage temperature">
+                    Storage Temp.
+                </th>
+                <td mat-cell *matCellDef="let element"> {{element.storageTemp}} </td>
+            </ng-container>
 
-        <ng-container matColumnDef="projectSpecific">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by project">
-                Project Specific?
-            </th>
-            <td mat-cell *matCellDef="let element"> {{element.projectSpecific}} </td>
-        </ng-container>
+            <ng-container matColumnDef="projectSpecific">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by project">
+                    Project Specific?
+                </th>
+                <td mat-cell *matCellDef="let element"> {{element.projectSpecific}} </td>
+            </ng-container>
 
-        <ng-container matColumnDef="archive">
-            <th mat-header-cell *matHeaderCellDef></th>
-            <td mat-cell *matCellDef="let chemical" class="coshh-archive-cell">
-                <button
-                    matTooltip="Archive this chemical"
-                    matTooltipPosition="above"
-                    class="archive-button"
-                    mat-mini-fab
-                    color="warn"
-                    (click)="archive(chemical)"
-                >
-                    <mat-icon>delete</mat-icon>
-                </button>
-            </td>
-        </ng-container>
+            <ng-container matColumnDef="archive">
+                <th mat-header-cell *matHeaderCellDef></th>
+                <td mat-cell *matCellDef="let chemical" class="coshh-archive-cell">
+                    <button
+                        matTooltip="Archive this chemical"
+                        matTooltipPosition="above"
+                        class="archive-button"
+                        mat-mini-fab
+                        color="warn"
+                        (click)="archive(chemical)"
+                    >
+                        <mat-icon>delete</mat-icon>
+                    </button>
+                </td>
+            </ng-container>
 
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns; let chemical" [ngClass]="{'archived': chemical.isArchived}"></tr>
-    </table>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns; let chemical" [ngClass]="{'archived': chemical.isArchived}"></tr>
+        </table>
+    </div>
