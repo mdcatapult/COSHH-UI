@@ -188,6 +188,7 @@ export class CoshhComponent implements OnInit {
         chemical.backgroundColour = this.getExpiryColour(chemical)
         this.updateChemical(chemical)
         this.updateHazards(chemical)
+        this.chemicals.update(chemical)
         this.refresh()
         this.searchOptions = this.getSearchObservable()
     }
