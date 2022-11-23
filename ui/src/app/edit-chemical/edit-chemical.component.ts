@@ -34,7 +34,6 @@ export class EditChemicalComponent implements OnInit {
         })
 
         dialogRef.afterClosed().subscribe((chemical: Chemical) => {
-            chemical.hazards = chemical.hazardList.filter(one => one.activated).map(one => one.title)
             this.onChemicalEditted.emit(chemical)
         })
     }
