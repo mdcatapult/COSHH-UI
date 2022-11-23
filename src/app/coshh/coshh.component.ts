@@ -153,7 +153,6 @@ export class CoshhComponent implements OnInit {
     }
 
     updateChemical(chemical: Chemical, refresh?: boolean): void {
-        this.updateHazards(chemical)
         this.http.put(`${environment.backendUrl}/chemical`, chemical).pipe(
             debounceTime(100)
         ).subscribe(() => {
@@ -169,7 +168,8 @@ export class CoshhComponent implements OnInit {
         ).subscribe(() => {
         })
     }
-onChemicalAdded(chemical: Chemical): void {this.http.post<Chemical>(`${environment.backendUrl}/chemical`, chemical).subscribe((addedChemical: Chemical) => {
+
+    onChemicalAdded(chemical: Chemical): void {this.http.post<Chemical>(`${environment.backendUrl}/chemical`, chemical).subscribe((addedChemical: Chemical) => {
             addedChemical.editSDS = false
             addedChemical.editCoshh = false
             addedChemical.hazardList = this.getHazardListForChemical(addedChemical)
@@ -181,16 +181,14 @@ onChemicalAdded(chemical: Chemical): void {this.http.post<Chemical>(`${environme
     }
 
     onChemicalEditted(chemical: Chemical): void {
-        this.updateChemical(chemical, true)
-        // this.http.post<Chemical>(`${environment.backendUrl}/chemical`, chemical).subscribe((addedChemical: Chemical) => {
-        //     addedChemical.editSDS = false
-        //     addedChemical.editCoshh = false
-        //     addedChemical.hazardList = this.getHazardListForChemical(addedChemical)
-        //     addedChemical.backgroundColour = this.getExpiryColour(chemical)
-        //     this.chemicals.add(addedChemical)
-        //     this.refresh()
-        //     this.searchOptions = this.getSearchObservable()
-        // })
+        chemical.editSDS = false
+        chemical.editCoshh = false
+        chemical.hazardList = this.getHazardListForChemical(chemical)
+        chemical.backgroundColour = this.getExpiryColour(chemical)
+        this.updateChemical(chemical)
+        this.updateHazards(chemical)
+        this.refresh()
+        this.searchOptions = this.getSearchObservable()
     }
 
     getExpiryColour(chemical: Chemical): ExpiryColor {

@@ -38,7 +38,7 @@ export class ChemicalDialogComponent {
                      selected: chemical.hazards.includes(hazard)}
         })
 
-        this.selectedHazardCategories = ['None']
+        this.selectedHazardCategories = chemical.hazards
 
         this.form = this.fb.group({
             casNumber: new FormControl(chemical.casNumber, [Validators.pattern('\\b[1-9]{1}\\d{1,5}-\\d{2}-\\d\\b'), Validators.required]),
