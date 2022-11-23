@@ -221,6 +221,12 @@
             <ng-container matColumnDef="archive">
                 <th mat-header-cell *matHeaderCellDef></th>
                 <td mat-cell *matCellDef="let chemical" class="coshh-archive-cell">
+                    <app-edit-chemical
+                        [labs]="labFilterValues"
+                        [projectSpecific]="projectSpecific"
+                        [chemical]="chemical"
+                        (onChemicalEditted)="onChemicalEditted($event)"
+                    ></app-edit-chemical>
                     <button
                         matTooltip="Archive this chemical"
                         matTooltipPosition="above"
