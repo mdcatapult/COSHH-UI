@@ -18,7 +18,9 @@ describe('ChemicalDialogComponent', () => {
                 MatDialog,
                 HttpClient,
                 {provide: MatDialogRef, useValue: {}},
-                {provide: MAT_DIALOG_DATA, useValue: {}},
+                {provide: MAT_DIALOG_DATA, useValue: {
+                    chemical: {hazards: []},
+                }},
                 DateAdapter,
             ],
             imports: [
