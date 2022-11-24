@@ -214,16 +214,16 @@
                 <td mat-cell *matCellDef="let element"> {{element.projectSpecific}} </td>
             </ng-container>
 
-            <ng-container matColumnDef="archive">
+            <ng-container matColumnDef="buttons">
                 <th mat-header-cell *matHeaderCellDef></th>
-                <td mat-cell *matCellDef="let chemical" class="coshh-archive-cell">
+                <td mat-cell *matCellDef="let chemical" class="coshh-archive-cell"
+                    style="width: 90px;">
                     <app-edit-chemical
                         [labs]="labFilterValues"
                         [projectSpecific]="projectSpecific"
                         [chemical]="chemical"
                         (onChemicalEdited)="onChemicalEdited($event)"
                     ></app-edit-chemical>
-                    <div><br></div>
                     <button
                         matTooltip="Archive this chemical"
                         matTooltipPosition="above"
