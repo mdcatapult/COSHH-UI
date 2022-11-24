@@ -102,24 +102,20 @@
                matSort (matSortChange)="announceSortChange($event)"
                class="mat-elevation-z8">
 
-            <ng-container matColumnDef="casNumber">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by number"
-                    [ngStyle]="{'position': freezeColumns ? 'sticky' : ''}">
+            <ng-container matColumnDef="casNumber" [sticky]="freezeColumns">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by number">
                     CAS no.
                 </th>
-                <td mat-cell *matCellDef="let element"
-                    [ngStyle]="{'position': freezeColumns ? 'sticky' : ''}">
+                <td mat-cell *matCellDef="let element">
                     {{element.casNumber}}
                 </td>
             </ng-container>
 
-            <ng-container matColumnDef="name">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by name"
-                    [ngStyle]="{'position': freezeColumns ? 'sticky' : ''}">
+            <ng-container matColumnDef="name" [sticky]="freezeColumns">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by name">
                     Chemical Name
                 </th>
-                <td mat-cell *matCellDef="let element"
-                    [ngStyle]="{'position': freezeColumns ? 'sticky' : ''}">
+                <td mat-cell *matCellDef="let element">
                     {{element.name}}
                 </td>
             </ng-container>
