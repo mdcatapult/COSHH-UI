@@ -18,7 +18,7 @@ export class EditChemicalComponent implements OnInit {
     @Input() labs: string[] = []
     @Input() projectSpecific: string[] = []
     @Input() chemical!: Chemical
-    @Output() onChemicalEditted = new EventEmitter<Chemical>()
+    @Output() onChemicalEdited = new EventEmitter<Chemical>()
 
     ngOnInit(): void {
     }
@@ -34,7 +34,7 @@ export class EditChemicalComponent implements OnInit {
         })
 
         dialogRef.afterClosed().subscribe((chemical: Chemical) => {
-            this.onChemicalEditted.emit(chemical)
+            this.onChemicalEdited.emit(chemical)
         })
     }
 }

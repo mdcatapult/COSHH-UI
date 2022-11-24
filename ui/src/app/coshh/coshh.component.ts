@@ -181,7 +181,7 @@ export class CoshhComponent implements OnInit {
         })
     }
 
-    onChemicalEditted(chemical: Chemical): void {
+    onChemicalEdited(chemical: Chemical): void {
         chemical.editSDS = false
         chemical.editCoshh = false
         chemical.hazardList = this.getHazardListForChemical(chemical)
