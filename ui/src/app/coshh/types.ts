@@ -75,7 +75,7 @@ type HazardTuple = typeof ALL_HAZARDS
 export type Hazard = HazardTuple[number]
 
 export type HazardCategory = {
-    name: string,
+    name: Hazard,
     selected: boolean
 }
 
