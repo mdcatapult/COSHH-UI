@@ -148,6 +148,10 @@ th.mat-sort-header-sorted {
   color: black;
 }
 
+.table-container {
+  overflow-x: auto;
+}
+
 button {
   margin: 5px;
 }
@@ -155,4 +159,8 @@ button {
 .archived {
   text-decoration: line-through;
   text-decoration-thickness: 1.5px;
+}
+
+.coshh-buttons-cell {
+  width: 90px;
 }
