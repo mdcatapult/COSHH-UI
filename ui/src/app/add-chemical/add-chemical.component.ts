@@ -49,7 +49,9 @@ export class AddChemicalComponent implements OnInit {
         })
 
         dialogRef.afterClosed().subscribe((chemical: Chemical) => {
-            this.onChemicalAdded.emit(chemical)
+            if (chemical) {
+                this.onChemicalAdded.emit(chemical)
+            }
         })
     }
 }
