@@ -29,6 +29,8 @@ export class ChemicalDialogComponent {
             chemical: Chemical,
         },
     ) {
+        dialogRef.disableClose = true;
+
         const chemical = this.data.chemical
 
         this.dateAdapter.setLocale('en-GB');
