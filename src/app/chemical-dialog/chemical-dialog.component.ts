@@ -78,6 +78,10 @@ export class ChemicalDialogComponent {
         this.form.valid && this.dialogRef.close(chemical)
     }
 
+    onCancel(): void {
+        this.dialogRef.close()
+    }
+
     removeHazardFromSelectedHazardList(hazardName: string): void {
         if (this.selectedHazardCategories.indexOf(hazardName) >= 0) {
             this.selectedHazardCategories.splice(this.selectedHazardCategories.indexOf(hazardName), 1)
