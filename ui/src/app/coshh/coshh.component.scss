@@ -21,7 +21,7 @@ header {
   margin: 1vw;
   overflow-x: auto;
   overflow-y: auto;
-  max-height: 83vh;
+  max-height: 79vh;
   max-width: 100%;
 }
 
@@ -157,5 +157,6 @@ button {
 }
 
 .coshh-buttons-cell {
-  width: 90px;
+  min-width: 100px;
+  padding-left: 0.25vw;
 }

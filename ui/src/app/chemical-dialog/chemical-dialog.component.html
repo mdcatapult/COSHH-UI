@@ -141,6 +141,10 @@
             [disabled]="!this.selectedHazardCategories.length"
             mat-raised-button
             color="primary"
-            (click)="onClose()">Submit
-    </button>
+            style="margin-right: 0.5vw"
+            (click)="onClose()">Submit</button>
+    <button
+            mat-raised-button
+            color="warn"
+            (click)="onCancel()">Cancel</button>
 </div>
