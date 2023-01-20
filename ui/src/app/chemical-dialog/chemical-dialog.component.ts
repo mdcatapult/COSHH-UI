@@ -29,6 +29,8 @@ export class ChemicalDialogComponent {
             chemical: Chemical,
         },
     ) {
+        dialogRef.disableClose = true;
+
         const chemical = this.data.chemical
 
         this.dateAdapter.setLocale('en-GB');
@@ -76,6 +78,10 @@ export class ChemicalDialogComponent {
                           ...this.form.value}
         chemical.hazards = this.selectedHazardCategories
         this.form.valid && this.dialogRef.close(chemical)
+    }
+
+    onCancel(): void {
+        this.dialogRef.close()
     }
 
     removeHazardFromSelectedHazardList(hazardName: string): void {
