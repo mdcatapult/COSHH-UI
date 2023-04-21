@@ -43,7 +43,7 @@ export class ChemicalDialogComponent {
         this.selectedHazardCategories = chemical.hazards
 
         this.form = this.fb.group({
-            casNumber: new FormControl(chemical.casNumber, [Validators.pattern('\\b[1-9]{1}\\d{1,5}-\\d{2}-\\d\\b'), Validators.required]),
+            casNumber: new FormControl(chemical.casNumber, [Validators.pattern(/^([1-9]{1}\d{1,5}-\d{2}-\d|N\/?A)$/i)]),
             name: new FormControl(chemical.name, Validators.required),
             chemicalNumber: new FormControl(chemical.chemicalNumber, Validators.required),
             matterState: new FormControl(chemical.matterState, Validators.required),
