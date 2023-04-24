@@ -4,6 +4,7 @@ import {BrowserModule} from '@angular/platform-browser';
 import {AppComponent} from './app.component';
 import {CoshhComponent} from './coshh/coshh.component';
 import {DateTimeFormatPipe} from './utility/pipes/my-datetime-format.pipe'
+import {NAPipe} from "./utility/pipes/na-pipe";
 import {HttpClientModule} from '@angular/common/http';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MatTableModule} from "@angular/material/table";
@@ -36,6 +37,7 @@ import {MatSelectModule} from "@angular/material/select";
         EditChemicalComponent,
         ChemicalDialogComponent,
         DateTimeFormatPipe,
+        NAPipe
     ],
     imports: [
         BrowserModule,
