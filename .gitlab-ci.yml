@@ -11,7 +11,6 @@ test-lint-build-ui:
   stage: test-lint-build
   image: registry.mdcatapult.io/informatics/docker-images/ci/node
   before_script:
-    - cd ui
     - apt-get -yqq update && apt-get upgrade -yqq chromium libxss1 xvfb
     - export CHROME_BIN=/usr/bin/chromium
     - npm install
