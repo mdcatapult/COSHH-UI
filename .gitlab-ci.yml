@@ -1,0 +1,87 @@
+stages:
+  - test-lint-build
+  - publish
+  - release-ui
+
+default:
+  tags:
+    - wopr
+
+test-lint-build-ui:
+  stage: test-lint-build
+  image: registry.mdcatapult.io/informatics/docker-images/ci/node
+  before_script:
+    - cd ui
+    - apt-get -yqq update && apt-get upgrade -yqq chromium libxss1 xvfb
+    - export CHROME_BIN=/usr/bin/chromium
+    - npm install
+  script:
+    - npm run test:ci
+    - npm run build
+  coverage: /Lines\s+:\s(\d+\.?\d*)%\s\(\s\d+\/\d+\s\)/
+  except:
+    variables:
+      - $CI_COMMIT_MESSAGE =~ /^Setting version to.*/
+
+publish-ui:
+  stage: publish
+  tags:
+    - wopr
+  image:
+    name: gcr.io/kaniko-project/executor:debug
+    entrypoint:
+      - ''
+  before_script:
+    - echo "{\"auths\":{\"$CI_REGISTRY\":{\"username\":\"$CI_REGISTRY_USER\",\"password\":\"$CI_REGISTRY_PASSWORD\"}}}" > /kaniko/.docker/config.json
+  script:
+    - >
+      /kaniko/executor
+      --context $CI_PROJECT_DIR
+      --build-arg VERSION_HASH=$CI_COMMIT_SHORT_SHA
+      --destination $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
+      --dockerfile $CI_PROJECT_DIR/Dockerfile
+  except:
+    refs:
+      - master
+      - tags
+    variables:
+      - $CI_COMMIT_MESSAGE =~ /^Setting version to.*/
+
+publish-ui-master:
+  stage: publish
+  tags:
+    - wopr
+  image:
+    name: gcr.io/kaniko-project/executor:debug
+    entrypoint:
+      - ''
+  before_script:
+    - echo "{\"auths\":{\"$CI_REGISTRY\":{\"username\":\"$CI_REGISTRY_USER\",\"password\":\"$CI_REGISTRY_PASSWORD\"}}}" > /kaniko/.docker/config.json
+  script:
+    - >
+      /kaniko/executor
+      --context $CI_PROJECT_DIR
+      --build-arg VERSION_HASH=$CI_COMMIT_SHORT_SHA
+      --destination $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
+      --destination $CI_REGISTRY_IMAGE:latest
+      --dockerfile $CI_PROJECT_DIR/Dockerfile
+  only:
+    refs:
+      - tags
+    variables:
+      - "$CI_COMMIT_MESSAGE =~ /^Setting version to.*/"
+
+release-ui:
+  stage: release-ui
+  image: registry.mdcatapult.io/informatics/docker-images/ci/node
+  tags:
+    - wopr
+  script:
+    - git checkout master; git pull
+    - cictl exec release node
+  only:
+    refs:
+     - master
+  except:
+    variables:
+      - "$CI_COMMIT_MESSAGE =~ /^Setting version to.*/"
