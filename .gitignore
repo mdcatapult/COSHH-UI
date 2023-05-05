@@ -1,0 +1,6 @@
+.angular/cache/*
+.idea
+*.DS_Store
+dist
+node_modules
+*.swp
