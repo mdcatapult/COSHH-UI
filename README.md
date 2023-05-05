@@ -1,13 +1,13 @@
 ## COSHH UI
 
-An Angular based webapp companion to the [COSHH API]()(https://gitlab.mdcatapult.io/informatics/coshh/coshh-api).
+An Angular based webapp companion to the [COSHH API](https://gitlab.mdcatapult.io/informatics/coshh/coshh-api).
 
 ### Running
 
 You may need to `npm i` if running for the first time, and `npm install -g @angular/cli` if you don't have Angular.
 
 ### Debugging
-You will need the API up and running so see the [COSHH API]()(https://gitlab.mdcatapult.io/informatics/coshh/coshh-api) project for info on running it.
+You will need the API up and running so see the [COSHH API](https://gitlab.mdcatapult.io/informatics/coshh/coshh-api) project for info on running it.
 
 Start the UI:
 ```bash
