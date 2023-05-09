@@ -105,7 +105,7 @@ ul {
 }
 
 .add-chemical {
-  padding-left: 0.55vw;
+  padding: 0 0.55vw 0 0.5vw;
 }
 
 header {
@@ -159,4 +159,8 @@ button {
 .coshh-buttons-cell {
   min-width: 100px;
   padding-left: 0.25vw;
+}
+
+.coshh-inventory{
+  margin-right: 1vw;
 }

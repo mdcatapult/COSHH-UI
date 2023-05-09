@@ -12,6 +12,7 @@ import {MatIconModule} from "@angular/material/icon";
 import {AddChemicalComponent} from './add-chemical/add-chemical.component';
 import {EditChemicalComponent} from './edit-chemical/edit-chemical.component';
 import {ChemicalDialogComponent} from './chemical-dialog/chemical-dialog.component';
+import {MatBadgeModule} from '@angular/material/badge';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
@@ -43,6 +44,7 @@ import {MatSelectModule} from "@angular/material/select";
         BrowserModule,
         HttpClientModule,
         BrowserAnimationsModule,
+        MatBadgeModule,
         MatTableModule,
         MatIconModule,
         MatDialogModule,

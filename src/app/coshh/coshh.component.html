@@ -2,7 +2,6 @@
     <header>
         <img class="mdc-logo" src="assets/mdc-logo-blue-small.png">
         <mat-toolbar class="coshh-toolbar">
-            <span>COSHH Inventory </span>
             <div class="add-chemical">
                 <app-add-chemical
                         [labs]="labFilterValues"
@@ -10,6 +9,12 @@
                         (onChemicalAdded)="onChemicalAdded($event)"
                 ></app-add-chemical>
             </div>
+            <div
+                    class="coshh-inventory"
+                    [matBadge]="tableData.data.length"
+                    matBadgeColor="accent">COSHH Inventory
+            </div>
+
 
             <span class="spacer"></span>
 
@@ -28,7 +33,8 @@
                     <mat-form-field className="filter-select" appearance="outline">
                         <mat-label>Filter by cupboard</mat-label>
                         <mat-select required [formControl]="cupboardFilterControl">
-                            <mat-option *ngFor="let cupboard of cupboardFilterValues" [value]="cupboard">{{cupboard}}</mat-option>
+                            <mat-option *ngFor="let cupboard of cupboardFilterValues"
+                                        [value]="cupboard">{{cupboard}}</mat-option>
                         </mat-select>
                     </mat-form-field>
                 </div>
@@ -37,7 +43,8 @@
                     <mat-form-field appearance="outline">
                         <mat-label>Filter by expiry</mat-label>
                         <mat-select required [formControl]="expiryFilterControl">
-                            <mat-option *ngFor="let expiry of expiryFilterValues" [value]="expiry">{{expiry}}</mat-option>
+                            <mat-option *ngFor="let expiry of expiryFilterValues"
+                                        [value]="expiry">{{expiry}}</mat-option>
                         </mat-select>
                     </mat-form-field>
                 </div>
@@ -46,7 +53,8 @@
                     <mat-form-field appearance="outline">
                         <mat-label>Filter by hazard</mat-label>
                         <mat-select required [formControl]="hazardFilterControl">
-                            <mat-option *ngFor="let hazard of hazardFilterValues" [value]="hazard">{{hazard}}</mat-option>
+                            <mat-option *ngFor="let hazard of hazardFilterValues"
+                                        [value]="hazard">{{hazard}}</mat-option>
                         </mat-select>
                     </mat-form-field>
                 </div>
@@ -56,7 +64,8 @@
                     <mat-form-field appearance="outline">
                         <mat-label>Project specific?</mat-label>
                         <mat-select required [formControl]="projectFilterControl">
-                            <mat-option *ngFor="let project of projectFilterValues" [value]="project">{{project}}</mat-option>
+                            <mat-option *ngFor="let project of projectFilterValues"
+                                        [value]="project">{{project}}</mat-option>
                         </mat-select>
                     </mat-form-field>
                 </div>
@@ -90,12 +99,12 @@
                         [(ngModel)]="freezeColumns"
                         color="primary">Freeze 'Name' and 'CAS' columns
                 </mat-checkbox>
-        </div>
+            </div>
 
         </mat-toolbar>
     </header>
 
-    <br />
+    <br/>
 
     <div class="table-container">
         <table mat-table [dataSource]="tableData"
@@ -183,7 +192,8 @@
                 <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by expiry">
                     Expiry
                 </th>
-                <td mat-cell *matCellDef="let element" [style.background-color]="element.backgroundColour"> {{element.expiry | DateTimeFormat}} </td>
+                <td mat-cell *matCellDef="let element"
+                    [style.background-color]="element.backgroundColour"> {{element.expiry | DateTimeFormat}} </td>
             </ng-container>
 
             <ng-container matColumnDef="safetyDataSheet">
@@ -201,7 +211,8 @@
             </ng-container>
 
             <ng-container matColumnDef="storageTemp">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by storage temperature">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header
+                    sortActionDescription="Sort by storage temperature">
                     Storage Temp.
                 </th>
                 <td mat-cell *matCellDef="let element"> {{element.storageTemp}} </td>
@@ -218,18 +229,18 @@
                 <th mat-header-cell *matHeaderCellDef></th>
                 <td mat-cell *matCellDef="let chemical" class="coshh-buttons-cell">
                     <app-edit-chemical
-                        [labs]="labFilterValues"
-                        [projectSpecific]="projectSpecific"
-                        [chemical]="chemical"
-                        (onChemicalEdited)="onChemicalEdited($event)"
+                            [labs]="labFilterValues"
+                            [projectSpecific]="projectSpecific"
+                            [chemical]="chemical"
+                            (onChemicalEdited)="onChemicalEdited($event)"
                     ></app-edit-chemical>
                     <button
-                        matTooltip="Archive this chemical"
-                        matTooltipPosition="above"
-                        class="archive-button"
-                        mat-mini-fab
-                        color="warn"
-                        (click)="archive(chemical)"
+                            matTooltip="Archive this chemical"
+                            matTooltipPosition="above"
+                            class="archive-button"
+                            mat-mini-fab
+                            color="warn"
+                            (click)="archive(chemical)"
                     >
                         <mat-icon>delete</mat-icon>
                     </button>
@@ -237,7 +248,8 @@
             </ng-container>
 
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns; let chemical" [ngClass]="{'archived': chemical.isArchived}"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns; let chemical"
+                [ngClass]="{'archived': chemical.isArchived}"></tr>
         </table>
     </div>
-<div>
+    <div>

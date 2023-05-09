@@ -4,7 +4,6 @@ import { HttpClient } from '@angular/common/http';
 
 import { UntypedFormBuilder, UntypedFormControl } from "@angular/forms";
 
-import { MatCheckboxChange } from "@angular/material/checkbox";
 import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 
@@ -42,7 +41,6 @@ export class CoshhComponent implements OnInit {
         })
     }
 
-    selectedHazards: Hazard[] = [];
     hazardFilterValues = (<string[]>allHazards()).concat('All')
     tableData = new MatTableDataSource<Chemical>() // data source for table
     columns: string[] = columnTypes // columns to display in table
