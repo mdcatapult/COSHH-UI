@@ -62,6 +62,14 @@ export class CoshhComponent implements OnInit {
     searchOptions: Observable<string[]> = new Observable()
     searchControl = new UntypedFormControl()
 
+    tooltipText = () => {
+        const numberOfChemicals = this.getChemicals().length
+        const chemicalOrChemicals = numberOfChemicals === 1 ? 'chemical' : 'chemicals'
+
+        return `${numberOfChemicals} ${chemicalOrChemicals} found with current filters`
+    }
+
+
     @ViewChild(MatSort) sort!: MatSort;
 
     ngOnInit(): void {
