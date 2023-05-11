@@ -56,6 +56,6 @@ export class Chemicals {
 
     
     static daysUntilExpiry(chemical: Chemical): number {
-        return moment(chemical.expiry).diff(moment(), 'days')
+        return moment(chemical.expiry).startOf('day').diff(moment().startOf('day'), 'days')
     }
 }
