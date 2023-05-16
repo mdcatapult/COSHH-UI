@@ -28,7 +28,9 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {MatButtonModule} from "@angular/material/button";
 import {MatMenuModule} from '@angular/material/menu';
 import {MatSelectModule} from "@angular/material/select";
-
+import { AuthModule } from '@auth0/auth0-angular';
+import { environment as env } from '../environments/environment';
+import {SharedModule} from "./shared";
 
 @NgModule({
     declarations: [
@@ -63,7 +65,11 @@ import {MatSelectModule} from "@angular/material/select";
         MatAutocompleteModule,
         MatButtonModule,
         MatMenuModule,
-        MatSelectModule
+        MatSelectModule,
+        AuthModule.forRoot({
+            ...env.auth0,
+        }),
+        SharedModule
     ],
     providers: [
         {provide: MAT_DATE_LOCALE, useValue: 'en-GB'},

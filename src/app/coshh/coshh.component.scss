@@ -164,3 +164,13 @@ button {
 .coshh-inventory{
   margin-right: 1vw;
 }
+// Centre items in flexbox with space in between them ie similar to float left/right
+.centred-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+#login-buttons {
+  padding-left: 20px;
+}

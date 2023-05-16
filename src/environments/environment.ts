@@ -4,7 +4,14 @@
 
 export const environment = {
   production: false,
-  backendUrl: 'http://localhost:8080'
+  backendUrl: 'http://localhost:8080',
+  auth0: {
+    domain: 'mdcatapult.eu.auth0.com',
+    clientId: 'kGE0VDjHYDaQvx977nCCe8e4GJbCfi41',
+    authorizationParams: {
+      redirect_uri: window.location.origin
+    }
+  }
 };
 
 /*
