@@ -9,7 +9,8 @@ export const environment = {
     domain: 'mdcatapult.eu.auth0.com',
     clientId: 'kGE0VDjHYDaQvx977nCCe8e4GJbCfi41',
     authorizationParams: {
-      redirect_uri: window.location.origin
+      redirect_uri: window.location.origin,
+      audience: 'https://coshh-api-local.wopr.inf.mdc'
     }
   }
 };
