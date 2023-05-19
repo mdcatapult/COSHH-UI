@@ -24,6 +24,13 @@ test-lint-build-ui:
 
 publish-ui:
   stage: publish
+  variables:
+    CLIENT_ORIGIN_URL: "$DEV_CLIENT_ORIGIN_URL"
+    AUTH0_DOMAIN: "$DEV_AUTH0_DOMAIN"
+    AUTH0_AUDIENCE: "$DEV_AUTH0_AUDIENCE"
+    AUTH0_CLIENT_ID: "$DEV_AUTH0_CLIENT_ID"
+    DEPLOYMENT_ENV: "dev"
+    BACKEND_URL: "$DEV_BACKEND_URL"
   tags:
     - wopr
   image:
@@ -48,6 +55,13 @@ publish-ui:
 
 publish-ui-master:
   stage: publish
+  variables:
+    CLIENT_ORIGIN_URL: "$PROD_CLIENT_ORIGIN_URL"
+    AUTH0_DOMAIN: "$PROD_AUTH0_DOMAIN"
+    AUTH0_AUDIENCE: "$PROD_AUTH0_AUDIENCE"
+    AUTH0_CLIENT_ID: "$PROD_AUTH0_CLIENT_ID"
+    DEPLOYMENT_ENV: "prod"
+    BACKEND_URL: "$PROD_BACKEND_URL"
   tags:
     - wopr
   image:

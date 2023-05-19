@@ -10,7 +10,7 @@ RUN npm install -g @angular/cli
 
 COPY . .
 
-RUN ng build
+RUN npm run build
 
 FROM nginx:1.21-alpine
 
