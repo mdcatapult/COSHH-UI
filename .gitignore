@@ -4,4 +4,4 @@
 dist
 node_modules
 *.swp
-src/environments/
+src/environments/*
