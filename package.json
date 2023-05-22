@@ -5,7 +5,8 @@
     "ng": "ng",
     "config": "ts-node ./scripts/setenv.ts",
     "start": "npm run config && ng serve",
-    "build": "npm run config && ng build",
+    "build": "npm run config && ng build --configuration=development",
+    "build-prod": "npm run config && ng build --configuration=production",
     "watch": "npm run config -- --environment=dev ng build --watch",
     "test": "npm run config && ng test",
     "test:ci": "npm run config && ng test --browsers GitlabCI --watch false"
