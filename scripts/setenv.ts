@@ -5,7 +5,6 @@ const { argv } = require('yargs');
 require('dotenv').config();
 
 // read the command line arguments passed with yargs
-const environment = argv.environment;
 const isProduction = process.env["DEPLOYMENT_ENV"] === 'prod'
 const targetPath = isProduction
     ? `./src/environments/environment.prod.ts`
