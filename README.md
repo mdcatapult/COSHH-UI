@@ -66,4 +66,6 @@ DEPLOYMENT_ENV: "prod"
 BACKEND_URL: "$PROD_BACKEND_URL"
 ```
 
+The CI stage `publish-ui-master` runs on a merge to `master` branch and uses the file called `Dockerfile` which uses `npm run build-prod` which then runs `ng build --configuration=production`.  
+The CI stage `publish-ui` runs on `development` and other branches and uses `Dockerfile-dev` which runs `ng build --configuration=development`.  
 Change things like `PROD_CLIENT_ORIGIN_URL` in the gitlab repo via `settings>CI/CD>Variables` to whatever Auth0 settings the app needs to use.
