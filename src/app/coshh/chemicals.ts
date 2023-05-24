@@ -14,7 +14,7 @@ export class Chemicals {
             .filter(chemical => lab === 'All' || chemical.location === lab)
             .filter(chemical => Chemicals.filterExpiryDate(chemical, expiry))
             .filter(chemical => project === 'Any' || project === 'No' && chemical.projectSpecific === '' || chemical.projectSpecific === project)
-            .filter(chemical => chemical.name.toLowerCase().includes(searchLower) || chemical.chemicalNumber.toLowerCase().includes(searchLower))
+            .filter(chemical => chemical.name.toLowerCase().includes(searchLower) || chemical.chemicalNumber?.toLowerCase().includes(searchLower))
             .sort((a, b) => {
                 if (a.name < b.name) {
                     return -1
