@@ -13,7 +13,7 @@ export const environment = {
    backendUrl: "${process.env["BACKEND_URL"]}",
    auth0: {
       clientId: "${process.env["AUTH0_CLIENT_ID"]}",
-      domain: "${process.env["CLIENT_DOMAIN"]}",
+      domain: "${process.env["AUTH0_DOMAIN"]}",
       authorizationParams: {
           redirect_uri: window.location.origin,
           audience: "${process.env["AUTH0_AUDIENCE"]}"
