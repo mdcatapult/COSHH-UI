@@ -5,7 +5,7 @@ export class Chemicals {
     private chemicals: Chemical[] = []
 
     get = (includeArchived: boolean, cupboard: string, hazardCategory: string, lab: string, expiry: Expiry, project: string, searchStr: string): Chemical[] => {
-        const searchLower = searchStr?.toLowerCase()
+        const searchLower = searchStr.toLowerCase()
         return this.chemicals
             .filter(chemical => includeArchived || !chemical.isArchived)
             .filter(chemical => cupboard === 'All' || chemical.cupboard === cupboard)
@@ -30,7 +30,7 @@ export class Chemicals {
     getNames = (chemicals: Chemical[], search: string): string[] => {
         const searchLower = search.toLowerCase()
         return chemicals
-            .flatMap(chemical => [chemical.name, chemical.chemicalNumber])
+            .flatMap(chemical => [chemical.name, chemical.chemicalNumber?])
             .filter(phrase => phrase.toLowerCase().includes(searchLower))
             .sort()
             .filter((item, pos, array) => !pos || item != array[pos - 1])  // deduplication
