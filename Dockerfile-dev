@@ -10,7 +10,11 @@ RUN npm install -g @angular/cli
 
 COPY . .
 
+RUN env
+
 RUN npm run build
+
+RUN cat app/src/environments/environment.ts
 
 FROM nginx:1.21-alpine
 
