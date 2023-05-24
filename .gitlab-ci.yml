@@ -53,6 +53,7 @@ publish-ui:
       --build-arg VERSION_HASH=$CI_COMMIT_SHORT_SHA
       --build-arg CLIENT_ORIGIN_URL=$DEV_CLIENT_ORIGIN_URL
       --build-arg AUTH0_DOMAIN=$DEV_AUTH0_DOMAIN
+      --build-arg AUTH0_AUDIENCE=$DEV_AUTH0_AUDIENCE
       --build-arg AUTH0_CLIENT_ID=$DEV_AUTH0_CLIENT_ID
       --build-arg DEPLOYMENT_ENV=dev
       --build-arg BACKEND_URL=$DEV_BACKEND_URL
