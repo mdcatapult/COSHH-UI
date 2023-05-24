@@ -31,13 +31,13 @@ test-lint-build-ui:
 
 publish-ui:
   stage: publish
-  variables:
-    CLIENT_ORIGIN_URL: "$DEV_CLIENT_ORIGIN_URL"
-    AUTH0_DOMAIN: "$DEV_AUTH0_DOMAIN"
-    AUTH0_AUDIENCE: "$DEV_AUTH0_AUDIENCE"
-    AUTH0_CLIENT_ID: "$DEV_AUTH0_CLIENT_ID"
-    DEPLOYMENT_ENV: "dev"
-    BACKEND_URL: "$DEV_BACKEND_URL"
+#  variables:
+#    CLIENT_ORIGIN_URL: "$DEV_CLIENT_ORIGIN_URL"
+#    AUTH0_DOMAIN: "$DEV_AUTH0_DOMAIN"
+#    AUTH0_AUDIENCE: "$DEV_AUTH0_AUDIENCE"
+#    AUTH0_CLIENT_ID: "$DEV_AUTH0_CLIENT_ID"
+#    DEPLOYMENT_ENV: "dev"
+#    BACKEND_URL: "$DEV_BACKEND_URL"
   tags:
     - wopr
   image:
@@ -51,6 +51,11 @@ publish-ui:
       /kaniko/executor
       --context $CI_PROJECT_DIR
       --build-arg VERSION_HASH=$CI_COMMIT_SHORT_SHA
+      --build-arg CLIENT_ORIGIN_URL=$DEV_CLIENT_ORIGIN_URL
+      --build-arg AUTH0_DOMAIN=$DEV_AUTH0_DOMAIN
+      --build-arg AUTH0_CLIENT_ID=$DEV_AUTH0_CLIENT_ID
+      --build-arg DEPLOYMENT_ENV=dev
+      --build-arg BACKEND_URL=$DEV_BACKEND_URL
       --destination $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
       --dockerfile $CI_PROJECT_DIR/Dockerfile-dev
   except:
