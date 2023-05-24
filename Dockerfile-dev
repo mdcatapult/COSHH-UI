@@ -10,6 +10,12 @@ RUN npm install -g @angular/cli
 
 COPY . .
 
+ARG CLIENT_ORIGIN_URL
+ARG AUTH0_DOMAIN
+ARG AUTH0_CLIENT_ID
+ARG DEPLOYMENT_ENV
+ARG BACKEND_URL
+
 RUN env
 
 RUN npm run build
