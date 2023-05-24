@@ -5,7 +5,7 @@ export class Chemicals {
     private chemicals: Chemical[] = []
 
     get = (includeArchived: boolean, cupboard: string, hazardCategory: string, lab: string, expiry: Expiry, project: string, searchStr: string): Chemical[] => {
-        const searchLower = searchStr.toLowerCase()
+        const searchLower = searchStr?.toLowerCase()
         return this.chemicals
             .filter(chemical => includeArchived || !chemical.isArchived)
             .filter(chemical => cupboard === 'All' || chemical.cupboard === cupboard)
@@ -14,7 +14,7 @@ export class Chemicals {
             .filter(chemical => lab === 'All' || chemical.location === lab)
             .filter(chemical => Chemicals.filterExpiryDate(chemical, expiry))
             .filter(chemical => project === 'Any' || project === 'No' && chemical.projectSpecific === '' || chemical.projectSpecific === project)
-            .filter(chemical => chemical.name.toLowerCase().includes(searchLower) || chemical.chemicalNumber && chemical.chemicalNumber.toLowerCase().includes(searchLower))
+            .filter(chemical => chemical.name.toLowerCase().includes(searchLower) || chemical.chemicalNumber?.toLowerCase().includes(searchLower))
             .sort((a, b) => {
                 if (a.name < b.name) {
                     return -1
