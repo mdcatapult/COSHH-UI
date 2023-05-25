@@ -21,10 +21,6 @@ RUN env
 
 RUN npm run build
 
-RUN pwd
-
-RUN cat /app/src/environments/environment.ts
-
 FROM nginx:1.21-alpine
 
 COPY --from=build app/dist/coshh /usr/share/nginx/html
