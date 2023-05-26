@@ -14,7 +14,7 @@ export class Chemicals {
             .filter(chemical => lab === 'All' || chemical.location === lab)
             .filter(chemical => Chemicals.filterExpiryDate(chemical, expiry))
             .filter(chemical => project === 'Any' || project === 'No' && chemical.projectSpecific === '' || chemical.projectSpecific === project)
-            .filter(chemical => chemical.name.toLowerCase().includes(searchLower) || chemical.chemicalNumber.toLowerCase().includes(searchLower))
+            .filter(chemical => chemical.name.toLowerCase().includes(searchLower) || chemical.chemicalNumber?.toLowerCase().includes(searchLower))
             .sort((a, b) => {
                 if (a.name < b.name) {
                     return -1
@@ -30,7 +30,7 @@ export class Chemicals {
     getNames = (chemicals: Chemical[], search: string): string[] => {
         const searchLower = search.toLowerCase()
         return chemicals
-            .flatMap(chemical => [chemical.name, chemical.chemicalNumber])
+            .flatMap(chemical => [chemical.name, chemical.chemicalNumber || ''])
             .filter(phrase => phrase.toLowerCase().includes(searchLower))
             .sort()
             .filter((item, pos, array) => !pos || item != array[pos - 1])  // deduplication
