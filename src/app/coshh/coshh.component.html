@@ -234,7 +234,7 @@
                 <td mat-cell *matCellDef="let element"> {{element.projectSpecific}} </td>
             </ng-container>
 
-            <ng-container matColumnDef="buttons">
+            <ng-container matColumnDef="buttons" sticky>
                 <th mat-header-cell *matHeaderCellDef></th>
                 <td mat-cell *matCellDef="let chemical" class="coshh-buttons-cell">
                     <app-edit-chemical
@@ -261,4 +261,3 @@
                 [ngClass]="{'archived': chemical.isArchived}"></tr>
         </table>
     </div>
-    <div>

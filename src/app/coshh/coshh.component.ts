@@ -19,7 +19,7 @@ import { Chemicals } from './chemicals';
 })
 export class CoshhComponent implements OnInit {
 
-    displayedColumns = ["casNumber", "name", "hazards", "location", "cupboard", "chemicalNumber", "matterState", "quantity", "added", "expiry", "safetyDataSheet", "coshhLink", "storageTemp", "projectSpecific", "buttons"]
+    displayedColumns = ["buttons", "casNumber", "name", "hazards", "location", "cupboard", "chemicalNumber", "matterState", "quantity", "added", "expiry", "safetyDataSheet", "coshhLink", "storageTemp", "projectSpecific"]
 
     constructor(private http: HttpClient, private fb: UntypedFormBuilder, private _liveAnnouncer: LiveAnnouncer) {
     }
