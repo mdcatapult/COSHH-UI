@@ -36,18 +36,18 @@ describe('Chemicals', () => {
         });
 
         it('should be 1 for chemical expiring tomorrow', () => {
-            chem.expiry = moment().add(1, 'days')
+            chem.expiry = moment().clone().add(1, 'days')
             expect(Chemicals.daysUntilExpiry(chem)).toBe(1)
         })
 
         it('should be -1 for chemical that expired yesterday', () => {
-            chem.expiry = moment().subtract(1, 'days')
+            chem.expiry = moment().clone().subtract(1, 'days')
             expect(Chemicals.daysUntilExpiry(chem)).toBe(-1)
         })
 
         // >= because unknown amount of leap years exist in next 10 years
         it('should be >= 3650 for chemical that expires in 10 years', () => {
-            chem.expiry = moment().add(10, 'years')
+            chem.expiry = moment().clone().add(10, 'years')
             expect(Chemicals.daysUntilExpiry(chem)).toBeGreaterThanOrEqual(3650)
         })
 

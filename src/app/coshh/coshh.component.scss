@@ -29,7 +29,6 @@ header {
   margin: 0 auto;
   max-width: 98%;
   border-radius: 4px;
-  height: 10vh;
 }
 
 .coshh-archive-cell {
@@ -86,15 +85,11 @@ ul {
 
 
 .toolbar-controls-container {
-  font-size: 2vh;
   display: flex;
-  padding: 3vh 1vw 0 0;
-  justify-content: flex-end;
 }
 
 .filter-control {
   margin-left: 0.25vw;
-
 }
 
 .archive-checkbox-container {
