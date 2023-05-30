@@ -14,6 +14,7 @@
         </div>
         </div>
         <mat-toolbar class="coshh-toolbar">
+            <mat-toolbar-row>
             <ng-container *ngIf="isAuthenticated$ | async;">
                 <div class="add-chemical">
                     <app-add-chemical
@@ -23,6 +24,7 @@
                     ></app-add-chemical>
                 </div>
             </ng-container>
+
             <div
                     class="coshh-inventory"
                     [matBadge]="tableData.data.length"
@@ -33,10 +35,28 @@
 
             <span class="spacer"></span>
 
-            <div class="toolbar-controls-container">
+            <div class="filter-control archive-checkbox-container">
+                <mat-checkbox
+                        class="coshh-checkbox"
+                        [formControl]="toggleArchiveControl"
+                        color="primary">Display archived chemicals
+                </mat-checkbox>
+                <mat-checkbox
+                        class="coshh-checkbox"
+                        [(ngModel)]="freezeColumns"
+                        color="primary">Freeze 'Name' and 'CAS' columns
+                </mat-checkbox>
+            </div>
+        </mat-toolbar-row>
 
+
+
+
+<mat-toolbar-row>
+    <span class="spacer"></span>
+            <div class="toolbar-controls-container">
                 <div class="filter-control">
-                    <mat-form-field className="filter-select" appearance="outline">
+                    <mat-form-field className="filter-select">
                         <mat-label>Filter by lab</mat-label>
                         <mat-select required [formControl]="labFilterControl">
                             <mat-option *ngFor="let lab of labFilterValues" [value]="lab">{{lab}}</mat-option>
@@ -45,7 +65,7 @@
                 </div>
 
                 <div class="filter-control">
-                    <mat-form-field className="filter-select" appearance="outline">
+                    <mat-form-field className="filter-select">
                         <mat-label>Filter by cupboard</mat-label>
                         <mat-select required [formControl]="cupboardFilterControl">
                             <mat-option *ngFor="let cupboard of cupboardFilterValues"
@@ -55,7 +75,7 @@
                 </div>
 
                 <div class="filter-control">
-                    <mat-form-field appearance="outline">
+                    <mat-form-field>
                         <mat-label>Filter by expiry</mat-label>
                         <mat-select required [formControl]="expiryFilterControl">
                             <mat-option *ngFor="let expiry of expiryFilterValues"
@@ -65,7 +85,7 @@
                 </div>
 
                 <div class="filter-control">
-                    <mat-form-field appearance="outline">
+                    <mat-form-field>
                         <mat-label>Filter by hazard</mat-label>
                         <mat-select required [formControl]="hazardFilterControl">
                             <mat-option *ngFor="let hazard of hazardFilterValues"
@@ -76,7 +96,7 @@
 
 
                 <div class="filter-control">
-                    <mat-form-field appearance="outline">
+                    <mat-form-field>
                         <mat-label>Project specific?</mat-label>
                         <mat-select required [formControl]="projectFilterControl">
                             <mat-option *ngFor="let project of projectFilterValues"
@@ -86,7 +106,7 @@
                 </div>
 
                 <div class="filter-control">
-                    <mat-form-field appearance="outline">
+                    <mat-form-field>
                         <mat-label>Name / Chem no</mat-label>
                         <input type="text"
                                placeholder="Type to search..."
@@ -102,23 +122,12 @@
                     </mat-form-field>
                 </div>
             </div>
-
-            <div class="filter-control archive-checkbox-container">
-                <mat-checkbox
-                        class="coshh-checkbox"
-                        [formControl]="toggleArchiveControl"
-                        color="primary">Display archived chemicals
-                </mat-checkbox>
-                <mat-checkbox
-                        class="coshh-checkbox"
-                        [(ngModel)]="freezeColumns"
-                        color="primary">Freeze 'Name' and 'CAS' columns
-                </mat-checkbox>
-            </div>
+    <span class="spacer"></span>
+</mat-toolbar-row>
 
         </mat-toolbar>
     </header>
-
+</div>
     <br/>
 
     <div class="table-container">
@@ -240,7 +249,7 @@
                 <td mat-cell *matCellDef="let element"> {{element.projectSpecific}} </td>
             </ng-container>
 
-            <ng-container matColumnDef="buttons">
+            <ng-container matColumnDef="buttons" sticky>
                 <th mat-header-cell *matHeaderCellDef></th>
                 <td mat-cell *matCellDef="let chemical" class="coshh-buttons-cell">
                     <ng-container *ngIf="isAuthenticated$ | async;">
@@ -269,4 +278,3 @@
                 [ngClass]="{'archived': chemical.isArchived}"></tr>
         </table>
     </div>
-    <div>
