@@ -140,7 +140,7 @@ export class CoshhComponent implements OnInit {
 
 
     archive(chemical: Chemical): void {
-        chemical.isArchived = true
+        chemical.isArchived = !chemical.isArchived
         this.updateChemical(chemical)
 
         this.refresh()
