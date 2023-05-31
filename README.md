@@ -13,7 +13,7 @@ You will need the API up and running so see the [COSHH API](https://gitlab.mdcat
 Before running you need to create a `.env` file in the root directory containing the following.
 ```bash
 CLIENT_ORIGIN_URL=http://localhost:4020
-CLIENT_DOMAIN=mdcatapult.eu.auth0.com
+AUTH0_DOMAIN=mdcatapult.eu.auth0.com
 AUTH0_AUDIENCE=https://coshh-api-local.wopr.inf.mdc
 AUTH0_CLIENT_ID=kGE0VDjHYDaQvx977nCCe8e4GJbCfi41
 BACKEND_URL=http://localhost:8080
@@ -25,7 +25,7 @@ The `start` and `build` commands use the `dotenv` package and a script in `scrip
 If you don't create a `.env` file then you need to export them all to the environment you are running within:
 ```bash
 export CLIENT_ORIGIN_URL=http://localhost:4020 \
-export CLIENT_DOMAIN=mdcatapult.eu.auth0.com \
+export AUTH0_DOMAIN=mdcatapult.eu.auth0.com \
 export AUTH0_AUDIENCE=https://coshh-api-local.wopr.inf.mdc \
 export AUTH0_CLIENT_ID=kGE0VDjHYDaQvx977nCCe8e4GJbCfi41 \
 export BACKEND_URL=http://localhost:8080 \
