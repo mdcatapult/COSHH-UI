@@ -9,8 +9,11 @@ import { MatTableDataSource } from '@angular/material/table';
 
 import { allHazards, Chemical, columnTypes, ExpiryColor, Hazard, HazardListItem, red, yellow } from './types';
 import { combineLatest, debounceTime, map, Observable, startWith } from 'rxjs';
+// environment.ts is added at compile time by npm run start command
+// @ts-ignore
 import { environment } from 'src/environments/environment';
 import { Chemicals } from './chemicals';
+import {AuthService} from "@auth0/auth0-angular";
 
 @Component({
     selector: 'app-coshh',
@@ -19,9 +22,11 @@ import { Chemicals } from './chemicals';
 })
 export class CoshhComponent implements OnInit {
 
+    isAuthenticated$ = this.authService.isAuthenticated$
+
     displayedColumns = ["buttons", "casNumber", "name", "hazards", "location", "cupboard", "chemicalNumber", "matterState", "quantity", "added", "expiry", "safetyDataSheet", "coshhLink", "storageTemp", "projectSpecific"]
 
-    constructor(private http: HttpClient, private fb: UntypedFormBuilder, private _liveAnnouncer: LiveAnnouncer) {
+    constructor(private http: HttpClient, private fb: UntypedFormBuilder, private _liveAnnouncer: LiveAnnouncer, private authService: AuthService) {
     }
 
     chemicals = new Chemicals() // this represents all the chemicals returned from the API
