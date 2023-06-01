@@ -1,15 +1,30 @@
 <div>
     <header>
-        <img class="mdc-logo" src="assets/mdc-logo-blue-small.png">
+        <div class="centred-container">
+        <div id="login-buttons">
+            <ng-container *ngIf="isAuthenticated$ | async; else unAuthenticated">
+                <app-logout-button></app-logout-button>
+            </ng-container>
+            <ng-template #unAuthenticated>
+                <app-login-button></app-login-button>
+            </ng-template>
+        </div>
+        <div>
+            <img class="mdc-logo" src="assets/mdc-logo-blue-small.png">
+        </div>
+        </div>
         <mat-toolbar class="coshh-toolbar">
             <mat-toolbar-row>
-            <div class="add-chemical">
-                <app-add-chemical
-                        [labs]="labFilterValues"
-                        [projectSpecific]="projectSpecific"
-                        (onChemicalAdded)="onChemicalAdded($event)"
-                ></app-add-chemical>
-            </div>
+            <ng-container *ngIf="isAuthenticated$ | async;">
+                <div class="add-chemical">
+                    <app-add-chemical
+                            [labs]="labFilterValues"
+                            [projectSpecific]="projectSpecific"
+                            (onChemicalAdded)="onChemicalAdded($event)"
+                    ></app-add-chemical>
+                </div>
+            </ng-container>
+
             <div
                     class="coshh-inventory"
                     [matBadge]="tableData.data.length"
@@ -112,7 +127,7 @@
 
         </mat-toolbar>
     </header>
-
+</div>
     <br/>
 
     <div class="table-container">
@@ -237,6 +252,7 @@
             <ng-container matColumnDef="buttons" sticky>
                 <th mat-header-cell *matHeaderCellDef></th>
                 <td mat-cell *matCellDef="let chemical" class="coshh-buttons-cell">
+                    <ng-container *ngIf="isAuthenticated$ | async;">
                     <button mat-button [matMenuTriggerFor]="menu">
                         <mat-icon>more_vert</mat-icon>
                     </button>
@@ -279,6 +295,7 @@
                             <mat-icon id="clone-icon">file_copy</mat-icon>
                         </button>
                     </mat-menu>
+                    </ng-container>
                 </td>
             </ng-container>
 
