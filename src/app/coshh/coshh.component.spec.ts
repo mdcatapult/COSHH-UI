@@ -3,6 +3,7 @@ import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {UntypedFormBuilder} from '@angular/forms';
 import {MatAutocompleteModule} from "@angular/material/autocomplete";
 import {CoshhComponent} from './coshh.component';
+import {AuthModule} from "@auth0/auth0-angular";
 
 describe('CoshhComponent', () => {
     let component: CoshhComponent;
@@ -18,6 +19,11 @@ describe('CoshhComponent', () => {
             ],
             imports: [
                 MatAutocompleteModule,
+                // Fake Auth0 details for testing purposes
+                AuthModule.forRoot({
+                    domain: 'a.domain.id',
+                    clientId: '12345',
+                }),
             ]
         })
             .compileComponents();
