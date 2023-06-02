@@ -260,6 +260,7 @@
                             (onChemicalEdited)="onChemicalEdited($event)"
                     ></app-edit-chemical>
                     <button
+                            *ngIf="!chemical.isArchived"
                             matTooltip="Archive this chemical"
                             matTooltipPosition="above"
                             class="archive-button"
@@ -268,6 +269,17 @@
                             (click)="archive(chemical)"
                     >
                         <mat-icon>delete</mat-icon>
+                    </button>
+                    <button
+                            *ngIf="chemical.isArchived"
+                            matTooltip="Unarchive this chemical"
+                            matTooltipPosition="above"
+                            class="archive-button"
+                            mat-mini-fab
+                            color="accent"
+                            (click)="archive(chemical)"
+                    >
+                        <mat-icon>undo</mat-icon>
                     </button>
                     </ng-container>
                 </td>
