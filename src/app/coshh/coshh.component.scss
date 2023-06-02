@@ -41,7 +41,7 @@ header {
 }
 
 .hazard {
-  height: 6vh;
+  height: 3.5vh;
 }
 
 ul {
@@ -142,8 +142,20 @@ th.mat-sort-header-sorted {
   color: black;
 }
 
-button {
+.clone-button {
   margin: 5px;
+}
+
+.unarchive-button {
+  background-color: forestgreen;
+}
+
+#unarchive-icon {
+  color: white;
+}
+
+::ng-deep .mat-menu-content{
+  background: lightgrey;
 }
 
 .archived {
@@ -151,11 +163,16 @@ button {
   text-decoration-thickness: 1.5px;
 }
 
-.coshh-buttons-cell {
-  min-width: 100px;
-  padding-left: 0.25vw;
-}
-
 .coshh-inventory{
   margin-right: 1vw;
+}
+// Centre items in flexbox with space in between them ie similar to float left/right
+.centred-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+#login-buttons {
+  padding-left: 20px;
 }
