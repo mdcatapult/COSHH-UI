@@ -280,4 +280,8 @@ export class CoshhComponent implements OnInit {
         }
     }
 
+    printInventory() {
+        window.print()
+    }
+
 }

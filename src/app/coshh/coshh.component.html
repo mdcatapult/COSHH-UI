@@ -126,7 +126,8 @@
     <button mat-mini-fab color="accent"
             id="print-button"
             matTooltip="Print inventory with current filters"
-            matTooltipPosition="left">
+            matTooltipPosition="left"
+            (click)="printInventory()">
         <mat-icon [ngStyle]="{'color': 'purple'}">print</mat-icon>
     </button>
 </mat-toolbar-row>
