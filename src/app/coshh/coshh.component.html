@@ -125,10 +125,10 @@
     <span class="spacer"></span>
     <button mat-mini-fab color="accent"
             id="print-button"
-            matTooltip="Print inventory with current filters"
+            matTooltip="Save inventory with current filters to PDF (name, quantity, location, SDS, added an expiry columns only)"
             matTooltipPosition="left"
             (click)="printInventory()">
-        <mat-icon [ngStyle]="{'color': 'purple'}">print</mat-icon>
+        <mat-icon [ngStyle]="{'color': 'purple'}">picture_as_pdf</mat-icon>
     </button>
 </mat-toolbar-row>
 
@@ -138,7 +138,7 @@
     <br/>
 
     <div class="table-container">
-        <table mat-table [dataSource]="tableData"
+        <table id="coshh-table" mat-table [dataSource]="tableData"
                matSort (matSortChange)="announceSortChange($event)"
                class="mat-elevation-z8">
 

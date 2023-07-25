@@ -1,24 +1,29 @@
-import { LiveAnnouncer } from '@angular/cdk/a11y';
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import {LiveAnnouncer} from '@angular/cdk/a11y';
+import {Component, OnInit, ViewChild} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
 
-import { UntypedFormBuilder, UntypedFormControl } from "@angular/forms";
+import {UntypedFormBuilder, UntypedFormControl} from "@angular/forms";
 
-import { MatSort, Sort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
+import {MatSort, Sort} from '@angular/material/sort';
+import {MatTableDataSource} from '@angular/material/table';
 
-import { allHazards, Chemical, columnTypes, ExpiryColor, Hazard, HazardListItem, red, yellow } from './types';
-import { combineLatest, debounceTime, map, Observable, startWith } from 'rxjs';
+import {allHazards, Chemical, columnTypes, ExpiryColor, Hazard, HazardListItem, red, yellow} from './types';
+import {combineLatest, debounceTime, map, Observable, startWith} from 'rxjs';
 // environment.ts is added at compile time by npm run start command
 // @ts-ignore
-import { environment } from 'src/environments/environment';
-import { Chemicals } from './chemicals';
+import {environment} from 'src/environments/environment';
+import {Chemicals} from './chemicals';
 import {AuthService} from "@auth0/auth0-angular";
+import jsPDF from "jspdf";
+import autoTable from 'jspdf-autotable'
+import {DateTimeFormatPipe} from "../utility/pipes/my-datetime-format.pipe";
+import * as moment from "moment";
 
 @Component({
     selector: 'app-coshh',
     templateUrl: './coshh.component.html',
-    styleUrls: ['./coshh.component.scss']
+    styleUrls: ['./coshh.component.scss'],
+    providers: [DateTimeFormatPipe]
 })
 export class CoshhComponent implements OnInit {
 
@@ -26,7 +31,11 @@ export class CoshhComponent implements OnInit {
 
     displayedColumns = ["buttons", "casNumber", "name", "hazards", "location", "cupboard", "chemicalNumber", "matterState", "quantity", "added", "expiry", "safetyDataSheet", "coshhLink", "storageTemp", "projectSpecific"]
 
-    constructor(private http: HttpClient, private fb: UntypedFormBuilder, private _liveAnnouncer: LiveAnnouncer, private authService: AuthService) {
+    constructor(private http: HttpClient,
+                private fb: UntypedFormBuilder,
+                private _liveAnnouncer: LiveAnnouncer,
+                private authService: AuthService,
+                private dateTimePipe: DateTimeFormatPipe) {
     }
 
     chemicals = new Chemicals() // this represents all the chemicals returned from the API
@@ -117,13 +126,13 @@ export class CoshhComponent implements OnInit {
         })
 
         combineLatest([
-            this.hazardFilterControl,
-            this.cupboardFilterControl,
-            this.labFilterControl,
-            this.expiryFilterControl,
-            this.projectFilterControl,
-            this.toggleArchiveControl
-        ].map(control => control.valueChanges.pipe(startWith(control.value)))
+                this.hazardFilterControl,
+                this.cupboardFilterControl,
+                this.labFilterControl,
+                this.expiryFilterControl,
+                this.projectFilterControl,
+                this.toggleArchiveControl
+            ].map(control => control.valueChanges.pipe(startWith(control.value)))
         ).subscribe(() => {
             this.refresh()
             this.searchOptions = this.getSearchObservable()
@@ -181,7 +190,8 @@ export class CoshhComponent implements OnInit {
         })
     }
 
-    onChemicalAdded(chemical: Chemical): void {this.http.post<Chemical>(`${environment.backendUrl}/chemical`, chemical).subscribe((addedChemical: Chemical) => {
+    onChemicalAdded(chemical: Chemical): void {
+        this.http.post<Chemical>(`${environment.backendUrl}/chemical`, chemical).subscribe((addedChemical: Chemical) => {
             addedChemical.editSDS = false
             addedChemical.editCoshh = false
             addedChemical.hazardList = this.getHazardListForChemical(addedChemical)
@@ -281,7 +291,27 @@ export class CoshhComponent implements OnInit {
     }
 
     printInventory() {
-        window.print()
+        const chemicalsToPrint = this.getChemicals().map(chemical => {
+
+            return {
+                'Name': chemical.name,
+                'Quantity': chemical.quantity,
+                'Location': chemical.location,
+                'Safety data sheet': chemical.safetyDataSheet,
+                'Added': this.dateTimePipe.transform(chemical.added.toString()),
+                'Expiry': this.dateTimePipe.transform(chemical.expiry.toString())
+            }
+    })
+        const doc = new jsPDF();
+        const now = moment().format('DD-MM-YYYY')
+        doc.text(`MDC COSHH Inventory (${now})`, 60, 15)
+        autoTable(doc, {
+            startY: 25,
+            head: [Object.keys(chemicalsToPrint[0])],
+            body: chemicalsToPrint.map(column => Object.values(column)),
+            theme: 'striped'
+        })
+        doc.save('mdc-coshh-inventory.pdf')
     }
 
 }
