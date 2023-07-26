@@ -290,7 +290,7 @@ export class CoshhComponent implements OnInit {
         }
     }
 
-    printInventory() {
+    savePDF() {
         const chemicalsToPrint = this.getChemicals().map(chemical => {
 
             return {
@@ -313,5 +313,13 @@ export class CoshhComponent implements OnInit {
         })
         doc.save('mdc-coshh-inventory.pdf')
     }
+
+    // attempts to use css @media query to set print options programatically were unsuccessful
+    // in the print dialog window the user will need to change the orientation to landscape and the scale to 50% for
+    // it to fit on an A4 page
+    printInventory() {
+        window.print()
+    }
+
 
 }

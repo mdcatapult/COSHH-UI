@@ -124,12 +124,20 @@
             </div>
     <span class="spacer"></span>
     <button mat-mini-fab color="accent"
-            id="print-button"
+            id="pdf-button"
             matTooltip="Save inventory with current filters to PDF (name, quantity, location, SDS, added an expiry columns only)"
             matTooltipPosition="left"
-            (click)="printInventory()">
+            (click)="savePDF()">
         <mat-icon [ngStyle]="{'color': 'purple'}">picture_as_pdf</mat-icon>
     </button>
+    <button mat-mini-fab color="accent"
+            id="print-button"
+            matTooltip="Print inventory with current filters"
+            matTooltipPosition="left"
+            (click)="printInventory()">
+        <mat-icon [ngStyle]="{'color': 'purple'}">print</mat-icon>
+    </button>
+
 </mat-toolbar-row>
 
         </mat-toolbar>
