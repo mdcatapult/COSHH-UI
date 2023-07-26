@@ -2,22 +2,23 @@ import {LiveAnnouncer} from '@angular/cdk/a11y';
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 
-import {UntypedFormBuilder, UntypedFormControl} from "@angular/forms";
+import {UntypedFormBuilder, UntypedFormControl} from '@angular/forms';
 
 import {MatSort, Sort} from '@angular/material/sort';
 import {MatTableDataSource} from '@angular/material/table';
 
-import {allHazards, Chemical, columnTypes, ExpiryColor, Hazard, HazardListItem, red, yellow} from './types';
+import {allHazards, Chemical, columnTypes, ExpiryColor, Hazard, red, yellow} from './types';
 import {combineLatest, debounceTime, map, Observable, startWith} from 'rxjs';
 // environment.ts is added at compile time by npm run start command
 // @ts-ignore
 import {environment} from 'src/environments/environment';
 import {Chemicals} from './chemicals';
-import {AuthService} from "@auth0/auth0-angular";
-import jsPDF from "jspdf";
-import autoTable from 'jspdf-autotable'
-import {DateTimeFormatPipe} from "../utility/pipes/my-datetime-format.pipe";
-import * as moment from "moment";
+import {AuthService} from '@auth0/auth0-angular';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
+import {DateTimeFormatPipe} from '../utility/pipes/my-datetime-format.pipe';
+import * as moment from 'moment';
+import writeXlsxFile, {SheetData, Columns} from 'write-excel-file';
 
 @Component({
     selector: 'app-coshh',
@@ -29,7 +30,8 @@ export class CoshhComponent implements OnInit {
 
     isAuthenticated$ = this.authService.isAuthenticated$
 
-    displayedColumns = ["buttons", "casNumber", "name", "hazards", "location", "cupboard", "chemicalNumber", "matterState", "quantity", "added", "expiry", "safetyDataSheet", "coshhLink", "storageTemp", "projectSpecific"]
+    displayedColumns = ['buttons', 'casNumber', 'name', 'hazards', 'location', 'cupboard', 'chemicalNumber', 'matterState',
+        'quantity', 'added', 'expiry', 'safetyDataSheet', 'coshhLink', 'storageTemp', 'projectSpecific']
 
     constructor(private http: HttpClient,
                 private fb: UntypedFormBuilder,
@@ -148,7 +150,7 @@ export class CoshhComponent implements OnInit {
             this.labFilterControl.value,
             this.expiryFilterControl.value,
             this.projectFilterControl.value,
-            this.searchControl.value || "",
+            this.searchControl.value || ''
         )
     }
 
@@ -301,7 +303,7 @@ export class CoshhComponent implements OnInit {
                 'Added': this.dateTimePipe.transform(chemical.added.toString()),
                 'Expiry': this.dateTimePipe.transform(chemical.expiry.toString())
             }
-    })
+        })
         const doc = new jsPDF();
         const now = moment().format('DD-MM-YYYY')
         doc.text(`MDC COSHH Inventory (${now})`, 60, 15)
@@ -319,6 +321,38 @@ export class CoshhComponent implements OnInit {
     // it to fit on an A4 page
     printInventory() {
         window.print()
+    }
+
+
+    async saveExcel() {
+
+        const columnNames = ['Name', 'Quantity', 'Location', 'Safety data sheet', 'Added', 'Expiry', 'Comments']
+        const HEADER_ROW:SheetData = [columnNames.map(columnName => {
+
+            return {value: columnName, fontSize: 15, fontWeight: 'bold', align: 'center'}
+        })]
+        const chemicalsToSave = this.getChemicals().map(chemical => {
+            const row:SheetData = [[
+                {type: String, value: chemical.name, wrap: true},
+                {type: Number, value: parseInt(chemical.quantity)},
+                {type: String, value: chemical.location},
+                {type: String, value: chemical.safetyDataSheet, wrap: true},
+                {type: Date, value: new Date(chemical.added.toString()), format: 'dd/mm/yyyy'},
+                {type: Date, value: new Date(chemical.expiry.toString()), format: 'dd/mm/yyyy'},
+                {type: String, wrap: true}
+            ]]
+
+            // this looks weird but it's the only way to get the types to play ball
+            return row[0]
+        })
+        const data = [...HEADER_ROW, ...chemicalsToSave]
+        const columns:Columns = [{width: 30}, {}, {width: 15}, {width: 50}, {width: 12}, {width: 12}, {width: 50}]
+
+        await writeXlsxFile(data, {
+            columns,
+            fileName: 'mdc-coshh-inventory.xlsx',
+            orientation: 'landscape'
+        })
     }
 
 

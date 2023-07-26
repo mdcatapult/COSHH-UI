@@ -32,6 +32,7 @@
     "rxjs": "~7.5.0",
     "ts-transformer-keys": "^0.4.3",
     "tslib": "^2.3.0",
+    "write-excel-file": "^1.4.27",
     "zone.js": "~0.11.4"
   },
   "devDependencies": {

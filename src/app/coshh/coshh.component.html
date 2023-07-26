@@ -124,6 +124,13 @@
             </div>
     <span class="spacer"></span>
     <button mat-mini-fab color="accent"
+            id="excel-button"
+            matTooltip="Save inventory with current filters to Excel (name, quantity, location, SDS, added an expiry columns only)"
+            matTooltipPosition="left"
+            (click)="saveExcel()">
+        <mat-icon [ngStyle]="{'color': 'purple'}">save_alt</mat-icon>
+    </button>
+    <button mat-mini-fab color="accent"
             id="pdf-button"
             matTooltip="Save inventory with current filters to PDF (name, quantity, location, SDS, added an expiry columns only)"
             matTooltipPosition="left"
