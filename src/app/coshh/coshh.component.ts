@@ -15,15 +15,13 @@ import {Chemicals} from './chemicals';
 // environment.ts is added at compile time by npm run start command
 // @ts-ignore
 import {environment} from 'src/environments/environment';
-import {DateTimeFormatPipe} from '../utility/pipes/my-datetime-format.pipe';
 import {allHazards, Chemical, columnsForExport, columnTypes, ExpiryColor, Hazard, red, yellow} from './types';
 import {createExcelData, createPDFData} from "../utility/utilities";
 
 @Component({
     selector: 'app-coshh',
     templateUrl: './coshh.component.html',
-    styleUrls: ['./coshh.component.scss'],
-    providers: [DateTimeFormatPipe]
+    styleUrls: ['./coshh.component.scss']
 })
 export class CoshhComponent implements OnInit {
 
@@ -35,8 +33,7 @@ export class CoshhComponent implements OnInit {
     constructor(private http: HttpClient,
                 private fb: UntypedFormBuilder,
                 private _liveAnnouncer: LiveAnnouncer,
-                private authService: AuthService,
-                private dateTimePipe: DateTimeFormatPipe) {
+                private authService: AuthService) {
     }
 
     chemicals = new Chemicals() // this represents all the chemicals returned from the API

@@ -25,6 +25,12 @@ header {
   max-width: 100%;
 }
 
+@media print {
+  .table-container {
+    max-height: 100% !important;
+  }
+}
+
 .coshh-toolbar {
   margin: 0 auto;
   max-width: 98%;
