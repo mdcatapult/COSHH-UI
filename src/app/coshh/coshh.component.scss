@@ -157,6 +157,7 @@ th.mat-sort-header-sorted {
 
 ::ng-deep .mat-menu-content{
   background: lightgrey;
+  height: 75%;
 }
 
 .archived {
@@ -178,11 +179,13 @@ th.mat-sort-header-sorted {
   padding-left: 20px;
 }
 
+#excel-button,
 #print-button {
-  margin-right: 1vw;
+  margin: 0 0.5vw 0 0.5vw;
 }
 
+#pdf-button,
 #excel-button,
-#pdf-button {
-  margin-right: 0.5vw;
+#print-button {
+  margin-top: 0.4vh;
 }

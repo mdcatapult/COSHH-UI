@@ -1,24 +1,22 @@
 import {LiveAnnouncer} from '@angular/cdk/a11y';
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-
 import {UntypedFormBuilder, UntypedFormControl} from '@angular/forms';
-
 import {MatSort, Sort} from '@angular/material/sort';
 import {MatTableDataSource} from '@angular/material/table';
-
-import {allHazards, Chemical, columnsForExport, columnTypes, ExpiryColor, Hazard, red, yellow} from './types';
-import {combineLatest, debounceTime, map, Observable, startWith} from 'rxjs';
-// environment.ts is added at compile time by npm run start command
-// @ts-ignore
-import {environment} from 'src/environments/environment';
-import {Chemicals} from './chemicals';
 import {AuthService} from '@auth0/auth0-angular';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
-import {DateTimeFormatPipe} from '../utility/pipes/my-datetime-format.pipe';
 import * as moment from 'moment';
+import {combineLatest, debounceTime, map, Observable, startWith} from 'rxjs';
 import writeXlsxFile from 'write-excel-file';
+
+import {Chemicals} from './chemicals';
+// environment.ts is added at compile time by npm run start command
+// @ts-ignore
+import {environment} from 'src/environments/environment';
+import {DateTimeFormatPipe} from '../utility/pipes/my-datetime-format.pipe';
+import {allHazards, Chemical, columnsForExport, columnTypes, ExpiryColor, Hazard, red, yellow} from './types';
 import {createExcelData, createPDFData} from "../utility/utilities";
 
 @Component({
