@@ -124,10 +124,10 @@
             </div>
     <span class="spacer"></span>
 
-    <button matTooltip="Print or export chemicals" mat-button [matMenuTriggerFor]="menu">
+    <button matTooltip="Print or export chemicals" mat-button [matMenuTriggerFor]="exportMenu">
         <mat-icon>more_vert</mat-icon>
     </button>
-    <mat-menu #menu="matMenu">
+    <mat-menu #exportMenu="matMenu">
     <button mat-mini-fab color="accent"
             id="excel-button"
             matTooltip="Save inventory with current filters to Excel (name, quantity, location, SDS, added and expiry columns only)"
