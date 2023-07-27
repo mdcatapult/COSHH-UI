@@ -124,8 +124,8 @@
             </div>
     <span class="spacer"></span>
 
-    <button matTooltip="Print or export chemicals" mat-button [matMenuTriggerFor]="exportMenu">
-        <mat-icon>more_vert</mat-icon>
+    <button id="save-button" matTooltip="Print or export chemicals" mat-mini-fab [matMenuTriggerFor]="exportMenu">
+        <mat-icon [ngStyle]="{'color': 'purple'}">save</mat-icon>
     </button>
     <mat-menu #exportMenu="matMenu">
     <button mat-mini-fab color="accent"
