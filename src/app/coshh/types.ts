@@ -79,6 +79,16 @@ export type HazardCategory = {
     selected: boolean
 }
 
+export const columnsForExport = [
+    'Name',
+    'Quantity',
+    'Location',
+    'Safety data sheet',
+    'Added',
+    'Expiry',
+    'Comments'
+]
+
 
 
 

@@ -25,6 +25,12 @@ header {
   max-width: 100%;
 }
 
+@media print {
+  .table-container {
+    max-height: 100% !important;
+  }
+}
+
 .coshh-toolbar {
   margin: 0 auto;
   max-width: 98%;
@@ -62,6 +68,7 @@ ul {
 .date-form-field {
   max-width: 7.5vw;
 }
+
 
 .storage-temp-form-field,
 .state-form-field,
@@ -156,6 +163,7 @@ th.mat-sort-header-sorted {
 
 ::ng-deep .mat-menu-content{
   background: lightgrey;
+  height: 75%;
 }
 
 .archived {
@@ -175,4 +183,19 @@ th.mat-sort-header-sorted {
 
 #login-buttons {
   padding-left: 20px;
+}
+
+#excel-button,
+#print-button {
+  margin: 0 0.5vw 0 0.5vw;
+}
+
+#pdf-button,
+#excel-button,
+#print-button {
+  margin-top: 0.4vh;
+}
+
+#save-button {
+  margin-right: 1vw;
 }
