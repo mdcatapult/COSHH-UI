@@ -30,7 +30,7 @@
               "core-js/modules/es.string.replace.js",
               "core-js/modules/es.string.match.js",
               "core-js/modules/es.string.includes.js",
-              "core-js/modules/es.string.emds-with.js",
+              "core-js/modules/es.string.ends-with.js",
               "core-js/modules/es.regexp.to-string.js",
               "core-js/modules/es.promise.js",
               "core-js/modules/es.array.reverse.js",

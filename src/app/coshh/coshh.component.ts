@@ -7,7 +7,7 @@ import {UntypedFormBuilder, UntypedFormControl} from '@angular/forms';
 import {MatSort, Sort} from '@angular/material/sort';
 import {MatTableDataSource} from '@angular/material/table';
 
-import {allHazards, Chemical, columnTypes, ExpiryColor, Hazard, red, yellow} from './types';
+import {allHazards, Chemical, columnsForExport, columnTypes, ExpiryColor, Hazard, red, yellow} from './types';
 import {combineLatest, debounceTime, map, Observable, startWith} from 'rxjs';
 // environment.ts is added at compile time by npm run start command
 // @ts-ignore
@@ -18,7 +18,8 @@ import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import {DateTimeFormatPipe} from '../utility/pipes/my-datetime-format.pipe';
 import * as moment from 'moment';
-import writeXlsxFile, {SheetData, Columns} from 'write-excel-file';
+import writeXlsxFile from 'write-excel-file';
+import {createExcelData, createPDFData} from "../utility/utilities";
 
 @Component({
     selector: 'app-coshh',
@@ -293,17 +294,7 @@ export class CoshhComponent implements OnInit {
     }
 
     savePDF() {
-        const chemicalsToPrint = this.getChemicals().map(chemical => {
-
-            return {
-                'Name': chemical.name,
-                'Quantity': chemical.quantity,
-                'Location': chemical.location,
-                'Safety data sheet': chemical.safetyDataSheet,
-                'Added': this.dateTimePipe.transform(chemical.added.toString()),
-                'Expiry': this.dateTimePipe.transform(chemical.expiry.toString())
-            }
-        })
+        const chemicalsToPrint = createPDFData(this.getChemicals())
         const doc = new jsPDF();
         const now = moment().format('DD-MM-YYYY')
         doc.text(`MDC COSHH Inventory (${now})`, 60, 15)
@@ -316,44 +307,20 @@ export class CoshhComponent implements OnInit {
         doc.save('mdc-coshh-inventory.pdf')
     }
 
-    // attempts to use css @media query to set print options programatically were unsuccessful
+    // attempts to use css @media query to set print options programmatically were unsuccessful
     // in the print dialog window the user will need to change the orientation to landscape and the scale to 50% for
     // it to fit on an A4 page
     printInventory() {
         window.print()
     }
 
-
     async saveExcel() {
-
-        const columnNames = ['Name', 'Quantity', 'Location', 'Safety data sheet', 'Added', 'Expiry', 'Comments']
-        const HEADER_ROW:SheetData = [columnNames.map(columnName => {
-
-            return {value: columnName, fontSize: 15, fontWeight: 'bold', align: 'center'}
-        })]
-        const chemicalsToSave = this.getChemicals().map(chemical => {
-            const row:SheetData = [[
-                {type: String, value: chemical.name, wrap: true},
-                {type: Number, value: parseInt(chemical.quantity)},
-                {type: String, value: chemical.location},
-                {type: String, value: chemical.safetyDataSheet, wrap: true},
-                {type: Date, value: new Date(chemical.added.toString()), format: 'dd/mm/yyyy'},
-                {type: Date, value: new Date(chemical.expiry.toString()), format: 'dd/mm/yyyy'},
-                {type: String, wrap: true}
-            ]]
-
-            // this looks weird but it's the only way to get the types to play ball
-            return row[0]
-        })
-        const data = [...HEADER_ROW, ...chemicalsToSave]
-        const columns:Columns = [{width: 30}, {}, {width: 15}, {width: 50}, {width: 12}, {width: 12}, {width: 50}]
-
+        const {data, columnOptions} = createExcelData(columnsForExport, this.getChemicals())
         await writeXlsxFile(data, {
-            columns,
+            columns: columnOptions,
             fileName: 'mdc-coshh-inventory.xlsx',
             orientation: 'landscape'
         })
     }
-
 
 }
