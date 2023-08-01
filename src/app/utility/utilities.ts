@@ -23,12 +23,12 @@ export function createExcelData(columnNames: String[], chemicals: Chemical[]) {
     })]
     const chemicalsToSave: SheetData = chemicals.map(chemical => {
         const row: SheetData = [[
-            {type: String, value: chemical.name, wrap: true},
-            {type: Number, value: parseInt(chemical.quantity)},
-            {type: String, value: chemical.location},
-            {type: String, value: chemical.safetyDataSheet, wrap: true},
-            {type: Date, value: new Date(chemical.added.toString()), format: 'dd/mm/yyyy'},
-            {type: Date, value: new Date(chemical.expiry.toString()), format: 'dd/mm/yyyy'},
+            {type: String, value: chemical.name || '', wrap: true},
+            chemical.quantity ? {type: Number, value: parseInt(chemical.quantity)} : {type: String, value: ''},
+            {type: String, value: chemical.location || ''},
+            {type: String, value: chemical.safetyDataSheet || '', wrap: true},
+            chemical.added ? {type: Date, value: new Date(chemical.added.toString()), format: 'dd/mm/yyyy'} : {type: String, value: ''},
+            chemical.expiry ? {type: Date, value: new Date(chemical.expiry.toString()), format: 'dd/mm/yyyy'} : {type: String, value: ''},
             {type: String, wrap: true}
         ]]
 
@@ -47,12 +47,12 @@ export function createPDFData(chemicals: Chemical[]) {
     return chemicals.map(chemical => {
 
         return {
-            'Name': chemical.name,
-            'Quantity': chemical.quantity,
-            'Location': chemical.location,
-            'Safety data sheet': chemical.safetyDataSheet,
-            'Added': dateTimePipe.transform(chemical.added.toString()),
-            'Expiry': dateTimePipe.transform(chemical.expiry.toString())
+            'Name': chemical.name || '',
+            'Quantity': chemical.quantity || '',
+            'Location': chemical.location || '',
+            'Safety data sheet': chemical.safetyDataSheet || '',
+            'Added': chemical.added ? dateTimePipe.transform(chemical.added.toString()) : '',
+            'Expiry': chemical.expiry ? dateTimePipe.transform(chemical.expiry.toString()) : ''
         }
     })
 }
