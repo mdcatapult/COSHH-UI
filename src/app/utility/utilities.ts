@@ -51,8 +51,8 @@ export function createPDFData(chemicals: Chemical[]) {
             'Quantity': chemical.quantity || '',
             'Location': chemical.location || '',
             'Safety data sheet': chemical.safetyDataSheet || '',
-            'Added': dateTimePipe.transform(chemical.added.toString()) || '',
-            'Expiry': dateTimePipe.transform(chemical.expiry.toString()) || ''
+            'Added': chemical.added ? dateTimePipe.transform(chemical.added.toString()) : '',
+            'Expiry': chemical.expiry ? dateTimePipe.transform(chemical.expiry.toString()) : ''
         }
     })
 }
