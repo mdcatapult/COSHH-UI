@@ -52,7 +52,7 @@ export function createPDFData(chemicals: Chemical[]) {
             'Location': chemical.location || '',
             'Safety data sheet': chemical.safetyDataSheet || '',
             'Added': dateTimePipe.transform(chemical.added.toString()) || '',
-            'Expiry': dateTimePipe.transform(chemical.expiry.toString() || '')
+            'Expiry': dateTimePipe.transform(chemical.expiry.toString()) || ''
         }
     })
 }
