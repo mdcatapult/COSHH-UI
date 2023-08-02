@@ -297,7 +297,15 @@ export class CoshhComponent implements OnInit {
             startY: 25,
             head: [Object.keys(chemicalsToPrint[0])],
             body: chemicalsToPrint.map(column => Object.values(column)),
-            theme: 'striped'
+            theme: 'striped',
+            styles: {
+                cellWidth: 'auto'
+            },
+            columnStyles: {
+                text: {
+                    cellWidth: 'auto'
+                }
+            }
         })
         doc.save('mdc-coshh-inventory.pdf')
     }
