@@ -24,7 +24,7 @@ export function createExcelData(columnNames: String[], chemicals: Chemical[]) {
     const chemicalsToSave: SheetData = chemicals.map(chemical => {
         const row: SheetData = [[
             {type: String, value: chemical.name || '', wrap: true},
-            chemical.quantity ? {type: Number, value: parseInt(chemical.quantity)} : {type: String, value: ''},
+            {type: String, value: chemical.quantity || ''},
             {type: String, value: chemical.location || ''},
             {type: String, value: chemical.safetyDataSheet || '', wrap: true},
             chemical.added ? {type: Date, value: new Date(chemical.added.toString()), format: 'dd/mm/yyyy'} : {type: String, value: ''},

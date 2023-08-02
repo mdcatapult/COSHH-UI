@@ -138,14 +138,14 @@
     <button mat-mini-fab color="accent"
             id="pdf-button"
             matTooltip="Save inventory with current filters to PDF (name, quantity, location, SDS, added and expiry columns only)"
-            matTooltipPosition="left"
+            matTooltipPosition="above"
             (click)="savePDF()">
         <mat-icon [ngStyle]="{'color': 'purple'}">picture_as_pdf</mat-icon>
     </button>
     <button mat-mini-fab color="accent"
             id="print-button"
             matTooltip="Print inventory with current filters"
-            matTooltipPosition="left"
+            matTooltipPosition="below"
             (click)="printInventory()">
         <mat-icon [ngStyle]="{'color': 'purple'}">print</mat-icon>
     </button>
