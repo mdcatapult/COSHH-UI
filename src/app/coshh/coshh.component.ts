@@ -290,9 +290,9 @@ export class CoshhComponent implements OnInit {
 
     savePDF() {
         const chemicalsToPrint = createPDFData(this.getChemicals())
-        const doc = new jsPDF();
+        const doc = new jsPDF('landscape');
         const now = moment().format('DD-MM-YYYY')
-        doc.text(`MDC COSHH Inventory (${now})`, 60, 15)
+        doc.text(`MDC COSHH Inventory (${now})`, 100, 15)
         autoTable(doc, {
             startY: 25,
             head: [Object.keys(chemicalsToPrint[0])],
