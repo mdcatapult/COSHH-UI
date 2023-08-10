@@ -252,14 +252,14 @@
                 <th mat-header-cell *matHeaderCellDef>
                     SDS
                 </th>
-                <td mat-cell *matCellDef="let element"><a *ngIf="isValidHttpUrl(element.safetyDataSheet)" href="{{element.safetyDataSheet}}"><mat-icon>article</mat-icon></a></td>
+                <td mat-cell *matCellDef="let element"><a *ngIf="isValidHttpUrl(element.safetyDataSheet)" href="{{element.safetyDataSheet}}" target="_blank" title="Link to {{element.safetyDataSheet}}"><mat-icon>article</mat-icon></a></td>
             </ng-container>
 
             <ng-container matColumnDef="coshhLink">
                 <th mat-header-cell *matHeaderCellDef>
                     COSHH
                 </th>
-                <td mat-cell *matCellDef="let element"><a *ngIf="isValidHttpUrl(element.coshhLink)" href="{{element.coshhLink}}"><mat-icon>article</mat-icon></a></td>
+                <td mat-cell *matCellDef="let element"><a *ngIf="isValidHttpUrl(element.coshhLink)" href="{{element.coshhLink}}" target="_blank" title="Link to {{element.coshhLink}}"><mat-icon>article</mat-icon></a></td>
             </ng-container>
 
             <ng-container matColumnDef="storageTemp">
