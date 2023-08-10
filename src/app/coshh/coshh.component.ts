@@ -16,7 +16,7 @@ import {Chemicals} from './chemicals';
 // @ts-ignore
 import {environment} from 'src/environments/environment';
 import {allHazards, Chemical, columnsForExport, columnTypes, ExpiryColor, Hazard, red, yellow} from './types';
-import {createExcelData, createPDFData} from "../utility/utilities";
+import {createExcelData, createPDFData, isValidHttpUrl} from "../utility/utilities";
 
 @Component({
     selector: 'app-coshh',
@@ -321,4 +321,5 @@ export class CoshhComponent implements OnInit {
         })
     }
 
+    protected readonly isValidHttpUrl = isValidHttpUrl;
 }
