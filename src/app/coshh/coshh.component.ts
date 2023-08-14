@@ -164,9 +164,14 @@ export class CoshhComponent implements OnInit {
 
     }
 
+    /**
+     * Show only cupboards for currently selected lab. If 'All' labs it will show cupboards currently used over all the chemicals.
+     * 'All' is always an option for cupboards filter so append it to the list
+     */
     refreshCupboardsFilterList(): void {
         this.http.get<string[]>(`${environment.backendUrl}/cupboards`).subscribe(cupboards => {
-            this.cupboardFilterValues = cupboards.concat('All')
+            this.cupboardFilterValues = this.getChemicals().map( chemical => chemical.cupboard).concat('All')
+                    .filter((value, index, self) => self.indexOf(value) === index)
             this.cupboards = cupboards
         })
     }
