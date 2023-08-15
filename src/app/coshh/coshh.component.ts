@@ -171,11 +171,17 @@ export class CoshhComponent implements OnInit {
      * 'All' is always an option for cupboards filter so append it to the list
      */
     refreshCupboardsFilterList(): void {
-        this.filterService.getCupboards().subscribe(cupboards => {
-            this.cupboardFilterValues = this.getChemicals().map( chemical => chemical.cupboard).concat('All')
-                .filter((value, index, self) => self.indexOf(value) === index)
-            this.cupboards = cupboards
-        })
+        if (this.labFilterControl.value == 'All') {
+            this.filterService.getCupboards().subscribe(cupboards => {
+                this.cupboardFilterValues = cupboards.concat('All')
+                this.cupboards = cupboards
+            })
+        } else {
+            this.filterService.getCupboardsForLab(this.labFilterControl.value).subscribe(cupboards => {
+                this.cupboardFilterValues = cupboards.concat('All')
+                this.cupboards = cupboards
+            })
+        }
     }
 
     updateChemical(chemical: Chemical, refresh?: boolean): void {
