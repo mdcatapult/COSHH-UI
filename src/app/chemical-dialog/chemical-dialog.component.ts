@@ -4,7 +4,7 @@ import {DateAdapter} from '@angular/material/core';
 import {MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import * as moment from 'moment';
 import {Observable} from "rxjs";
-import {getAutocompleteObservable} from "../utility/utilities";
+import {getAutocompleteObservable, urlValidator} from "../utility/utilities";
 import {Chemical, HazardCategory, allHazards} from "../coshh/types"
 
 @Component({
@@ -50,14 +50,14 @@ export class ChemicalDialogComponent {
             quantity: new FormControl(chemical.quantity, Validators.required),
             added: new FormControl(chemical.added, Validators.required),
             expiry: new FormControl(chemical.expiry, Validators.required),
-            safetyDataSheet: new FormControl(chemical.safetyDataSheet),
-            coshhLink: new FormControl(chemical.coshhLink),
+            safetyDataSheet: new FormControl(chemical.safetyDataSheet, urlValidator()),
+            coshhLink: new FormControl(chemical.coshhLink, urlValidator()),
             storageTemp: new FormControl(chemical.storageTemp, Validators.required),
             location: new FormControl(chemical.location),
             cupboard: new FormControl(chemical.cupboard),
             hazards: this.buildHazards(chemical),
             projectSpecific: new UntypedFormControl(chemical.projectSpecific)
-        })
+        }, {updateOn: 'blur'})
     }
 
     projectSpecificOptions: Observable<string[]> = new Observable()
