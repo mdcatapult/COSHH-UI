@@ -36,8 +36,10 @@ export class ChemicalDialogComponent {
         this.dateAdapter.setLocale('en-GB');
         this.masterCheckbox = false;
         this.hazardCategoryList = allHazards().map(hazard => {
-            return { name: hazard,
-                     selected: chemical.hazards.includes(hazard)}
+            return {
+                name: hazard,
+                selected: chemical.hazards.includes(hazard)
+            }
         })
 
         this.selectedHazardCategories = chemical.hazards
@@ -62,6 +64,14 @@ export class ChemicalDialogComponent {
 
     projectSpecificOptions: Observable<string[]> = new Observable()
 
+    urlFeedback(): String {
+        const invalidSDSLink = this.form.get('safetyDataSheet').errors?.['invalidURL']
+        const invalidCOSHHLink = this.form.get('coshhLink').errors?.['invalidURL']
+        const invalidLinks = invalidSDSLink && invalidCOSHHLink
+
+        return `Invalid ${invalidSDSLink ? 'Safety Data Sheet' : ''} ${invalidLinks ? 'and' : ''} ${invalidCOSHHLink ? 'COSHH' : ''} ${invalidLinks ? 'links' : 'link'}: please ensure URL${invalidLinks? 's' : ''} ${invalidLinks ? 'are' : 'is'} valid or leave field${invalidLinks ? 's': ''} blank`
+    }
+
     ngOnInit(): void {
         this.projectSpecificOptions = getAutocompleteObservable(this.form.controls["projectSpecific"], this.data.projectSpecific)
     }
@@ -74,8 +84,10 @@ export class ChemicalDialogComponent {
 
 
     onClose(): void {
-        const chemical = {...this.data.chemical,
-                          ...this.form.value}
+        const chemical = {
+            ...this.data.chemical,
+            ...this.form.value
+        }
         chemical.hazards = this.selectedHazardCategories
         this.form.valid && this.dialogRef.close(chemical)
     }
