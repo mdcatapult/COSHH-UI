@@ -17,6 +17,7 @@ import {Chemicals} from './chemicals';
 import {environment} from 'src/environments/environment';
 import {allHazards, Chemical, columnsForExport, columnTypes, ExpiryColor, Hazard, red, yellow} from './types';
 import {createExcelData, createPDFData, isValidHttpUrl} from "../utility/utilities";
+import {FilterService} from "../filter.service";
 
 @Component({
     selector: 'app-coshh',
@@ -33,7 +34,8 @@ export class CoshhComponent implements OnInit {
     constructor(private http: HttpClient,
                 private fb: UntypedFormBuilder,
                 private _liveAnnouncer: LiveAnnouncer,
-                private authService: AuthService) {
+                private authService: AuthService,
+                private filterService: FilterService) {
     }
 
     chemicals = new Chemicals() // this represents all the chemicals returned from the API
@@ -164,11 +166,22 @@ export class CoshhComponent implements OnInit {
 
     }
 
+    /**
+     * Show only cupboards for currently selected lab. If 'All' labs it will show cupboards currently used over all the chemicals.
+     * 'All' is always an option for cupboards filter so append it to the list
+     */
     refreshCupboardsFilterList(): void {
-        this.http.get<string[]>(`${environment.backendUrl}/cupboards`).subscribe(cupboards => {
-            this.cupboardFilterValues = cupboards.concat('All')
-            this.cupboards = cupboards
-        })
+        if (this.labFilterControl.value == 'All') {
+            this.filterService.getCupboards().subscribe(cupboards => {
+                this.cupboardFilterValues = cupboards.concat('All')
+                this.cupboards = cupboards
+            })
+        } else {
+            this.filterService.getCupboardsForLab(this.labFilterControl.value).subscribe(cupboards => {
+                this.cupboardFilterValues = cupboards.concat('All')
+                this.cupboards = cupboards
+            })
+        }
     }
 
     updateChemical(chemical: Chemical, refresh?: boolean): void {
