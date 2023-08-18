@@ -23,6 +23,6 @@ export class FilterService {
   getCupboardsForLab(lab: string) {
     const options = lab ?
         { params: new HttpParams().set('lab', lab) } : {};
-    return this.http.get<[string]>(`${environment.backendUrl}/lab_cupboards`, options);
+    return this.http.get<[string]>(`${environment.backendUrl}/lab-cupboards`, options);
   }
 }
