@@ -138,6 +138,11 @@
 
 <div class="submit-button-container">
     <span class="spacer"></span>
+    <div *ngIf="form.get('safetyDataSheet').errors?.['invalidURL'] || form.get('coshhLink').errors?.['invalidURL']"
+         id="invalid-url-feedback">
+        {{urlFeedback()}}
+    </div>
+
     <button
             [disabled]="!form.valid"
             mat-raised-button

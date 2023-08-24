@@ -1,4 +1,4 @@
-import {UntypedFormControl} from "@angular/forms";
+import {AbstractControl, UntypedFormControl, ValidationErrors, ValidatorFn} from "@angular/forms";
 import {map, Observable} from "rxjs";
 import {Columns, SheetData} from "write-excel-file";
 
@@ -71,4 +71,16 @@ export function isValidHttpUrl(urlString: string): boolean {
     }
 
     return url.protocol === "http:" || url.protocol === "https:";
+}
+
+export function urlValidator(): ValidatorFn {
+
+    return (control: AbstractControl): ValidationErrors | null => {
+        if (!control.value) {
+
+            return null
+        }
+
+        return isValidHttpUrl(control.value) ? null : {invalidURL: control.value};
+    }
 }
