@@ -204,6 +204,8 @@ export class CoshhComponent implements OnInit {
     }
 
     onChemicalAdded(chemical: Chemical): void {
+        // Lower case the cupboard name to make filtering and data integrity better
+        chemical.cupboard = chemical.cupboard.toLowerCase()
         this.http.post<Chemical>(`${environment.backendUrl}/chemical`, chemical).subscribe((addedChemical: Chemical) => {
             addedChemical.editSDS = false
             addedChemical.editCoshh = false
