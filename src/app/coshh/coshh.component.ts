@@ -16,7 +16,7 @@ import {Chemicals} from './chemicals';
 // @ts-ignore
 import {environment} from 'src/environments/environment';
 import {allHazards, Chemical, columnsForExport, columnTypes, ExpiryColor, Hazard, red, yellow} from './types';
-import {createExcelData, createPDFData, isValidHttpUrl} from "../utility/utilities";
+import {createExcelData, createPDFData, isValidHttpUrl, checkDuplicates} from "../utility/utilities";
 import {FilterService} from "../filter.service";
 
 @Component({
@@ -173,13 +173,15 @@ export class CoshhComponent implements OnInit {
     refreshCupboardsFilterList(): void {
         if (this.labFilterControl.value == 'All') {
             this.filterService.getCupboards().subscribe(cupboards => {
-                this.cupboardFilterValues = cupboards.concat('All')
-                this.cupboards = cupboards
+                let dedupedCupboards: string[] = checkDuplicates(cupboards)
+                this.cupboardFilterValues = dedupedCupboards.concat('All')
+                this.cupboards = dedupedCupboards
             })
         } else {
             this.filterService.getCupboardsForLab(this.labFilterControl.value).subscribe(cupboards => {
-                this.cupboardFilterValues = cupboards.concat('All')
-                this.cupboards = cupboards
+                let dedupedCupboards: string[] = checkDuplicates(cupboards)
+                this.cupboardFilterValues = dedupedCupboards.concat('All')
+                this.cupboards = dedupedCupboards
             })
         }
     }
