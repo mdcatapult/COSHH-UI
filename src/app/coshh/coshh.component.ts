@@ -187,6 +187,8 @@ export class CoshhComponent implements OnInit {
     }
 
     updateChemical(chemical: Chemical, refresh?: boolean): void {
+        // Lower case the cupboard name to make filtering and data integrity better
+        chemical.cupboard = chemical.cupboard.toLowerCase()
         this.http.put(`${environment.backendUrl}/chemical`, chemical).pipe(
             debounceTime(100)
         ).subscribe(() => {
