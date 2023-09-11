@@ -90,6 +90,6 @@ export function urlValidator(): ValidatorFn {
  * @param things
  */
 export function checkDuplicates(things: string[]): string[] {
-    let duplicatesRemoved: string[] = Array.from(new Set(things.map(e => e.toLowerCase())));
+    let duplicatesRemoved: string[] = Array.from(new Set(things.map(e => e.toLowerCase().trim())));
     return duplicatesRemoved
 }
