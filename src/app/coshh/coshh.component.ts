@@ -16,7 +16,7 @@ import {Chemicals} from './chemicals';
 // @ts-ignore
 import {environment} from 'src/environments/environment';
 import {allHazards, Chemical, columnsForExport, columnTypes, ExpiryColor, Hazard, red, yellow} from './types';
-import {createExcelData, createPDFData, isValidHttpUrl} from "../utility/utilities";
+import {createExcelData, createPDFData, isValidHttpUrl, checkDuplicates} from "../utility/utilities";
 import {FilterService} from "../filter.service";
 
 @Component({
@@ -173,18 +173,22 @@ export class CoshhComponent implements OnInit {
     refreshCupboardsFilterList(): void {
         if (this.labFilterControl.value == 'All') {
             this.filterService.getCupboards().subscribe(cupboards => {
-                this.cupboardFilterValues = cupboards.concat('All')
-                this.cupboards = cupboards
+                let dedupedCupboards: string[] = checkDuplicates(cupboards)
+                this.cupboardFilterValues = dedupedCupboards.concat('All')
+                this.cupboards = dedupedCupboards
             })
         } else {
             this.filterService.getCupboardsForLab(this.labFilterControl.value).subscribe(cupboards => {
-                this.cupboardFilterValues = cupboards.concat('All')
-                this.cupboards = cupboards
+                let dedupedCupboards: string[] = checkDuplicates(cupboards)
+                this.cupboardFilterValues = dedupedCupboards.concat('All')
+                this.cupboards = dedupedCupboards
             })
         }
     }
 
     updateChemical(chemical: Chemical, refresh?: boolean): void {
+        // Lower case and remove trailing spaces from the cupboard name to make filtering and data integrity better
+        chemical.cupboard = chemical.cupboard.toLowerCase().trim()
         this.http.put(`${environment.backendUrl}/chemical`, chemical).pipe(
             debounceTime(100)
         ).subscribe(() => {
@@ -202,6 +206,8 @@ export class CoshhComponent implements OnInit {
     }
 
     onChemicalAdded(chemical: Chemical): void {
+        // Lower case and remove trailing spaces from the cupboard name to make filtering and data integrity better
+        chemical.cupboard = chemical.cupboard.toLowerCase().trim()
         this.http.post<Chemical>(`${environment.backendUrl}/chemical`, chemical).subscribe((addedChemical: Chemical) => {
             addedChemical.editSDS = false
             addedChemical.editCoshh = false

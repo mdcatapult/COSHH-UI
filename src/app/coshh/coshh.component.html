@@ -209,7 +209,7 @@
                 <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by cupboard">
                     Cupboard
                 </th>
-                <td mat-cell *matCellDef="let element"> {{element.cupboard}} </td>
+                <td mat-cell *matCellDef="let element"> {{element.cupboard.toLowerCase().trim()}} </td>
             </ng-container>
 
             <ng-container matColumnDef="chemicalNumber">
