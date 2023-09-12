@@ -8,7 +8,7 @@ export class Chemicals {
         const searchLower = searchStr.toLowerCase()
         return this.chemicals
             .filter(chemical => includeArchived || !chemical.isArchived)
-            .filter(chemical => cupboard === 'All' || chemical.cupboard.toLowerCase().trim() === cupboard) // Note that cupboard is now set to lower case
+            .filter(chemical => cupboard === 'All' || chemical.cupboard?.toLowerCase().trim() === cupboard) // Note that cupboard is now set to lower case
             .filter(chemical => hazardCategory === 'All' ||
                 chemical.hazards?.map(hazard => hazard.toString()).includes(hazardCategory))
             .filter(chemical => lab === 'All' || chemical.location === lab)

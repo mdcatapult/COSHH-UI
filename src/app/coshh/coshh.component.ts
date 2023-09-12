@@ -188,7 +188,7 @@ export class CoshhComponent implements OnInit {
 
     updateChemical(chemical: Chemical, refresh?: boolean): void {
         // Lower case and remove trailing spaces from the cupboard name to make filtering and data integrity better
-        chemical.cupboard = chemical.cupboard.toLowerCase().trim()
+        chemical.cupboard = chemical.cupboard?.toLowerCase().trim()
         this.http.put(`${environment.backendUrl}/chemical`, chemical).pipe(
             debounceTime(100)
         ).subscribe(() => {
@@ -207,7 +207,7 @@ export class CoshhComponent implements OnInit {
 
     onChemicalAdded(chemical: Chemical): void {
         // Lower case and remove trailing spaces from the cupboard name to make filtering and data integrity better
-        chemical.cupboard = chemical.cupboard.toLowerCase().trim()
+        chemical.cupboard = chemical.cupboard?.toLowerCase().trim()
         this.http.post<Chemical>(`${environment.backendUrl}/chemical`, chemical).subscribe((addedChemical: Chemical) => {
             addedChemical.editSDS = false
             addedChemical.editCoshh = false
