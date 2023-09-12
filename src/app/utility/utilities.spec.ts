@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { isValidHttpUrl } from './utilities';
+import { isValidHttpUrl, checkDuplicates } from './utilities';
 
 describe('isValidHttpUrl function', () => {
 
@@ -27,4 +27,14 @@ describe('isValidHttpUrl function', () => {
         expect(value).toBeFalse()
     });
 
+});
+
+describe('checkDuplicates function', () => {
+
+    it('will lower case and trim duplicate strings', () => {
+        const strings = ["A", "a", "A ", " a", "a "]
+        let value = checkDuplicates(strings)
+        expect(value).toEqual(["a"])
+    });
+    
 });

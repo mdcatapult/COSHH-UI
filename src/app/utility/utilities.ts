@@ -84,3 +84,12 @@ export function urlValidator(): ValidatorFn {
         return isValidHttpUrl(control.value) ? null : {invalidURL: control.value};
     }
 }
+
+/**
+ * Remove duplicates from an array of strings. Case insensitive.
+ * @param things
+ */
+export function checkDuplicates(things: string[]): string[] {
+    let duplicatesRemoved: string[] = Array.from(new Set(things.map(e => e.toLowerCase().trim())));
+    return duplicatesRemoved
+}
