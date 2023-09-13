@@ -103,3 +103,10 @@ release-ui:
   except:
     variables:
       - "$CI_COMMIT_MESSAGE =~ /^Setting version to.*/"
+
+sast:
+  stage: test
+  tags:
+    - wopr
+include:
+  - template: Security/SAST.gitlab-ci.yml
