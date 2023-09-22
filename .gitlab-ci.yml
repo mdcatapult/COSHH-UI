@@ -4,8 +4,7 @@ stages:
   - release-ui
 
 default:
-  tags:
-    - wopr
+  image: registry.gitlab.com/medicines-discovery-catapult/informatics/docker-images/ci/node
 
 test-lint-build-ui:
   stage: test-lint-build
@@ -16,7 +15,6 @@ test-lint-build-ui:
     AUTH0_CLIENT_ID: "$DEV_AUTH0_CLIENT_ID"
     DEPLOYMENT_ENV: "dev"
     BACKEND_URL: "$DEV_BACKEND_URL"
-  image: registry.mdcatapult.io/informatics/docker-images/ci/node
   before_script:
     - apt-get -yqq update && apt-get upgrade -yqq chromium libxss1 xvfb
     - export CHROME_BIN=/usr/bin/chromium
@@ -31,8 +29,6 @@ test-lint-build-ui:
 
 publish-ui:
   stage: publish
-  tags:
-    - wopr
   image:
     name: gcr.io/kaniko-project/executor:debug
     entrypoint:
@@ -61,8 +57,6 @@ publish-ui:
 
 publish-ui-master:
   stage: publish
-  tags:
-    - wopr
   image:
     name: gcr.io/kaniko-project/executor:debug
     entrypoint:
@@ -91,9 +85,6 @@ publish-ui-master:
 
 release-ui:
   stage: release-ui
-  image: registry.mdcatapult.io/informatics/docker-images/ci/node
-  tags:
-    - wopr
   script:
     - git checkout master; git pull
     - cictl exec release node
@@ -106,7 +97,5 @@ release-ui:
 
 sast:
   stage: test-lint-build
-  tags:
-    - wopr
 include:
   - template: Security/SAST.gitlab-ci.yml
