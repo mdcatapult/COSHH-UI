@@ -1,6 +1,6 @@
 {
   "name": "coshh",
-  "version": "0.0.64",
+  "version": "0.0.65",
   "scripts": {
     "ng": "ng",
     "config": "ts-node ./scripts/setenv.ts",
