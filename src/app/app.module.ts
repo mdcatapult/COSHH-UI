@@ -31,6 +31,7 @@ import {MatSelectModule} from "@angular/material/select";
 import {AuthHttpInterceptor, AuthModule} from '@auth0/auth0-angular';
 import { environment as env } from '../environments/environment';
 import {SharedModule} from "./shared";
+import { ScanChemicalComponent } from './scan-chemical/scan-chemical.component';
 
 @NgModule({
     declarations: [
@@ -40,7 +41,8 @@ import {SharedModule} from "./shared";
         EditChemicalComponent,
         ChemicalDialogComponent,
         DateTimeFormatPipe,
-        NAPipe
+        NAPipe,
+        ScanChemicalComponent
     ],
     imports: [
         BrowserModule,

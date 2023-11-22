@@ -107,7 +107,7 @@ ul {
 }
 
 .add-chemical {
-  padding: 0 0.55vw 0 0.5vw;
+  //padding: 0 0.55vw 0 0.5vw;
 }
 
 header {
@@ -196,6 +196,16 @@ th.mat-sort-header-sorted {
   margin-top: 0.4vh;
 }
 
-#save-button {
-  margin-right: 1vw;
+#save-button,
+#scan-button{
+  //margin-right: 1vw;
+}
+
+#add-scan-container{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+  margin: 2.5% 0.5% 0 0;
+  min-height: 200%
 }

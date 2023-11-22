@@ -1,286 +1,303 @@
 <div>
     <header>
         <div class="centred-container">
-        <div id="login-buttons">
-            <ng-container *ngIf="isAuthenticated$ | async; else unAuthenticated">
-                <app-logout-button></app-logout-button>
-            </ng-container>
-            <ng-template #unAuthenticated>
-                <app-login-button></app-login-button>
-            </ng-template>
-        </div>
-        <div>
-            <img class="mdc-logo" src="assets/mdc-logo-blue-small.png">
-        </div>
+            <div id="login-buttons">
+                <ng-container *ngIf="isAuthenticated$ | async; else unAuthenticated">
+                    <app-logout-button></app-logout-button>
+                </ng-container>
+                <ng-template #unAuthenticated>
+                    <app-login-button></app-login-button>
+                </ng-template>
+            </div>
+            <div>
+                <img class="mdc-logo" src="assets/mdc-logo-blue-small.png">
+            </div>
         </div>
         <mat-toolbar class="coshh-toolbar">
             <mat-toolbar-row>
-            <ng-container *ngIf="isAuthenticated$ | async;">
-                <div class="add-chemical">
-                    <app-add-chemical
-                            [labs]="labFilterValues"
-                            [projectSpecific]="projectSpecific"
-                            (onChemicalAdded)="onChemicalAdded($event)"
-                    ></app-add-chemical>
-                </div>
-            </ng-container>
+                <ng-container *ngIf="isAuthenticated$ | async;">
+                    <div id="add-scan-container">
+                        <div class="add-chemical">
+                            <app-add-chemical
+                                    [labs]="labFilterValues"
+                                    [projectSpecific]="projectSpecific"
+                                    (onChemicalAdded)="onChemicalAdded($event)"
+                            ></app-add-chemical>
+                        </div>
+                        <button id="scan-button"
+                                [matTooltip]="scanningMode ? 'Barcode scanning mode enabled'  : 'Click to enable barcode scanning mode'"
+                                mat-mini-fab
+                                (click)="scanningMode = true"
+                                (focusout)="scanningMode = false">
+                            <mat-icon [ngStyle]="scanningMode ? {'color': 'green'} : {'color': 'purple'}">settings_remote</mat-icon>
+                        </button>
+                    </div>
+                </ng-container>
 
-            <div
-                    class="coshh-inventory"
-                    [matBadge]="tableData.data.length"
-                    [matTooltip]="tooltipText()"
-                    matBadgeColor="accent">COSHH Inventory
-            </div>
-
-
-            <span class="spacer"></span>
-
-            <div class="filter-control archive-checkbox-container">
-                <mat-checkbox
-                        class="coshh-checkbox"
-                        [formControl]="toggleArchiveControl"
-                        color="primary">Display archived chemicals
-                </mat-checkbox>
-                <mat-checkbox
-                        class="coshh-checkbox"
-                        [(ngModel)]="freezeColumns"
-                        color="primary">Freeze 'Name' and 'CAS' columns
-                </mat-checkbox>
-            </div>
-        </mat-toolbar-row>
-
-
-
-
-<mat-toolbar-row>
-    <span class="spacer"></span>
-            <div class="toolbar-controls-container">
-                <div class="filter-control">
-                    <mat-form-field className="filter-select">
-                        <mat-label>Filter by lab</mat-label>
-                        <mat-select required [formControl]="labFilterControl">
-                            <mat-option *ngFor="let lab of labFilterValues" [value]="lab">{{lab}}</mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                </div>
-
-                <div class="filter-control">
-                    <mat-form-field className="filter-select">
-                        <mat-label>Filter by cupboard</mat-label>
-                        <mat-select required [formControl]="cupboardFilterControl">
-                            <mat-option *ngFor="let cupboard of cupboardFilterValues"
-                                        [value]="cupboard">{{cupboard}}</mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                </div>
-
-                <div class="filter-control">
-                    <mat-form-field>
-                        <mat-label>Filter by expiry</mat-label>
-                        <mat-select required [formControl]="expiryFilterControl">
-                            <mat-option *ngFor="let expiry of expiryFilterValues"
-                                        [value]="expiry">{{expiry}}</mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                </div>
-
-                <div class="filter-control">
-                    <mat-form-field>
-                        <mat-label>Filter by hazard</mat-label>
-                        <mat-select required [formControl]="hazardFilterControl">
-                            <mat-option *ngFor="let hazard of hazardFilterValues"
-                                        [value]="hazard">{{hazard}}</mat-option>
-                        </mat-select>
-                    </mat-form-field>
+                <div
+                        class="coshh-inventory"
+                        [matBadge]="tableData.data.length"
+                        [matTooltip]="tooltipText()"
+                        matBadgeColor="accent">COSHH Inventory
                 </div>
 
 
-                <div class="filter-control">
-                    <mat-form-field>
-                        <mat-label>Project specific?</mat-label>
-                        <mat-select required [formControl]="projectFilterControl">
-                            <mat-option *ngFor="let project of projectFilterValues"
-                                        [value]="project">{{project}}</mat-option>
-                        </mat-select>
-                    </mat-form-field>
+                <span class="spacer"></span>
+
+                <div class="filter-control archive-checkbox-container">
+                    <mat-checkbox
+                            class="coshh-checkbox"
+                            [formControl]="toggleArchiveControl"
+                            color="primary">Display archived chemicals
+                    </mat-checkbox>
+                    <mat-checkbox
+                            class="coshh-checkbox"
+                            [(ngModel)]="freezeColumns"
+                            color="primary">Freeze 'Name' and 'CAS' columns
+                    </mat-checkbox>
                 </div>
+            </mat-toolbar-row>
 
-                <div class="filter-control">
-                    <mat-form-field>
-                        <mat-label>Name / Chem no</mat-label>
-                        <input type="text"
-                               placeholder="Type to search..."
-                               aria-label="Search"
-                               matInput
-                               [formControl]="searchControl"
-                               [matAutocomplete]="auto">
-                        <mat-autocomplete #auto="matAutocomplete">
-                            <mat-option *ngFor="let option of searchOptions | async | slice : 0 : 10" [value]="option">
-                                {{option}}
-                            </mat-option>
-                        </mat-autocomplete>
-                    </mat-form-field>
+
+            <mat-toolbar-row>
+                <span class="spacer"></span>
+                <div class="toolbar-controls-container">
+                    <div class="filter-control">
+                        <mat-form-field className="filter-select">
+                            <mat-label>Filter by lab</mat-label>
+                            <mat-select required [formControl]="labFilterControl">
+                                <mat-option *ngFor="let lab of labFilterValues" [value]="lab">{{lab}}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+
+                    <div class="filter-control">
+                        <mat-form-field className="filter-select">
+                            <mat-label>Filter by cupboard</mat-label>
+                            <mat-select required [formControl]="cupboardFilterControl">
+                                <mat-option *ngFor="let cupboard of cupboardFilterValues"
+                                            [value]="cupboard">{{cupboard}}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+
+                    <div class="filter-control">
+                        <mat-form-field>
+                            <mat-label>Filter by expiry</mat-label>
+                            <mat-select required [formControl]="expiryFilterControl">
+                                <mat-option *ngFor="let expiry of expiryFilterValues"
+                                            [value]="expiry">{{expiry}}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+
+                    <div class="filter-control">
+                        <mat-form-field>
+                            <mat-label>Filter by hazard</mat-label>
+                            <mat-select required [formControl]="hazardFilterControl">
+                                <mat-option *ngFor="let hazard of hazardFilterValues"
+                                            [value]="hazard">{{hazard}}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+
+
+                    <div class="filter-control">
+                        <mat-form-field>
+                            <mat-label>Project specific?</mat-label>
+                            <mat-select required [formControl]="projectFilterControl">
+                                <mat-option *ngFor="let project of projectFilterValues"
+                                            [value]="project">{{project}}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+
+                    <div class="filter-control">
+                        <mat-form-field>
+                            <mat-label>Name / Chem no</mat-label>
+                            <input type="text"
+                                   placeholder="Type to search..."
+                                   aria-label="Search"
+                                   matInput
+                                   [formControl]="searchControl"
+                                   [matAutocomplete]="auto">
+                            <mat-autocomplete #auto="matAutocomplete">
+                                <mat-option *ngFor="let option of searchOptions | async | slice : 0 : 10"
+                                            [value]="option">
+                                    {{option}}
+                                </mat-option>
+                            </mat-autocomplete>
+                        </mat-form-field>
+                    </div>
                 </div>
-            </div>
-    <span class="spacer"></span>
+                <span class="spacer"></span>
 
-    <button id="save-button" matTooltip="Print or export chemicals" mat-mini-fab [matMenuTriggerFor]="exportMenu">
-        <mat-icon [ngStyle]="{'color': 'purple'}">save</mat-icon>
-    </button>
-    <mat-menu #exportMenu="matMenu">
-    <button mat-mini-fab color="accent"
-            id="excel-button"
-            matTooltip="Save inventory with current filters to Excel (name, quantity, location, SDS, added and expiry columns only)"
-            matTooltipPosition="left"
-            (click)="saveExcel()">
-        <mat-icon [ngStyle]="{'color': 'purple'}">save_alt</mat-icon>
-    </button>
-    <button mat-mini-fab color="accent"
-            id="pdf-button"
-            matTooltip="Save inventory with current filters to PDF (name, quantity, location, SDS, added and expiry columns only)"
-            matTooltipPosition="above"
-            (click)="savePDF()">
-        <mat-icon [ngStyle]="{'color': 'purple'}">picture_as_pdf</mat-icon>
-    </button>
-    <button mat-mini-fab color="accent"
-            id="print-button"
-            matTooltip="Print inventory with current filters"
-            matTooltipPosition="below"
-            (click)="printInventory()">
-        <mat-icon [ngStyle]="{'color': 'purple'}">print</mat-icon>
-    </button>
-    </mat-menu>
+                <button id="save-button" matTooltip="Print or export chemicals" mat-mini-fab
+                        [matMenuTriggerFor]="exportMenu">
+                    <mat-icon [ngStyle]="{'color': 'purple'}">save</mat-icon>
+                </button>
+                <mat-menu #exportMenu="matMenu">
+                    <button mat-mini-fab color="accent"
+                            id="excel-button"
+                            matTooltip="Save inventory with current filters to Excel (name, quantity, location, SDS, added and expiry columns only)"
+                            matTooltipPosition="left"
+                            (click)="saveExcel()">
+                        <mat-icon [ngStyle]="{'color': 'purple'}">save_alt</mat-icon>
+                    </button>
+                    <button mat-mini-fab color="accent"
+                            id="pdf-button"
+                            matTooltip="Save inventory with current filters to PDF (name, quantity, location, SDS, added and expiry columns only)"
+                            matTooltipPosition="above"
+                            (click)="savePDF()">
+                        <mat-icon [ngStyle]="{'color': 'purple'}">picture_as_pdf</mat-icon>
+                    </button>
+                    <button mat-mini-fab color="accent"
+                            id="print-button"
+                            matTooltip="Print inventory with current filters"
+                            matTooltipPosition="below"
+                            (click)="printInventory()">
+                        <mat-icon [ngStyle]="{'color': 'purple'}">print</mat-icon>
+                    </button>
+                </mat-menu>
 
-</mat-toolbar-row>
+            </mat-toolbar-row>
 
         </mat-toolbar>
     </header>
 </div>
-    <br/>
+<br/>
 
-    <div class="table-container">
-        <table id="coshh-table" mat-table [dataSource]="tableData"
-               matSort (matSortChange)="announceSortChange($event)"
-               class="mat-elevation-z8">
+<div class="table-container">
+    <table id="coshh-table" mat-table [dataSource]="tableData"
+           matSort (matSortChange)="announceSortChange($event)"
+           class="mat-elevation-z8">
 
-            <ng-container matColumnDef="casNumber" [sticky]="freezeColumns">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by number">
-                    CAS no.
-                </th>
-                <td mat-cell *matCellDef="let element">
-                    {{element.casNumber | NA}}
-                </td>
-            </ng-container>
+        <ng-container matColumnDef="casNumber" [sticky]="freezeColumns">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by number">
+                CAS no.
+            </th>
+            <td mat-cell *matCellDef="let element">
+                {{element.casNumber | NA}}
+            </td>
+        </ng-container>
 
-            <ng-container matColumnDef="name" [sticky]="freezeColumns">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by name">
-                    Chemical Name
-                </th>
-                <td mat-cell *matCellDef="let element">
-                    {{element.name}}
-                </td>
-            </ng-container>
+        <ng-container matColumnDef="name" [sticky]="freezeColumns">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by name">
+                Chemical Name
+            </th>
+            <td mat-cell *matCellDef="let element">
+                {{element.name}}
+            </td>
+        </ng-container>
 
-            <ng-container matColumnDef="hazards">
-                <th mat-header-cell *matHeaderCellDef>
-                    Hazards
-                </th>
-                <td mat-cell *matCellDef="let chemical">
-                    <img *ngIf="!chemical.hazards || !chemical.hazards.length" class="img-responsive hazard"
-                         src="assets/unknown.jpg" alt="Unknown" title="Unknown">
+        <ng-container matColumnDef="hazards">
+            <th mat-header-cell *matHeaderCellDef>
+                Hazards
+            </th>
+            <td mat-cell *matCellDef="let chemical">
+                <img *ngIf="!chemical.hazards || !chemical.hazards.length" class="img-responsive hazard"
+                     src="assets/unknown.jpg" alt="Unknown" title="Unknown">
 
-                    <ul>
-                        <li *ngFor="let hazard of chemical.hazardList">
-                            <img *ngIf="hazard.activated" class="img-responsive hazard"
-                                 [src]="getHazardPicture(hazard.title)" [alt]="hazard.title" [title]="hazard.title">
-                        </li>
-                    </ul>
-                </td>
-            </ng-container>
+                <ul>
+                    <li *ngFor="let hazard of chemical.hazardList">
+                        <img *ngIf="hazard.activated" class="img-responsive hazard"
+                             [src]="getHazardPicture(hazard.title)" [alt]="hazard.title" [title]="hazard.title">
+                    </li>
+                </ul>
+            </td>
+        </ng-container>
 
-            <ng-container matColumnDef="location">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by location">
-                    Location
-                </th>
-                <td mat-cell *matCellDef="let element"> {{element.location}} </td>
-            </ng-container>
+        <ng-container matColumnDef="location">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by location">
+                Location
+            </th>
+            <td mat-cell *matCellDef="let element"> {{element.location}} </td>
+        </ng-container>
 
-            <ng-container matColumnDef="cupboard">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by cupboard">
-                    Cupboard
-                </th>
-                <td mat-cell *matCellDef="let element"> {{element.cupboard?.toLowerCase().trim()}} </td>
-            </ng-container>
+        <ng-container matColumnDef="cupboard">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by cupboard">
+                Cupboard
+            </th>
+            <td mat-cell *matCellDef="let element"> {{element.cupboard?.toLowerCase().trim()}} </td>
+        </ng-container>
 
-            <ng-container matColumnDef="chemicalNumber">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by chemical number">
-                    Chemical Number
-                </th>
-                <td mat-cell *matCellDef="let element"> {{element.chemicalNumber}} </td>
-            </ng-container>
+        <ng-container matColumnDef="chemicalNumber">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by chemical number">
+                Chemical Number
+            </th>
+            <td mat-cell *matCellDef="let element"> {{element.chemicalNumber}} </td>
+        </ng-container>
 
-            <ng-container matColumnDef="matterState">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by state">
-                    State
-                </th>
-                <td mat-cell *matCellDef="let element"> {{element.matterState}} </td>
-            </ng-container>
+        <ng-container matColumnDef="matterState">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by state">
+                State
+            </th>
+            <td mat-cell *matCellDef="let element"> {{element.matterState}} </td>
+        </ng-container>
 
-            <ng-container matColumnDef="quantity">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by quantity">
-                    Quantity
-                </th>
-                <td mat-cell *matCellDef="let element"> {{element.quantity}} </td>
-            </ng-container>
+        <ng-container matColumnDef="quantity">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by quantity">
+                Quantity
+            </th>
+            <td mat-cell *matCellDef="let element"> {{element.quantity}} </td>
+        </ng-container>
 
-            <ng-container matColumnDef="added">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by added date">
-                    Added
-                </th>
-                <td mat-cell *matCellDef="let element"> {{element.added | DateTimeFormat}} </td>
-            </ng-container>
+        <ng-container matColumnDef="added">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by added date">
+                Added
+            </th>
+            <td mat-cell *matCellDef="let element"> {{element.added | DateTimeFormat}} </td>
+        </ng-container>
 
-            <ng-container matColumnDef="expiry">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by expiry">
-                    Expiry
-                </th>
-                <td mat-cell *matCellDef="let element"
-                    [style.background-color]="element.backgroundColour"> {{element.expiry | DateTimeFormat}} </td>
-            </ng-container>
+        <ng-container matColumnDef="expiry">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by expiry">
+                Expiry
+            </th>
+            <td mat-cell *matCellDef="let element"
+                [style.background-color]="element.backgroundColour"> {{element.expiry | DateTimeFormat}} </td>
+        </ng-container>
 
-            <ng-container matColumnDef="safetyDataSheet">
-                <th mat-header-cell *matHeaderCellDef>
-                    SDS
-                </th>
-                <td mat-cell *matCellDef="let element"><a *ngIf="isValidHttpUrl(element.safetyDataSheet)" href="{{element.safetyDataSheet}}" target="_blank" title="Link to {{element.safetyDataSheet}}"><mat-icon>article</mat-icon></a></td>
-            </ng-container>
+        <ng-container matColumnDef="safetyDataSheet">
+            <th mat-header-cell *matHeaderCellDef>
+                SDS
+            </th>
+            <td mat-cell *matCellDef="let element"><a *ngIf="isValidHttpUrl(element.safetyDataSheet)"
+                                                      href="{{element.safetyDataSheet}}" target="_blank"
+                                                      title="Link to {{element.safetyDataSheet}}">
+                <mat-icon>article</mat-icon>
+            </a></td>
+        </ng-container>
 
-            <ng-container matColumnDef="coshhLink">
-                <th mat-header-cell *matHeaderCellDef>
-                    COSHH
-                </th>
-                <td mat-cell *matCellDef="let element"><a *ngIf="isValidHttpUrl(element.coshhLink)" href="{{element.coshhLink}}" target="_blank" title="Link to {{element.coshhLink}}"><mat-icon>article</mat-icon></a></td>
-            </ng-container>
+        <ng-container matColumnDef="coshhLink">
+            <th mat-header-cell *matHeaderCellDef>
+                COSHH
+            </th>
+            <td mat-cell *matCellDef="let element"><a *ngIf="isValidHttpUrl(element.coshhLink)"
+                                                      href="{{element.coshhLink}}" target="_blank"
+                                                      title="Link to {{element.coshhLink}}">
+                <mat-icon>article</mat-icon>
+            </a></td>
+        </ng-container>
 
-            <ng-container matColumnDef="storageTemp">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header
-                    sortActionDescription="Sort by storage temperature">
-                    Storage Temp.
-                </th>
-                <td mat-cell *matCellDef="let element"> {{element.storageTemp}} </td>
-            </ng-container>
+        <ng-container matColumnDef="storageTemp">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header
+                sortActionDescription="Sort by storage temperature">
+                Storage Temp.
+            </th>
+            <td mat-cell *matCellDef="let element"> {{element.storageTemp}} </td>
+        </ng-container>
 
-            <ng-container matColumnDef="projectSpecific">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by project">
-                    Project Specific?
-                </th>
-                <td mat-cell *matCellDef="let element"> {{element.projectSpecific}} </td>
-            </ng-container>
+        <ng-container matColumnDef="projectSpecific">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by project">
+                Project Specific?
+            </th>
+            <td mat-cell *matCellDef="let element"> {{element.projectSpecific}} </td>
+        </ng-container>
 
-            <ng-container matColumnDef="buttons" sticky>
-                <th mat-header-cell *matHeaderCellDef></th>
-                <td mat-cell *matCellDef="let chemical" class="coshh-buttons-cell">
-                    <ng-container *ngIf="isAuthenticated$ | async;">
+        <ng-container matColumnDef="buttons" sticky>
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td mat-cell *matCellDef="let chemical" class="coshh-buttons-cell">
+                <ng-container *ngIf="isAuthenticated$ | async;">
                     <button matTooltip="Edit, clone or archive this chemical" mat-button [matMenuTriggerFor]="menu">
                         <mat-icon>more_vert</mat-icon>
                     </button>
@@ -323,12 +340,12 @@
                             <mat-icon id="clone-icon">file_copy</mat-icon>
                         </button>
                     </mat-menu>
-                    </ng-container>
-                </td>
-            </ng-container>
+                </ng-container>
+            </td>
+        </ng-container>
 
-            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns; let chemical"
-                [ngClass]="{'archived': chemical.isArchived}"></tr>
-        </table>
-    </div>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns; let chemical"
+            [ngClass]="{'archived': chemical.isArchived}"></tr>
+    </table>
+</div>
