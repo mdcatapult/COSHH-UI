@@ -4,6 +4,7 @@ import { ScanChemicalComponent } from './scan-chemical.component';
 
 describe('ScanChemicalComponent', () => {
   let component: ScanChemicalComponent;
+
   let fixture: ComponentFixture<ScanChemicalComponent>;
 
   beforeEach(async () => {

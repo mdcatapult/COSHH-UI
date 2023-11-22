@@ -6,7 +6,7 @@ import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import jsPDF from 'jspdf';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
-import { MatDialog } from "@angular/material/dialog";
+import { MatDialog } from '@angular/material/dialog';
 import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 
@@ -17,7 +17,7 @@ import { Chemicals } from './chemicals';
 import { createExcelData, createPDFData, isValidHttpUrl, checkDuplicates } from '../utility/utilities';
 import { environment } from 'src/environments/environment';
 import { FilterService } from '../filter.service';
-import { ScanChemicalComponent } from "../scan-chemical/scan-chemical.component";
+import { ScanChemicalComponent } from '../scan-chemical/scan-chemical.component';
 import writeXlsxFile from 'write-excel-file';
 
 @Component({
@@ -38,29 +38,29 @@ export class CoshhComponent implements OnInit {
                 data: {
                     chemicalNumber: this.scannedBarcode,
                     chemical: this.getChemicals()
-                        .find(chemical => chemical.chemicalNumber === this.scannedBarcode),
+                        .find((chemical) => chemical.chemicalNumber === this.scannedBarcode),
                     archive: this.updateChemical
-                },
-            })
+                }
+            });
 
             dialog.afterOpened().subscribe(() => {
                 this.scanDialogOpen = true;
-            })
+            });
 
             dialog.afterClosed().subscribe(() => {
                 this.refresh();
                 this.scannedBarcode = '';
                 this.scanDialogOpen = false;
-            })
+            });
         }
-    }
+    };
 
     @HostListener('window:keypress', ['$event'])
     keyEvent(event: KeyboardEvent): void {
         event.key === 'Enter' ? this.barcodeScanned(): this.scannedBarcode += event.key;
     }
 
-    isAuthenticated$ = this.authService.isAuthenticated$
+    isAuthenticated$ = this.authService.isAuthenticated$;
 
     displayedColumns = ['buttons', 'casNumber', 'name', 'hazards', 'location', 'cupboard', 'chemicalNumber', 'matterState',
         'quantity', 'added', 'expiry', 'safetyDataSheet', 'coshhLink', 'storageTemp', 'owner'];
