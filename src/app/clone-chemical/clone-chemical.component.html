@@ -1,0 +1,11 @@
+<button
+        matTooltip="Clone this chemical"
+        matTooltipPosition="above"
+        class="clone-button"
+        mat-mini-fab
+        color="accent"
+        [disabled]="!users.length"
+        (click)="cloneChemical()"
+>
+    <mat-icon id="clone-icon">file_copy</mat-icon>
+</button>

@@ -20,6 +20,7 @@ test-lint-build-ui:
     - export CHROME_BIN=/usr/bin/chromium
     - npm install
   script:
+    - npx eslint .
     - npm run test:ci
     - npm run build --configuration=development
   coverage: /Lines\s+:\s(\d+\.?\d*)%\s\(\s\d+\/\d+\s\)/
