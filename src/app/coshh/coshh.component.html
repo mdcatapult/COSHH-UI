@@ -19,7 +19,7 @@
                 <div class="add-chemical">
                     <app-add-chemical
                             [labs]="labFilterValues"
-                            [projectSpecific]="projectSpecific"
+                            [users]="users"
                             (onChemicalAdded)="onChemicalAdded($event)"
                     ></app-add-chemical>
                 </div>
@@ -94,17 +94,6 @@
                     </mat-form-field>
                 </div>
 
-
-                <div class="filter-control">
-                    <mat-form-field>
-                        <mat-label>Project specific?</mat-label>
-                        <mat-select required [formControl]="projectFilterControl">
-                            <mat-option *ngFor="let project of projectFilterValues"
-                                        [value]="project">{{project}}</mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                </div>
-
                 <div class="filter-control">
                     <mat-form-field>
                         <mat-label>Name / Chem no</mat-label>
@@ -112,11 +101,28 @@
                                placeholder="Type to search..."
                                aria-label="Search"
                                matInput
-                               [formControl]="searchControl"
-                               [matAutocomplete]="auto">
-                        <mat-autocomplete #auto="matAutocomplete">
-                            <mat-option *ngFor="let option of searchOptions | async | slice : 0 : 10" [value]="option">
-                                {{option}}
+                               [formControl]="nameOrNumberSearchControl"
+                               [matAutocomplete]="autoNameNum">
+                        <mat-autocomplete #autoNameNum="matAutocomplete">
+                            <mat-option *ngFor="let nameOrNumber of nameOrNumberSearchOptions | async | slice : 0 : 10" [value]="nameOrNumber">
+                                {{nameOrNumber}}
+                            </mat-option>
+                        </mat-autocomplete>
+                    </mat-form-field>
+                </div>
+
+                <div class="filter-control">
+                    <mat-form-field>
+                        <mat-label>Owner</mat-label>
+                        <input type="text"
+                               placeholder="Type to search..."
+                               aria-label="Search"
+                               matInput
+                               [formControl]="ownerSearchControl"
+                               [matAutocomplete]="autoOwner">
+                        <mat-autocomplete #autoOwner="matAutocomplete">
+                            <mat-option *ngFor="let owner of ownerSearchOptions | async | slice : 0 : 10" [value]="owner">
+                                {{owner}}
                             </mat-option>
                         </mat-autocomplete>
                     </mat-form-field>
@@ -270,11 +276,11 @@
                 <td mat-cell *matCellDef="let element"> {{element.storageTemp}} </td>
             </ng-container>
 
-            <ng-container matColumnDef="projectSpecific">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by project">
-                    Project Specific?
+            <ng-container matColumnDef="owner">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by owner">
+                    Owner
                 </th>
-                <td mat-cell *matCellDef="let element"> {{element.projectSpecific}} </td>
+                <td mat-cell *matCellDef="let element"> {{element.owner}} </td>
             </ng-container>
 
             <ng-container matColumnDef="buttons" sticky>
@@ -287,7 +293,7 @@
                     <mat-menu #menu="matMenu">
                         <app-edit-chemical
                                 [labs]="labFilterValues"
-                                [projectSpecific]="projectSpecific"
+                                [users]="users"
                                 [chemical]="chemical"
                                 (onChemicalEdited)="onChemicalEdited($event)"
                         ></app-edit-chemical>
@@ -312,22 +318,18 @@
                         >
                             <mat-icon id="unarchive-icon">unarchive</mat-icon>
                         </button>
-                        <button
-                                matTooltip="Clone this chemical"
-                                matTooltipPosition="above"
-                                class="clone-button"
-                                mat-mini-fab
-                                color="accent"
-                                (click)="onChemicalAdded(chemical)"
-                        >
-                            <mat-icon id="clone-icon">file_copy</mat-icon>
-                        </button>
+                        <app-clone-chemical
+                                [labs]="labFilterValues"
+                                [users]="users"
+                                [chemical]="chemical"
+                                (onChemicalCloned)="onChemicalAdded($event)"
+                        ></app-clone-chemical>
                     </mat-menu>
                     </ng-container>
                 </td>
             </ng-container>
 
-            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
             <tr mat-row *matRowDef="let row; columns: displayedColumns; let chemical"
                 [ngClass]="{'archived': chemical.isArchived}"></tr>
         </table>

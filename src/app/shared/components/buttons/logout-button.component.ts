@@ -1,12 +1,12 @@
+import { AuthService } from '@auth0/auth0-angular';
 import { Component, Inject } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
-import { AuthService } from '@auth0/auth0-angular';
 
 @Component({
   selector: 'app-logout-button',
   template: `
     <button class="button__logout" (click)="handleLogout()">Log Out</button>
-  `,
+  `
 })
 export class LogoutButtonComponent {
   constructor(
@@ -17,8 +17,8 @@ export class LogoutButtonComponent {
   handleLogout(): void {
     this.auth.logout({
       logoutParams: {
-        returnTo: this.doc.location.origin,
-      },
+        returnTo: this.doc.location.origin
+      }
     });
   }
 }

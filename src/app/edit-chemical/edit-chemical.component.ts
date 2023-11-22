@@ -1,8 +1,8 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {MatDialog} from '@angular/material/dialog';
-import {ChemicalDialogComponent} from '../chemical-dialog/chemical-dialog.component';
-import {Chemical} from '../coshh/types';
-import * as moment from 'moment';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+
+import { Chemical } from '../coshh/types';
+import { ChemicalDialogComponent } from '../chemical-dialog/chemical-dialog.component';
 
 
 @Component({
@@ -15,10 +15,10 @@ export class EditChemicalComponent implements OnInit {
     constructor(public dialog: MatDialog) {
     }
 
-    @Input() labs: string[] = []
-    @Input() projectSpecific: string[] = []
-    @Input() chemical!: Chemical
-    @Output() onChemicalEdited = new EventEmitter<Chemical>()
+    @Input() labs: string[] = [];
+    @Input() chemical!: Chemical;
+    @Input() users: string[] = [];
+    @Output() onChemicalEdited = new EventEmitter<Chemical>();
 
     ngOnInit(): void {
     }
@@ -28,15 +28,15 @@ export class EditChemicalComponent implements OnInit {
             width: '50vw',
             data: {
                 labs: this.labs,
-                projectSpecific: this.projectSpecific,
-                chemical: this.chemical,
-            },
-        })
+                users: this.users,
+                chemical: this.chemical
+            }
+        });
 
 
         dialogRef.afterClosed().subscribe((chemical: Chemical) => {
-            if (chemical) this.onChemicalEdited.emit(chemical)
-        })
+            if (chemical) this.onChemicalEdited.emit(chemical);
+        });
     }
 }
 
