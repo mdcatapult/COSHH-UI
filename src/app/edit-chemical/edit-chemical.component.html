@@ -4,6 +4,7 @@
         matTooltipPosition="above"
         mat-mini-fab
         color="primary"
+        [disabled]="!users.length"
         (click)="editChemical()"
 >
     <mat-icon>edit</mat-icon>

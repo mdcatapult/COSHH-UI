@@ -1,13 +1,15 @@
-import {HttpClient, HttpHandler} from '@angular/common/http';
-import {ComponentFixture, TestBed} from '@angular/core/testing';
-import {UntypedFormBuilder} from '@angular/forms';
-import {MatAutocompleteModule} from "@angular/material/autocomplete";
-import {CoshhComponent} from './coshh.component';
-import {AuthModule} from "@auth0/auth0-angular";
-import {MatMenuModule} from "@angular/material/menu";
+import { AuthModule } from '@auth0/auth0-angular';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { HttpClient, HttpHandler } from '@angular/common/http';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatMenuModule } from '@angular/material/menu';
+import { UntypedFormBuilder } from '@angular/forms';
+
+import { CoshhComponent } from './coshh.component';
 
 describe('CoshhComponent', () => {
     let component: CoshhComponent;
+
     let fixture: ComponentFixture<CoshhComponent>;
 
     beforeEach(async () => {
@@ -16,7 +18,7 @@ describe('CoshhComponent', () => {
             providers: [
                 HttpClient,
                 HttpHandler,
-                UntypedFormBuilder,
+                UntypedFormBuilder
             ],
             imports: [
                 MatAutocompleteModule,
@@ -24,8 +26,8 @@ describe('CoshhComponent', () => {
                 // Fake Auth0 details for testing purposes
                 AuthModule.forRoot({
                     domain: 'a.domain.id',
-                    clientId: '12345',
-                }),
+                    clientId: '12345'
+                })
             ]
         })
             .compileComponents();

@@ -1,11 +1,12 @@
-import { Overlay } from '@angular/cdk/overlay';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { Overlay } from '@angular/cdk/overlay';
 
 import { EditChemicalComponent } from './edit-chemical.component';
 
 describe('EditChemicalComponent', () => {
   let component: EditChemicalComponent;
+
   let fixture: ComponentFixture<EditChemicalComponent>;
 
   beforeEach(async () => {
@@ -13,7 +14,7 @@ describe('EditChemicalComponent', () => {
       declarations: [ EditChemicalComponent ],
       providers: [
         MatDialog,
-        Overlay,
+        Overlay
       ],
       imports: [MatDialogModule]
     })

@@ -3,6 +3,7 @@
         matTooltipPosition="above"
         mat-mini-fab
         color="primary"
+        [disabled]="!users.length"
         (click)="addChemical()"
 >
     <mat-icon>add</mat-icon>

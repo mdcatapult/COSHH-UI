@@ -117,28 +117,29 @@
             </mat-form-field>
         </div>
 
-        <div class="row">
-            <mat-form-field appearance="fill">
-                <mat-label>Project specific?</mat-label>
-                <input type="text"
-                       placeholder="Type to search..."
-                       matInput
-                       [formControl]="form.controls['projectSpecific']"
-                       [matAutocomplete]="auto">
-                <mat-autocomplete #auto="matAutocomplete">
-                    <mat-option *ngFor="let option of projectSpecificOptions | async | slice : 0 : 10" [value]="option">
-                        {{option}}
-                    </mat-option>
-                </mat-autocomplete>
-            </mat-form-field>
-        </div>
+                <div class="row">
+                    <mat-form-field appearance="fill">
+                        <mat-label>Owner</mat-label>
+                        <input type="text"
+                               placeholder="Type to search..."
+                               matInput
+                               [formControl]="convertToFormControl('owner')"
+                               [matAutocomplete]="dialogOwners">
+                        <mat-autocomplete requireSelection #dialogOwners="matAutocomplete">
+                            <mat-option *ngFor="let option of ownerOptions | async | slice : 0 : 10" [value]="option">
+                                {{option}}
+                            </mat-option>
+                        </mat-autocomplete>
+                    </mat-form-field>
+                </div>
+
     </div>
 
 </form>
 
 <div class="submit-button-container">
     <span class="spacer"></span>
-    <div *ngIf="form.get('safetyDataSheet').errors?.['invalidURL'] || form.get('coshhLink').errors?.['invalidURL']"
+    <div *ngIf="form.get('safetyDataSheet')?.errors?.['invalidURL'] || form.get('coshhLink')?.errors?.['invalidURL']"
          id="invalid-url-feedback">
         {{urlFeedback()}}
     </div>

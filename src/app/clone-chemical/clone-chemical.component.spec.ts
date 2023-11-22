@@ -1,30 +1,26 @@
-import { Overlay } from '@angular/cdk/overlay';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpClient, HttpHandler } from '@angular/common/http';
 import { MatDialogModule } from '@angular/material/dialog';
 
-import { AddChemicalComponent } from './add-chemical.component';
+import { CloneChemicalComponent } from './clone-chemical.component';
 
-describe('AddChemicalComponent', () => {
-    let component: AddChemicalComponent;
+describe('CloneChemicalComponent', () => {
+    let component: CloneChemicalComponent;
 
-    let fixture: ComponentFixture<AddChemicalComponent>;
+    let fixture: ComponentFixture<CloneChemicalComponent>;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [AddChemicalComponent],
+            declarations: [CloneChemicalComponent],
             providers: [
                 HttpClient,
-                HttpHandler,
-                Overlay
+                HttpHandler
             ],
             imports: [MatDialogModule]
         })
             .compileComponents();
-    });
 
-    beforeEach(() => {
-        fixture = TestBed.createComponent(AddChemicalComponent);
+        fixture = TestBed.createComponent(CloneChemicalComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
     });

@@ -14,7 +14,7 @@ export type Chemical = {
     storageTemp: 'Shelf' | '+4' | '-20' | '-80',
     location: string,
     cupboard: string,
-    projectSpecific: string,
+    owner: string,
     isArchived: boolean,
     hazards: Hazard[],
     hazardList: HazardListItem[],
@@ -32,8 +32,8 @@ export type HazardListItem = {
 export type Expiry = 'Any' | '< 30 Days' | 'Expired'
 
 export type ExpiryColor = '' | typeof yellow | typeof red
-export const yellow = 'rgb(255,255,0,0.6)' 
-export const red = 'rgb(255,0,0,0.6)' 
+export const yellow = 'rgb(255,255,0,0.6)'; 
+export const red = 'rgb(255,0,0,0.6)'; 
 
 export const columnTypes = [
     'casNumber',
@@ -49,12 +49,12 @@ export const columnTypes = [
     'safetyDataSheet',
     'coshhLink',
     'storageTemp',
-    'projectSpecific',
+    'owner',
     'archive'
-]
+];
 
 export function allHazards(): Hazard[] {
-    return ALL_HAZARDS.map(e => e)
+    return ALL_HAZARDS.map((e) => e);
 }
 
 const ALL_HAZARDS = [
@@ -69,7 +69,7 @@ const ALL_HAZARDS = [
     'Health hazard/Hazardous to the ozone layer',
     'Serious health hazard',
     'Gas under pressure'
-] as const
+] as const;
 
 type HazardTuple = typeof ALL_HAZARDS
 export type Hazard = HazardTuple[number]
@@ -82,12 +82,15 @@ export type HazardCategory = {
 export const columnsForExport = [
     'Name',
     'Quantity',
+    'CAS No.',
+    'State',
     'Location',
+    'Cupboard',
     'Safety data sheet',
     'Added',
     'Expiry',
     'Comments'
-]
+];
 
 
 

@@ -1,14 +1,15 @@
-import {HttpClient} from '@angular/common/http';
-import {ComponentFixture, TestBed} from '@angular/core/testing';
-import {DateAdapter} from '@angular/material/core';
-import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
-import {MatAutocompleteModule} from '@angular/material/autocomplete';
+import { HttpClient } from '@angular/common/http';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { DateAdapter } from '@angular/material/core';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { ReactiveFormsModule } from '@angular/forms';
 
-import {ChemicalDialogComponent} from './chemical-dialog.component';
-import {ReactiveFormsModule} from "@angular/forms";
+import { ChemicalDialogComponent } from './chemical-dialog.component';
 
 describe('ChemicalDialogComponent', () => {
     let component: ChemicalDialogComponent;
+
     let fixture: ComponentFixture<ChemicalDialogComponent>;
 
     beforeEach(async () => {
@@ -17,11 +18,11 @@ describe('ChemicalDialogComponent', () => {
             providers: [
                 MatDialog,
                 HttpClient,
-                {provide: MatDialogRef, useValue: {}},
-                {provide: MAT_DIALOG_DATA, useValue: {
-                    chemical: {hazards: []},
-                }},
-                DateAdapter,
+                { provide: MatDialogRef, useValue: {} },
+                { provide: MAT_DIALOG_DATA, useValue: {
+                    chemical: { hazards: [] }
+                } },
+                DateAdapter
             ],
             imports: [
                 MatAutocompleteModule,
