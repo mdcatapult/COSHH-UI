@@ -20,6 +20,7 @@ test-lint-build-ui:
     - export CHROME_BIN=/usr/bin/chromium
     - npm install
   script:
+    - npx eslint .
     - npm run test:ci
     - npm run build --configuration=development
   coverage: /Lines\s+:\s(\d+\.?\d*)%\s\(\s\d+\/\d+\s\)/
@@ -50,12 +51,12 @@ publish-ui:
       --dockerfile $CI_PROJECT_DIR/Dockerfile-dev
   except:
     refs:
-      - master
+      - main
       - tags
     variables:
       - $CI_COMMIT_MESSAGE =~ /^Setting version to.*/
 
-publish-ui-master:
+publish-ui-main:
   stage: publish
   image:
     name: gcr.io/kaniko-project/executor:debug
@@ -86,11 +87,11 @@ publish-ui-master:
 release-ui:
   stage: release-ui
   script:
-    - git checkout master; git pull
+    - git checkout main; git pull
     - cictl exec release node
   only:
     refs:
-     - master
+     - main
   except:
     variables:
       - "$CI_COMMIT_MESSAGE =~ /^Setting version to.*/"

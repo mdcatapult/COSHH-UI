@@ -1,10 +1,9 @@
-import { TestBed } from '@angular/core/testing';
+import { defer } from 'rxjs';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { HttpClient } from '@angular/common/http';
+import { TestBed } from '@angular/core/testing';
 
 import { FilterService } from './filter.service';
-import {HttpClient} from "@angular/common/http";
-
-import { defer } from 'rxjs';
 
 /**
  * Create async observable that emits-once and completes
@@ -17,12 +16,14 @@ export function asyncData<T>(data: T) {
 
 describe('FilterService', () => {
   let service: FilterService;
+
   let httpClientSpy: jasmine.SpyObj<HttpClient>;
-  let filterService: FilterService
+
+  let filterService: FilterService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
+      imports: [HttpClientTestingModule]
     });
     service = TestBed.inject(FilterService);
   });
@@ -32,11 +33,12 @@ describe('FilterService', () => {
   });
   it('can return cupboards', (done: DoneFn) => {
     httpClientSpy = jasmine.createSpyObj('HttpClient', ['get']);
-    filterService = new FilterService(httpClientSpy)
-    const expectedCupboards = ['1', '2', '3']
+    filterService = new FilterService(httpClientSpy);
+    const expectedCupboards = ['1', '2', '3'];
+
     httpClientSpy.get.and.returnValue(asyncData(expectedCupboards));
-    filterService.getCupboardsForLab("Lab 1").subscribe({
-      next: cupboards => {
+    filterService.getCupboardsForLab('Lab 1').subscribe({
+      next: (cupboards) => {
         expect(cupboards)
             .withContext('expected cupboards')
             .toEqual(expectedCupboards);

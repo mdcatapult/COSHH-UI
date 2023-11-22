@@ -1,0 +1,16 @@
+
+<div *ngIf="errorMessage" id="error-container">
+    <mat-icon class="error">error_outline</mat-icon>
+    <p style="font-size: large; margin: 0.5% 1% 0 1%;">{{errorMessage}}</p>
+    <mat-icon class="error">error_outline</mat-icon>
+</div>
+
+<div *ngIf="chemical && !errorMessage" id="scan-archive-container">
+    <p style="font-size: large; margin: 0.5% 1% 0 1%">Confirm archive of {{chemical.name}}</p>
+    <button id="scan-archive-button"
+            mat-mini-fab
+            (click)="archiveChemical(chemical)"
+            mat-dialog-close>
+        <mat-icon [ngStyle]="{'color': 'red'}">delete_outline</mat-icon>
+    </button>
+</div>
