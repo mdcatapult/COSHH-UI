@@ -6,6 +6,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { UntypedFormBuilder } from '@angular/forms';
 
 import { CoshhComponent } from './coshh.component';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 
 describe('CoshhComponent', () => {
     let component: CoshhComponent;
@@ -18,10 +19,16 @@ describe('CoshhComponent', () => {
             providers: [
                 HttpClient,
                 HttpHandler,
-                UntypedFormBuilder
+                MatDialog,
+                UntypedFormBuilder,
+                { provide: MatDialogRef, useValue: {} },
+                { provide: MAT_DIALOG_DATA, useValue: {
+                        chemical: { hazards: [] }
+                    } }
             ],
             imports: [
                 MatAutocompleteModule,
+                MatDialogModule,
                 MatMenuModule,
                 // Fake Auth0 details for testing purposes
                 AuthModule.forRoot({
