@@ -2,20 +2,22 @@ import * as moment from 'moment';
 import { AuthService } from '@auth0/auth0-angular';
 import autoTable from 'jspdf-autotable';
 import { combineLatest, debounceTime, map, Observable, startWith } from 'rxjs';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import jsPDF from 'jspdf';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
+import { MatDialog } from '@angular/material/dialog';
 import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { UntypedFormBuilder, UntypedFormControl } from '@angular/forms';
 
+import { UntypedFormBuilder, UntypedFormControl } from '@angular/forms';
 import { allHazards, Chemical, columnsForExport, columnTypes, ExpiryColor, Hazard, red, yellow } from './types';
 import { Chemicals } from './chemicals';
 // environment.ts is added at compile time by npm run start command
 import { createExcelData, createPDFData, isValidHttpUrl, checkDuplicates } from '../utility/utilities';
 import { environment } from 'src/environments/environment';
 import { FilterService } from '../filter.service';
+import { ScanChemicalComponent } from '../scan-chemical/scan-chemical.component';
 import writeXlsxFile from 'write-excel-file';
 
 @Component({
@@ -24,6 +26,39 @@ import writeXlsxFile from 'write-excel-file';
     styleUrls: ['./coshh.component.scss']
 })
 export class CoshhComponent implements OnInit {
+
+    scanningMode: boolean = false;
+    private scannedBarcode: string = '';
+    scanDialogOpen: boolean = false;
+
+    barcodeScanned = () => {
+        if (!this.scanDialogOpen) {
+            const dialog = this.dialog.open(ScanChemicalComponent, {
+                width: '20vw',
+                data: {
+                    chemicalNumber: this.scannedBarcode,
+                    chemical: this.getChemicals()
+                        .find((chemical) => chemical.chemicalNumber === this.scannedBarcode),
+                    archive: this.updateChemical
+                }
+            });
+
+            dialog.afterOpened().subscribe(() => {
+                this.scanDialogOpen = true;
+            });
+
+            dialog.afterClosed().subscribe(() => {
+                this.refresh();
+                this.scannedBarcode = '';
+                this.scanDialogOpen = false;
+            });
+        }
+    };
+
+    @HostListener('window:keypress', ['$event'])
+    keyEvent(event: KeyboardEvent): void {
+        event.key === 'Enter' ? this.barcodeScanned(): this.scannedBarcode += event.key;
+    }
 
     isAuthenticated$ = this.authService.isAuthenticated$;
 
@@ -34,7 +69,8 @@ export class CoshhComponent implements OnInit {
                 private fb: UntypedFormBuilder,
                 private _liveAnnouncer: LiveAnnouncer,
                 private authService: AuthService,
-                private filterService: FilterService) {
+                private filterService: FilterService,
+                public dialog: MatDialog) {
     }
 
     chemicals = new Chemicals(); // this represents all the chemicals returned from the API

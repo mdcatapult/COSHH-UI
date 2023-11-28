@@ -12,7 +12,7 @@ You will need the API up and running so see the [COSHH API](https://gitlab.mdcat
 ### Environment variables
 Before running you need to create a `.env` file in the root directory containing the following.
 ```bash
-CLIENT_ORIGIN_URL=http://localhost:4020
+CLIENT_ORIGIN_URL=http://localhost:4200
 AUTH0_DOMAIN=mdcatapult.eu.auth0.com
 AUTH0_AUDIENCE=https://coshh-api-local.wopr.inf.mdc
 AUTH0_CLIENT_ID=kGE0VDjHYDaQvx977nCCe8e4GJbCfi41

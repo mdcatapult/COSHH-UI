@@ -31,18 +31,20 @@ import { DateTimeFormatPipe } from './utility/pipes/my-datetime-format.pipe';
 import { EditChemicalComponent } from './edit-chemical/edit-chemical.component';
 import { environment as env } from '../environments/environment';
 import { NAPipe } from './utility/pipes/na-pipe';
+import { ScanChemicalComponent } from './scan-chemical/scan-chemical.component';
 import { SharedModule } from './shared';
 
 @NgModule({
     declarations: [
         AppComponent,
+        CloneChemicalComponent,
         CoshhComponent,
         AddChemicalComponent,
         EditChemicalComponent,
         ChemicalDialogComponent,
         DateTimeFormatPipe,
         NAPipe,
-        CloneChemicalComponent
+        ScanChemicalComponent
     ],
     imports: [
         BrowserModule,
