@@ -18,18 +18,25 @@
                 <ng-container *ngIf="isAuthenticated$ | async;">
                     <div id="add-scan-container">
                         <div class="add-chemical">
-                            <app-add-chemical
-                                    [labs]="labFilterValues"
-                                    [users]="users"
-                                    (onChemicalAdded)="onChemicalAdded($event)"
-                            ></app-add-chemical>
+                            <button
+                                    matTooltip="Add a new chemical to the inventory"
+                                    matTooltipPosition="above"
+                                    mat-mini-fab
+                                    color="primary"
+                                    [disabled]="!users.length"
+                                    (click)="addChemical()"
+                            >
+                                <mat-icon>add</mat-icon>
+                            </button>
                         </div>
                         <button id="scan-button"
                                 [matTooltip]="scanningMode ? 'Barcode scanning mode enabled'  : 'Click to enable barcode scanning mode'"
                                 mat-mini-fab
                                 (click)="scanningMode = true"
                                 (focusout)="scanningMode = false">
-                            <mat-icon [ngStyle]="scanningMode ? {'color': 'green'} : {'color': 'purple'}">settings_remote</mat-icon>
+                            <mat-icon [ngStyle]="scanningMode ? {'color': 'green'} : {'color': 'purple'}">
+                                settings_remote
+                            </mat-icon>
                         </button>
                     </div>
                 </ng-container>
@@ -46,11 +53,13 @@
 
                 <div class="filter-control archive-checkbox-container">
                     <mat-checkbox
+                            (change)="scanningMode = false"
                             class="coshh-checkbox"
                             [formControl]="toggleArchiveControl"
                             color="primary">Display archived chemicals
                     </mat-checkbox>
                     <mat-checkbox
+                            (change)="scanningMode = false"
                             class="coshh-checkbox"
                             [(ngModel)]="freezeColumns"
                             color="primary">Freeze 'Name' and 'CAS' columns
@@ -101,77 +110,85 @@
                         </mat-form-field>
                     </div>
 
-                <div class="filter-control">
-                    <mat-form-field>
-                        <mat-label>Name / Chem no</mat-label>
-                        <input type="text"
-                               placeholder="Type to search..."
-                               aria-label="Search"
-                               matInput
-                               (focus)="scanningMode = false"
-                               [formControl]="nameOrNumberSearchControl"
-                               [matAutocomplete]="autoNameNum">
-                        <mat-autocomplete #autoNameNum="matAutocomplete">
-                            <mat-option *ngFor="let nameOrNumber of nameOrNumberSearchOptions | async | slice : 0 : 10" [value]="nameOrNumber">
-                                {{nameOrNumber}}
-                            </mat-option>
-                        </mat-autocomplete>
-                    </mat-form-field>
+                    <div class="filter-control">
+                        <mat-form-field>
+                            <mat-label>Name / Chem no</mat-label>
+                            <input type="text"
+                                   placeholder="Type to search..."
+                                   aria-label="Search"
+                                   matInput
+                                   (focus)="scanningMode = false"
+                                   [formControl]="nameOrNumberSearchControl"
+                                   [matAutocomplete]="autoNameNum">
+                            <mat-autocomplete #autoNameNum="matAutocomplete">
+                                <mat-option
+                                        *ngFor="let nameOrNumber of nameOrNumberSearchOptions | async | slice : 0 : 10"
+                                        [value]="nameOrNumber">
+                                    {{nameOrNumber}}
+                                </mat-option>
+                            </mat-autocomplete>
+                        </mat-form-field>
+                    </div>
+
+                    <div class="filter-control">
+                        <mat-form-field>
+                            <mat-label>Owner</mat-label>
+                            <input type="text"
+                                   (focus)="scanningMode = false"
+                                   placeholder="Type to search..."
+                                   aria-label="Search"
+                                   matInput
+                                   [formControl]="ownerSearchControl"
+                                   [matAutocomplete]="autoOwner">
+                            <mat-autocomplete #autoOwner="matAutocomplete">
+                                <mat-option *ngFor="let owner of ownerSearchOptions | async | slice : 0 : 10"
+                                            [value]="owner">
+                                    {{owner}}
+                                </mat-option>
+                            </mat-autocomplete>
+                        </mat-form-field>
+                    </div>
                 </div>
+                <span class="spacer"></span>
 
-                <div class="filter-control">
-                    <mat-form-field>
-                        <mat-label>Owner</mat-label>
-                        <input type="text"
-                               (focus)="scanningMode = false"
-                               placeholder="Type to search..."
-                               aria-label="Search"
-                               matInput
-                               [formControl]="ownerSearchControl"
-                               [matAutocomplete]="autoOwner">
-                        <mat-autocomplete #autoOwner="matAutocomplete">
-                            <mat-option *ngFor="let owner of ownerSearchOptions | async | slice : 0 : 10" [value]="owner">
-                                {{owner}}
-                            </mat-option>
-                        </mat-autocomplete>
-                    </mat-form-field>
-                </div>
-            </div>
-    <span class="spacer"></span>
+                <button
+                        (click)="scanningMode = false"
+                        id="save-button"
+                        matTooltip="Print or export chemicals"
+                        mat-mini-fab
+                        [matMenuTriggerFor]="exportMenu">
+                    <mat-icon [ngStyle]="{'color': 'purple'}">save</mat-icon>
+                </button>
+                <mat-menu #exportMenu="matMenu">
+                    <button mat-mini-fab color="accent"
+                            id="excel-button"
+                            matTooltip="Save inventory with current filters to Excel (name, quantity, location, SDS, added and expiry columns only)"
+                            matTooltipPosition="left"
+                            (click)="saveExcel()">
+                        <mat-icon [ngStyle]="{'color': 'purple'}">save_alt</mat-icon>
+                    </button>
+                    <button mat-mini-fab color="accent"
+                            id="pdf-button"
+                            matTooltip="Save inventory with current filters to PDF (name, quantity, location, SDS, added and expiry columns only)"
+                            matTooltipPosition="above"
+                            (click)="savePDF()">
+                        <mat-icon [ngStyle]="{'color': 'purple'}">picture_as_pdf</mat-icon>
+                    </button>
+                    <button mat-mini-fab color="accent"
+                            id="print-button"
+                            matTooltip="Print inventory with current filters"
+                            matTooltipPosition="below"
+                            (click)="printInventory()">
+                        <mat-icon [ngStyle]="{'color': 'purple'}">print</mat-icon>
+                    </button>
+                </mat-menu>
 
-    <button id="save-button" matTooltip="Print or export chemicals" mat-mini-fab [matMenuTriggerFor]="exportMenu">
-        <mat-icon [ngStyle]="{'color': 'purple'}">save</mat-icon>
-    </button>
-    <mat-menu #exportMenu="matMenu">
-    <button mat-mini-fab color="accent"
-            id="excel-button"
-            matTooltip="Save inventory with current filters to Excel (name, quantity, location, SDS, added and expiry columns only)"
-            matTooltipPosition="left"
-            (click)="saveExcel()">
-        <mat-icon [ngStyle]="{'color': 'purple'}">save_alt</mat-icon>
-    </button>
-    <button mat-mini-fab color="accent"
-            id="pdf-button"
-            matTooltip="Save inventory with current filters to PDF (name, quantity, location, SDS, added and expiry columns only)"
-            matTooltipPosition="above"
-            (click)="savePDF()">
-        <mat-icon [ngStyle]="{'color': 'purple'}">picture_as_pdf</mat-icon>
-    </button>
-    <button mat-mini-fab color="accent"
-            id="print-button"
-            matTooltip="Print inventory with current filters"
-            matTooltipPosition="below"
-            (click)="printInventory()">
-        <mat-icon [ngStyle]="{'color': 'purple'}">print</mat-icon>
-    </button>
-    </mat-menu>
-
-</mat-toolbar-row>
+            </mat-toolbar-row>
 
         </mat-toolbar>
     </header>
 </div>
-    <br/>
+<br/>
 
 <div class="table-container">
     <table id="coshh-table" mat-table [dataSource]="tableData"
@@ -293,18 +310,22 @@
             <td mat-cell *matCellDef="let element"> {{element.storageTemp}} </td>
         </ng-container>
 
-            <ng-container matColumnDef="owner">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by owner">
-                    Owner
-                </th>
-                <td mat-cell *matCellDef="let element"> {{element.owner}} </td>
-            </ng-container>
+        <ng-container matColumnDef="owner">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by owner">
+                Owner
+            </th>
+            <td mat-cell *matCellDef="let element"> {{element.owner}} </td>
+        </ng-container>
 
         <ng-container matColumnDef="buttons" sticky>
             <th mat-header-cell *matHeaderCellDef></th>
             <td mat-cell *matCellDef="let chemical" class="coshh-buttons-cell">
                 <ng-container *ngIf="isAuthenticated$ | async;">
-                    <button matTooltip="Edit, clone or archive this chemical" mat-button [matMenuTriggerFor]="menu">
+                    <button
+                            (click)="scanningMode = false"
+                            matTooltip="Edit, clone or archive this chemical"
+                            mat-button
+                            [matMenuTriggerFor]="menu">
                         <mat-icon>more_vert</mat-icon>
                     </button>
                     <mat-menu #menu="matMenu">
@@ -346,8 +367,8 @@
             </td>
         </ng-container>
 
-            <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns; let chemical"
-                [ngClass]="{'archived': chemical.isArchived}"></tr>
-        </table>
-    </div>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns; let chemical"
+            [ngClass]="{'archived': chemical.isArchived}"></tr>
+    </table>
+</div>

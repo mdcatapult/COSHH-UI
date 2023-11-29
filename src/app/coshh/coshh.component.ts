@@ -2,17 +2,18 @@ import * as moment from 'moment';
 import { AuthService } from '@auth0/auth0-angular';
 import autoTable from 'jspdf-autotable';
 import { combineLatest, debounceTime, map, Observable, startWith } from 'rxjs';
-import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
+import {Component, EventEmitter, HostListener, OnInit, Output, ViewChild} from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import jsPDF from 'jspdf';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-
 import { UntypedFormBuilder, UntypedFormControl } from '@angular/forms';
+
 import { allHazards, Chemical, columnsForExport, columnTypes, ExpiryColor, Hazard, red, yellow } from './types';
 import { Chemicals } from './chemicals';
+import {ChemicalDialogComponent} from "../chemical-dialog/chemical-dialog.component";
 // environment.ts is added at compile time by npm run start command
 import { createExcelData, createPDFData, isValidHttpUrl, checkDuplicates } from '../utility/utilities';
 import { environment } from 'src/environments/environment';
@@ -26,6 +27,8 @@ import writeXlsxFile from 'write-excel-file';
     styleUrls: ['./coshh.component.scss']
 })
 export class CoshhComponent implements OnInit {
+
+    @Output() chemicalAdded = new EventEmitter<Chemical>();
 
     scanningMode: boolean = false;
     private scannedBarcode: string = '';
@@ -396,4 +399,44 @@ export class CoshhComponent implements OnInit {
     }
 
     protected readonly isValidHttpUrl = isValidHttpUrl;
+
+    addChemical(): void {
+        this.scanningMode = false;
+        this.http.get<string>(`${environment.backendUrl}/chemical/maxchemicalnumber`)
+            .subscribe((maxChemNo) => {
+                const formattedChemicalNumber = (parseInt(maxChemNo) + 1).toString().padStart(5, '0');
+
+                const chemical = {
+                    casNumber: '',
+                    name: '',
+                    chemicalNumber: formattedChemicalNumber,
+                    matterState: '',
+                    quantity: '',
+                    added: moment(new Date(), 'DD-MM-YYY'),
+                    expiry: moment(new Date(), 'DD-MM-YYY').add(5, 'y'),
+                    safetyDataSheet: '',
+                    coshhLink: '',
+                    storageTemp: '',
+                    location: '',
+                    cupboard: '',
+                    hazards: ['Unknown'],
+                    owner: ''
+                };
+
+                const dialogRef = this.dialog.open(ChemicalDialogComponent, {
+                    width: '50vw',
+                    data: {
+                        labs: this.labs,
+                        users: this.users,
+                        chemical: chemical
+                    }
+                });
+
+                dialogRef.afterClosed().subscribe((chemical: Chemical) => {
+                    if (chemical) {
+                        this.chemicalAdded.emit(chemical);
+                    }
+                });
+            });
+    }
 }
