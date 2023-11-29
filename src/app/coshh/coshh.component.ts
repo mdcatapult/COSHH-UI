@@ -2,7 +2,7 @@ import * as moment from 'moment';
 import { AuthService } from '@auth0/auth0-angular';
 import autoTable from 'jspdf-autotable';
 import { combineLatest, debounceTime, map, Observable, startWith } from 'rxjs';
-import {Component, EventEmitter, HostListener, OnInit, Output, ViewChild} from '@angular/core';
+import { Component, EventEmitter, HostListener, OnInit, Output, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import jsPDF from 'jspdf';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
@@ -13,7 +13,7 @@ import { UntypedFormBuilder, UntypedFormControl } from '@angular/forms';
 
 import { allHazards, Chemical, columnsForExport, columnTypes, ExpiryColor, Hazard, red, yellow } from './types';
 import { Chemicals } from './chemicals';
-import {ChemicalDialogComponent} from "../chemical-dialog/chemical-dialog.component";
+import { ChemicalDialogComponent } from '../chemical-dialog/chemical-dialog.component';
 // environment.ts is added at compile time by npm run start command
 import { createExcelData, createPDFData, isValidHttpUrl, checkDuplicates } from '../utility/utilities';
 import { environment } from 'src/environments/environment';
