@@ -38,7 +38,7 @@
                         class="coshh-inventory"
                         [matBadge]="tableData.data.length"
                         [matTooltip]="tooltipText()"
-                        matBadgeColor="accent">COSHH Inventory
+                        matBadgeColor="accent">MDC Chemical Inventory
                 </div>
 
 
@@ -65,7 +65,7 @@
                     <div class="filter-control">
                         <mat-form-field className="filter-select">
                             <mat-label>Filter by lab</mat-label>
-                            <mat-select required [formControl]="labFilterControl">
+                            <mat-select (focus)="scanningMode = false" required [formControl]="labFilterControl">
                                 <mat-option *ngFor="let lab of labFilterValues" [value]="lab">{{lab}}</mat-option>
                             </mat-select>
                         </mat-form-field>
@@ -74,7 +74,7 @@
                     <div class="filter-control">
                         <mat-form-field className="filter-select">
                             <mat-label>Filter by cupboard</mat-label>
-                            <mat-select required [formControl]="cupboardFilterControl">
+                            <mat-select (focus)="scanningMode = false" required [formControl]="cupboardFilterControl">
                                 <mat-option *ngFor="let cupboard of cupboardFilterValues"
                                             [value]="cupboard">{{cupboard}}</mat-option>
                             </mat-select>
@@ -84,7 +84,7 @@
                     <div class="filter-control">
                         <mat-form-field>
                             <mat-label>Filter by expiry</mat-label>
-                            <mat-select required [formControl]="expiryFilterControl">
+                            <mat-select (focus)="scanningMode = false" required [formControl]="expiryFilterControl">
                                 <mat-option *ngFor="let expiry of expiryFilterValues"
                                             [value]="expiry">{{expiry}}</mat-option>
                             </mat-select>
@@ -94,7 +94,7 @@
                     <div class="filter-control">
                         <mat-form-field>
                             <mat-label>Filter by hazard</mat-label>
-                            <mat-select required [formControl]="hazardFilterControl">
+                            <mat-select (focus)="scanningMode = false" required [formControl]="hazardFilterControl">
                                 <mat-option *ngFor="let hazard of hazardFilterValues"
                                             [value]="hazard">{{hazard}}</mat-option>
                             </mat-select>
@@ -108,6 +108,7 @@
                                placeholder="Type to search..."
                                aria-label="Search"
                                matInput
+                               (focus)="scanningMode = false"
                                [formControl]="nameOrNumberSearchControl"
                                [matAutocomplete]="autoNameNum">
                         <mat-autocomplete #autoNameNum="matAutocomplete">
@@ -122,6 +123,7 @@
                     <mat-form-field>
                         <mat-label>Owner</mat-label>
                         <input type="text"
+                               (focus)="scanningMode = false"
                                placeholder="Type to search..."
                                aria-label="Search"
                                matInput
