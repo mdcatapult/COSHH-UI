@@ -32,8 +32,7 @@
                         <button id="scan-button"
                                 [matTooltip]="scanningMode ? 'Barcode scanning mode enabled'  : 'Click to enable barcode scanning mode'"
                                 mat-mini-fab
-                                (click)="scanningMode = true"
-                                (focusout)="scanningMode = false">
+                                (click)="scanningMode = true">
                             <mat-icon [ngStyle]="scanningMode ? {'color': 'green'} : {'color': 'purple'}">
                                 settings_remote
                             </mat-icon>
