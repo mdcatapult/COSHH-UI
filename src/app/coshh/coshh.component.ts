@@ -249,7 +249,6 @@ export class CoshhComponent implements OnInit {
     }
 
     onChemicalAdded(chemical: Chemical): void {
-        console.log('onChemicalAdded')
         // Lower case and remove trailing spaces from the cupboard name to make filtering and data integrity better
         chemical.cupboard = chemical.cupboard?.toLowerCase().trim();
         this.http.post<Chemical>(`${environment.backendUrl}/chemical`, chemical).subscribe((addedChemical: Chemical) => {
