@@ -36,10 +36,10 @@ import { SharedModule } from './shared';
 
 @NgModule({
     declarations: [
+        AddChemicalComponent,
         AppComponent,
         CloneChemicalComponent,
         CoshhComponent,
-        AddChemicalComponent,
         EditChemicalComponent,
         ChemicalDialogComponent,
         DateTimeFormatPipe,

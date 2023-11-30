@@ -9,8 +9,8 @@ import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-
 import { UntypedFormBuilder, UntypedFormControl } from '@angular/forms';
+
 import { allHazards, Chemical, columnsForExport, columnTypes, ExpiryColor, Hazard, red, yellow } from './types';
 import { Chemicals } from './chemicals';
 // environment.ts is added at compile time by npm run start command
@@ -29,10 +29,15 @@ export class CoshhComponent implements OnInit {
 
     scanningMode: boolean = false;
     private scannedBarcode: string = '';
-    scanDialogOpen: boolean = false;
+    dialogOpen: boolean = false;
+
+    onDialogOpen(v:boolean): void {
+        this.dialogOpen = v;
+        this.scanningMode = !v;
+    }
 
     barcodeScanned = () => {
-        if (!this.scanDialogOpen) {
+        if (!this.dialogOpen) {
             const dialog = this.dialog.open(ScanChemicalComponent, {
                 width: '20vw',
                 data: {
@@ -44,20 +49,20 @@ export class CoshhComponent implements OnInit {
             });
 
             dialog.afterOpened().subscribe(() => {
-                this.scanDialogOpen = true;
+                this.dialogOpen = true;
             });
 
             dialog.afterClosed().subscribe(() => {
                 this.refresh();
                 this.scannedBarcode = '';
-                this.scanDialogOpen = false;
+                this.dialogOpen = false;
             });
         }
     };
 
     @HostListener('window:keypress', ['$event'])
     keyEvent(event: KeyboardEvent): void {
-        event.key === 'Enter' ? this.barcodeScanned(): this.scannedBarcode += event.key;
+        event.key === 'Enter' && this.scanningMode ? this.barcodeScanned(): this.scannedBarcode += event.key;
     }
 
     isAuthenticated$ = this.authService.isAuthenticated$;
@@ -396,4 +401,5 @@ export class CoshhComponent implements OnInit {
     }
 
     protected readonly isValidHttpUrl = isValidHttpUrl;
+
 }
