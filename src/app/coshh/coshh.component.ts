@@ -13,7 +13,6 @@ import { UntypedFormBuilder, UntypedFormControl } from '@angular/forms';
 
 import { allHazards, Chemical, columnsForExport, columnTypes, ExpiryColor, Hazard, red, yellow } from './types';
 import { Chemicals } from './chemicals';
-import { ChemicalDialogComponent } from '../chemical-dialog/chemical-dialog.component';
 // environment.ts is added at compile time by npm run start command
 import { createExcelData, createPDFData, isValidHttpUrl, checkDuplicates } from '../utility/utilities';
 import { environment } from 'src/environments/environment';
@@ -28,14 +27,17 @@ import writeXlsxFile from 'write-excel-file';
 })
 export class CoshhComponent implements OnInit {
 
-    @Output() chemicalAdded = new EventEmitter<Chemical>();
-
     scanningMode: boolean = false;
     private scannedBarcode: string = '';
-    scanDialogOpen: boolean = false;
+    dialogOpen: boolean = false;
+
+    onDialogOpen(v:boolean): void {
+        this.dialogOpen = v;
+        this.scanningMode = !v;
+    }
 
     barcodeScanned = () => {
-        if (!this.scanDialogOpen) {
+        if (!this.dialogOpen) {
             const dialog = this.dialog.open(ScanChemicalComponent, {
                 width: '20vw',
                 data: {
@@ -47,20 +49,20 @@ export class CoshhComponent implements OnInit {
             });
 
             dialog.afterOpened().subscribe(() => {
-                this.scanDialogOpen = true;
+                this.dialogOpen = true;
             });
 
             dialog.afterClosed().subscribe(() => {
                 this.refresh();
                 this.scannedBarcode = '';
-                this.scanDialogOpen = false;
+                this.dialogOpen = false;
             });
         }
     };
 
     @HostListener('window:keypress', ['$event'])
     keyEvent(event: KeyboardEvent): void {
-        event.key === 'Enter' ? this.barcodeScanned(): this.scannedBarcode += event.key;
+        event.key === 'Enter' && this.scanningMode ? this.barcodeScanned(): this.scannedBarcode += event.key;
     }
 
     isAuthenticated$ = this.authService.isAuthenticated$;
@@ -247,6 +249,7 @@ export class CoshhComponent implements OnInit {
     }
 
     onChemicalAdded(chemical: Chemical): void {
+        console.log('onChemicalAdded')
         // Lower case and remove trailing spaces from the cupboard name to make filtering and data integrity better
         chemical.cupboard = chemical.cupboard?.toLowerCase().trim();
         this.http.post<Chemical>(`${environment.backendUrl}/chemical`, chemical).subscribe((addedChemical: Chemical) => {
@@ -400,43 +403,4 @@ export class CoshhComponent implements OnInit {
 
     protected readonly isValidHttpUrl = isValidHttpUrl;
 
-    addChemical(): void {
-        this.scanningMode = false;
-        this.http.get<string>(`${environment.backendUrl}/chemical/maxchemicalnumber`)
-            .subscribe((maxChemNo) => {
-                const formattedChemicalNumber = (parseInt(maxChemNo) + 1).toString().padStart(5, '0');
-
-                const chemical = {
-                    casNumber: '',
-                    name: '',
-                    chemicalNumber: formattedChemicalNumber,
-                    matterState: '',
-                    quantity: '',
-                    added: moment(new Date(), 'DD-MM-YYY'),
-                    expiry: moment(new Date(), 'DD-MM-YYY').add(5, 'y'),
-                    safetyDataSheet: '',
-                    coshhLink: '',
-                    storageTemp: '',
-                    location: '',
-                    cupboard: '',
-                    hazards: ['Unknown'],
-                    owner: ''
-                };
-
-                const dialogRef = this.dialog.open(ChemicalDialogComponent, {
-                    width: '50vw',
-                    data: {
-                        labs: this.labs,
-                        users: this.users,
-                        chemical: chemical
-                    }
-                });
-
-                dialogRef.afterClosed().subscribe((chemical: Chemical) => {
-                    if (chemical) {
-                        this.chemicalAdded.emit(chemical);
-                    }
-                });
-            });
-    }
 }

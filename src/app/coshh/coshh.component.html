@@ -18,16 +18,12 @@
                 <ng-container *ngIf="isAuthenticated$ | async;">
                     <div id="add-scan-container">
                         <div class="add-chemical">
-                            <button
-                                    matTooltip="Add a new chemical to the inventory"
-                                    matTooltipPosition="above"
-                                    mat-mini-fab
-                                    color="primary"
-                                    [disabled]="!users.length"
-                                    (click)="addChemical()"
-                            >
-                                <mat-icon>add</mat-icon>
-                            </button>
+                            <app-add-chemical
+                                    [labs]="labFilterValues"
+                                    [users]="users"
+                                    (onChemicalAdded)="onChemicalAdded($event)"
+                                    (onDialogOpen)="onDialogOpen($event)"
+                            ></app-add-chemical>
                         </div>
                         <button id="scan-button"
                                 [matTooltip]="scanningMode ? 'Barcode scanning mode enabled'  : 'Click to enable barcode scanning mode'"

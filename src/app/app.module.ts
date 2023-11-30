@@ -22,6 +22,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { NgModule } from '@angular/core';
 
+import { AddChemicalComponent } from './add-chemical/add-chemical.component';
 import { AppComponent } from './app.component';
 import { ChemicalDialogComponent } from './chemical-dialog/chemical-dialog.component';
 import { CloneChemicalComponent } from './clone-chemical/clone-chemical.component';
@@ -35,6 +36,7 @@ import { SharedModule } from './shared';
 
 @NgModule({
     declarations: [
+        AddChemicalComponent,
         AppComponent,
         CloneChemicalComponent,
         CoshhComponent,
