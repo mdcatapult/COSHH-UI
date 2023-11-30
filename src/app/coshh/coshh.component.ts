@@ -2,7 +2,7 @@ import * as moment from 'moment';
 import { AuthService } from '@auth0/auth0-angular';
 import autoTable from 'jspdf-autotable';
 import { combineLatest, debounceTime, map, Observable, startWith } from 'rxjs';
-import { Component, EventEmitter, HostListener, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import jsPDF from 'jspdf';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
