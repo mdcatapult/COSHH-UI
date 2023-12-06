@@ -28,7 +28,8 @@ describe('Chemicals', () => {
             hazardList: [],
             backgroundColour: '',
             editCoshh: false,
-            editSDS: false
+            editSDS: false,
+            lastUpdatedBy: ''
         };
 
         it('should be 0 for chemical expiring today', () => {

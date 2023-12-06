@@ -12,7 +12,7 @@ import { Chemical, HazardCategory, allHazards } from '../coshh/types';
     selector: 'app-chemical-dialog',
     templateUrl: './chemical-dialog.component.html',
     styleUrls: ['./chemical-dialog.component.scss']
-})
+})  
 export class ChemicalDialogComponent {
 
     hazardCategoryList: HazardCategory[];
