@@ -6,30 +6,30 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { AddChemicalComponent } from './add-chemical.component';
 
 describe('AddChemicalComponent', () => {
-    let component: AddChemicalComponent;
+  let component: AddChemicalComponent;
 
-    let fixture: ComponentFixture<AddChemicalComponent>;
+  let fixture: ComponentFixture<AddChemicalComponent>;
 
-    beforeEach(async () => {
-        await TestBed.configureTestingModule({
-            declarations: [AddChemicalComponent],
-            providers: [
-                HttpClient,
-                HttpHandler,
-                Overlay
-            ],
-            imports: [MatDialogModule]
-        })
-            .compileComponents();
-    });
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      declarations: [AddChemicalComponent],
+      providers: [
+        HttpClient,
+        HttpHandler,
+        Overlay
+      ],
+      imports: [MatDialogModule]
+    })
+        .compileComponents();
+  });
 
-    beforeEach(() => {
-        fixture = TestBed.createComponent(AddChemicalComponent);
-        component = fixture.componentInstance;
-        fixture.detectChanges();
-    });
+  beforeEach(() => {
+    fixture = TestBed.createComponent(AddChemicalComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
 
-    it('should create', () => {
-        expect(component).toBeTruthy();
-    });
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
 });

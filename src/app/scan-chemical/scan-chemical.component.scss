@@ -1,0 +1,15 @@
+.error {
+  color: red;
+}
+
+#error-container,
+#scan-archive-container{
+  display: flex;
+  flex-wrap: unset;
+  justify-content: center;
+  align-items: center;
+}
+
+#scan-archive-button {
+  margin-left: 5%;
+}
