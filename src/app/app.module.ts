@@ -33,7 +33,6 @@ import { environment as env } from '../environments/environment';
 import { NAPipe } from './utility/pipes/na-pipe';
 import { ScanChemicalComponent } from './scan-chemical/scan-chemical.component';
 import { SharedModule } from './shared';
-import { CoshhUserProfileComponent } from './coshh-user-profile/coshh-user-profile.component';
 
 @NgModule({
     declarations: [
@@ -45,8 +44,7 @@ import { CoshhUserProfileComponent } from './coshh-user-profile/coshh-user-profi
         ChemicalDialogComponent,
         DateTimeFormatPipe,
         NAPipe,
-        ScanChemicalComponent,
-        CoshhUserProfileComponent
+        ScanChemicalComponent
     ],
     imports: [
         BrowserModule,
