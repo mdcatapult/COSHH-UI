@@ -20,7 +20,8 @@ export type Chemical = {
     hazardList: HazardListItem[],
     backgroundColour: ExpiryColor,
     editSDS: boolean,
-    editCoshh: boolean
+    editCoshh: boolean,
+    lastUpdatedBy: string,
 }
 
 export type HazardListItem = {
