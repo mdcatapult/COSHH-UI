@@ -36,6 +36,7 @@ export class CoshhComponent implements OnInit {
         this.scanningMode = !v;
     }
 
+
     barcodeScanned = () => {
         if (!this.dialogOpen) {
             const dialog = this.dialog.open(ScanChemicalComponent, {
@@ -83,6 +84,7 @@ export class CoshhComponent implements OnInit {
     labs: string[] = [];
     users: string[] = [];
     freezeColumns = false;
+    loggedInUser: string = '';
 
     getHazardListForChemical = (chemical: Chemical) => {
         return allHazards().map((hazard: Hazard) => {
@@ -166,6 +168,10 @@ export class CoshhComponent implements OnInit {
             this.tableData.data = this.getChemicals();
         });
 
+        this.authService.user$.subscribe((user) => {
+            this.loggedInUser = user?.email ?? '';
+        });
+
         combineLatest([
                 this.hazardFilterControl,
                 this.cupboardFilterControl,
@@ -232,6 +238,7 @@ export class CoshhComponent implements OnInit {
     updateChemical(chemical: Chemical, refresh?: boolean): void {
         // Lower case and remove trailing spaces from the cupboard name to make filtering and data integrity better
         chemical.cupboard = chemical.cupboard?.toLowerCase().trim();
+        chemical.lastUpdatedBy = this.loggedInUser;
         this.http.put(`${environment.backendUrl}/chemical`, chemical).pipe(
             debounceTime(100)
         ).subscribe(() => {
@@ -239,6 +246,7 @@ export class CoshhComponent implements OnInit {
             chemical.backgroundColour = this.getExpiryColour(chemical);
             if (refresh) this.refresh();
         });
+
     }
 
     updateHazards(chemical: Chemical): void {
@@ -269,6 +277,7 @@ export class CoshhComponent implements OnInit {
         chemical.editCoshh = false;
         chemical.hazardList = this.getHazardListForChemical(chemical);
         chemical.backgroundColour = this.getExpiryColour(chemical);
+        chemical.lastUpdatedBy = this.loggedInUser;
         this.updateChemical(chemical);
         this.updateHazards(chemical);
         this.chemicals.update(chemical);
