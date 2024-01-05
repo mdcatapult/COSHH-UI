@@ -33,7 +33,7 @@ import { environment as env } from '../environments/environment';
 import { NAPipe } from './utility/pipes/na-pipe';
 import { ScanChemicalComponent } from './scan-chemical/scan-chemical.component';
 import { SharedModule } from './shared';
-import { ServicesComponent } from './services/services.component';
+
 
 @NgModule({
     declarations: [
@@ -45,8 +45,7 @@ import { ServicesComponent } from './services/services.component';
         ChemicalDialogComponent,
         DateTimeFormatPipe,
         NAPipe,
-        ScanChemicalComponent,
-        ServicesComponent
+        ScanChemicalComponent
     ],
     imports: [
         BrowserModule,

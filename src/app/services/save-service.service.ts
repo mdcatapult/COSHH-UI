@@ -23,8 +23,6 @@ export class saveService implements OnInit {
         window.print();
     }
 
-    
-
     async saveExcel() {
         const { data, columnOptions } = createExcelData(columnsForExport, 
             this.coshhcomponent.getChemicals());
