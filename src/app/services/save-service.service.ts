@@ -2,19 +2,17 @@ import * as moment from 'moment';
 import { Injectable, OnInit } from '@angular/core';
 import { CoshhComponent  } from '../coshh/coshh.component';
 
-
 import autoTable from 'jspdf-autotable';
 import { createExcelData, createPDFData } from '../utility/utilities';
 import { columnsForExport } from '../coshh/types';
 import jsPDF from 'jspdf';
-
 import writeXlsxFile from 'write-excel-file';
 
 @Injectable({
     providedIn: 'root'
 })
 export class saveService implements OnInit {
-    constructor(private coshhobject: CoshhComponent) {}
+    constructor(private coshhcomponent: CoshhComponent) {}
     ngOnInit(): void {}
 
     // attempts to use css @media query to set print options programmatically were unsuccessful
@@ -29,7 +27,7 @@ export class saveService implements OnInit {
 
     async saveExcel() {
         const { data, columnOptions } = createExcelData(columnsForExport, 
-            this.coshhobject.getChemicals());
+            this.coshhcomponent.getChemicals());
 
         await writeXlsxFile(data, {
             columns: columnOptions,
@@ -39,7 +37,7 @@ export class saveService implements OnInit {
     }
 
     savePDF() {
-        const chemicalsToPrint = createPDFData(this.coshhobject.getChemicals());
+        const chemicalsToPrint = createPDFData(this.coshhcomponent.getChemicals());
 
         const doc = new jsPDF('landscape');
 

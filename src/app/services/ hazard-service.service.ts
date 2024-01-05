@@ -7,7 +7,6 @@ import { Chemical } from '../coshh/types';
 import { environment } from 'src/environments/environment';
 import { Hazard } from '../coshh/types';
 
-
 @Injectable({
     providedIn: 'root'
 })
