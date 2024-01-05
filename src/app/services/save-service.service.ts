@@ -1,29 +1,35 @@
 import * as moment from 'moment';
+import { Injectable, OnInit } from '@angular/core';
+import { CoshhComponent  } from '../coshh/coshh.component';
+
+
 import autoTable from 'jspdf-autotable';
 import { createExcelData, createPDFData } from '../utility/utilities';
 import { columnsForExport } from '../coshh/types';
 import jsPDF from 'jspdf';
-import { Injectable, OnInit } from '@angular/core';
+
 import writeXlsxFile from 'write-excel-file';
 
 @Injectable({
     providedIn: 'root'
 })
 export class saveService implements OnInit {
-
-    // attempts to use css @media query to set print options programmatically were unsuccessful
-// in the print dialog window the user will need to change the orientation to landscape and the scale to 50% for
-// it to fit on an A4 page
-
+    constructor(private coshhobject: CoshhComponent) {}
     ngOnInit(): void {}
 
-    
+    // attempts to use css @media query to set print options programmatically were unsuccessful
+    // in the print dialog window the user will need to change the orientation to landscape and the scale to 50% for
+    // it to fit on an A4 page
+
     printInventory() {
         window.print();
     }
 
+    
+
     async saveExcel() {
-        const { data, columnOptions } = createExcelData(columnsForExport, this.getChemicals());
+        const { data, columnOptions } = createExcelData(columnsForExport, 
+            this.coshhobject.getChemicals());
 
         await writeXlsxFile(data, {
             columns: columnOptions,
@@ -33,7 +39,7 @@ export class saveService implements OnInit {
     }
 
     savePDF() {
-        const chemicalsToPrint = createPDFData(this.getChemicals());
+        const chemicalsToPrint = createPDFData(this.coshhobject.getChemicals());
 
         const doc = new jsPDF('landscape');
 
@@ -51,4 +57,5 @@ export class saveService implements OnInit {
         });
         doc.save('mdc-coshh-inventory.pdf');
     }
+
 }
