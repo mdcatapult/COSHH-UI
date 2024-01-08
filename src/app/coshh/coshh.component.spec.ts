@@ -7,6 +7,8 @@ import { UntypedFormBuilder } from '@angular/forms';
 
 import { CoshhComponent } from './coshh.component';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { SaveService } from '../services/save-service.service';
+import { HazardService } from '../services/hazard-service.service';
 
 describe('CoshhComponent', () => {
     let component: CoshhComponent;
@@ -21,6 +23,8 @@ describe('CoshhComponent', () => {
                 HttpHandler,
                 MatDialog,
                 UntypedFormBuilder,
+                SaveService,
+                HazardService,
                 { provide: MatDialogRef, useValue: {} },
                 { provide: MAT_DIALOG_DATA, useValue: {
                         chemical: { hazards: [] }

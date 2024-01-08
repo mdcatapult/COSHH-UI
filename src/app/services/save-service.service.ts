@@ -1,5 +1,5 @@
 import * as moment from 'moment';
-import { Injectable, OnInit } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { CoshhComponent  } from '../coshh/coshh.component';
 
 import autoTable from 'jspdf-autotable';
@@ -11,9 +11,8 @@ import writeXlsxFile from 'write-excel-file';
 @Injectable({
     providedIn: 'root'
 })
-export class saveService implements OnInit {
+export class SaveService{
     constructor(private coshhcomponent: CoshhComponent) {}
-    ngOnInit(): void {}
 
     // attempts to use css @media query to set print options programmatically were unsuccessful
     // in the print dialog window the user will need to change the orientation to landscape and the scale to 50% for

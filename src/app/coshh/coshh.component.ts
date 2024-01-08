@@ -1,24 +1,24 @@
-import * as moment from 'moment';
 import { AuthService } from '@auth0/auth0-angular';
-import autoTable from 'jspdf-autotable';
 import { combineLatest, debounceTime, map, Observable, startWith } from 'rxjs';
 import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import jsPDF from 'jspdf';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { UntypedFormBuilder, UntypedFormControl } from '@angular/forms';
 
-import { allHazards, Chemical, columnsForExport, columnTypes, ExpiryColor, Hazard, red, yellow } from './types';
+import { allHazards, Chemical, columnTypes, ExpiryColor, Hazard, red, yellow } from './types';
 import { Chemicals } from './chemicals';
 // environment.ts is added at compile time by npm run start command
-import { createExcelData, createPDFData, isValidHttpUrl, checkDuplicates } from '../utility/utilities';
+import { isValidHttpUrl, checkDuplicates } from '../utility/utilities';
 import { environment } from 'src/environments/environment';
 import { FilterService } from '../filter.service';
+import { HazardService } from '../services/hazard-service.service';
+// import { SaveService } from '../services/save-service.service';
 import { ScanChemicalComponent } from '../scan-chemical/scan-chemical.component';
-import writeXlsxFile from 'write-excel-file';
+
+
 
 @Component({
     selector: 'app-coshh',
@@ -76,7 +76,8 @@ export class CoshhComponent implements OnInit {
                 private _liveAnnouncer: LiveAnnouncer,
                 private authService: AuthService,
                 private filterService: FilterService,
-                public dialog: MatDialog) {
+                public dialog: MatDialog, 
+                private HazardService: HazardService) {
     }
 
     chemicals = new Chemicals(); // this represents all the chemicals returned from the API
@@ -86,15 +87,15 @@ export class CoshhComponent implements OnInit {
     freezeColumns = false;
     loggedInUser: string = '';
 
-    getHazardListForChemical = (chemical: Chemical) => {
-        return allHazards().map((hazard: Hazard) => {
-            return {
-                title: hazard,
-                activated: chemical.hazards ? chemical.hazards.includes(hazard) : false,
-                value: hazard
-            };
-        });
-    };
+    // getHazardListForChemical = (chemical: Chemical) => {
+    //     return allHazards().map((hazard: Hazard) => {
+    //         return {
+    //             title: hazard,
+    //             activated: chemical.hazards ? chemical.hazards.includes(hazard) : false,
+    //             value: hazard
+    //         };
+    //     });
+    // };
 
     hazardFilterValues = (<string[]>allHazards()).concat('All');
     tableData = new MatTableDataSource<Chemical>(); // data source for table
@@ -136,7 +137,7 @@ export class CoshhComponent implements OnInit {
                     chem.editSDS = false;
                     chem.editCoshh = false;
                     chem.backgroundColour = this.getExpiryColour(chem);
-                    chem.hazardList = this.getHazardListForChemical(chem);
+                    chem.hazardList = this.HazardService.getHazardListForChemical(chem);
 
                     return chem;
                 });
@@ -250,10 +251,7 @@ export class CoshhComponent implements OnInit {
     }
 
     updateHazards(chemical: Chemical): void {
-        this.http.put(`${environment.backendUrl}/hazards`, chemical).pipe(
-            debounceTime(100)
-        ).subscribe(() => {
-        });
+        return this.HazardService.updateHazards(chemical);
     }
 
     onChemicalAdded(chemical: Chemical): void {
@@ -262,7 +260,7 @@ export class CoshhComponent implements OnInit {
         this.http.post<Chemical>(`${environment.backendUrl}/chemical`, chemical).subscribe((addedChemical: Chemical) => {
             addedChemical.editSDS = false;
             addedChemical.editCoshh = false;
-            addedChemical.hazardList = this.getHazardListForChemical(addedChemical);
+            addedChemical.hazardList = this.HazardService.getHazardListForChemical(addedChemical);  
             addedChemical.backgroundColour = this.getExpiryColour(chemical);
             this.chemicals.add(addedChemical);
             this.refresh();
@@ -275,7 +273,7 @@ export class CoshhComponent implements OnInit {
     onChemicalEdited(chemical: Chemical): void {
         chemical.editSDS = false;
         chemical.editCoshh = false;
-        chemical.hazardList = this.getHazardListForChemical(chemical);
+        chemical.hazardList = this.HazardService.getHazardListForChemical(chemical);
         chemical.backgroundColour = this.getExpiryColour(chemical);
         chemical.lastUpdatedBy = this.loggedInUser;
         this.updateChemical(chemical);
@@ -333,30 +331,7 @@ export class CoshhComponent implements OnInit {
 
 
     getHazardPicture(hazard: Hazard): string {
-        switch (hazard) {
-            case 'Corrosive':
-                return 'assets/corrosive.jpg';
-            case 'Hazardous to the environment':
-                return 'assets/environment.jpg';
-            case 'Explosive':
-                return 'assets/explosive.jpg';
-            case 'Flammable':
-                return 'assets/flammable.jpg';
-            case 'Gas under pressure':
-                return 'assets/gas.jpg';
-            case 'Health hazard/Hazardous to the ozone layer':
-                return 'assets/health.jpg';
-            case 'Oxidising':
-                return 'assets/oxidising.jpg';
-            case 'Serious health hazard':
-                return 'assets/serious.jpg';
-            case 'Acute toxicity':
-                return 'assets/toxic.jpg';
-            case 'None':
-                return 'assets/non-hazardous.jpg';
-            default:
-                return 'assets/unknown.jpg';
-        }
+        return this.HazardService.getHazardPicture(hazard);
     }
 
     /** Announce the change in sort state for assistive technology. */
@@ -372,42 +347,20 @@ export class CoshhComponent implements OnInit {
         }
     }
 
-    savePDF() {
-        const chemicalsToPrint = createPDFData(this.getChemicals());
+    // savePDF() {
+    //     return this.saveService.savePDF();
+    // }
 
-        const doc = new jsPDF('landscape');
+    // // attempts to use css @media query to set print options programmatically were unsuccessful
+    // // in the print dialog window the user will need to change the orientation to landscape and the scale to 50% for
+    // // it to fit on an A4 page
+    // printInventory() {
+    //     return this.saveService.printInventory();
+    // }
 
-        const now = moment().format('DD-MM-YYYY');
-
-        doc.text(`MDC COSHH Inventory (${now})`, 100, 15);
-        autoTable(doc, {
-            startY: 25,
-            head: [Object.keys(chemicalsToPrint[0])],
-            body: chemicalsToPrint.map((column) => Object.values(column)),
-            theme: 'striped',
-            styles: {
-                minCellWidth: 30
-            }
-        });
-        doc.save('mdc-coshh-inventory.pdf');
-    }
-
-    // attempts to use css @media query to set print options programmatically were unsuccessful
-    // in the print dialog window the user will need to change the orientation to landscape and the scale to 50% for
-    // it to fit on an A4 page
-    printInventory() {
-        window.print();
-    }
-
-    async saveExcel() {
-        const { data, columnOptions } = createExcelData(columnsForExport, this.getChemicals());
-
-        await writeXlsxFile(data, {
-            columns: columnOptions,
-            fileName: 'mdc-coshh-inventory.xlsx',
-            orientation: 'landscape'
-        });
-    }
+    // saveExcel() {
+    //     return this.saveService.saveExcel();
+    // }
 
     protected readonly isValidHttpUrl = isValidHttpUrl;
 
