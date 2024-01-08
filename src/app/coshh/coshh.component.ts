@@ -77,7 +77,7 @@ export class CoshhComponent implements OnInit {
                 private authService: AuthService,
                 private filterService: FilterService,
                 public dialog: MatDialog, 
-                private HazardService: HazardService) {
+                private hazardService: HazardService) {
     }
 
     chemicals = new Chemicals(); // this represents all the chemicals returned from the API
@@ -86,16 +86,6 @@ export class CoshhComponent implements OnInit {
     users: string[] = [];
     freezeColumns = false;
     loggedInUser: string = '';
-
-    // getHazardListForChemical = (chemical: Chemical) => {
-    //     return allHazards().map((hazard: Hazard) => {
-    //         return {
-    //             title: hazard,
-    //             activated: chemical.hazards ? chemical.hazards.includes(hazard) : false,
-    //             value: hazard
-    //         };
-    //     });
-    // };
 
     hazardFilterValues = (<string[]>allHazards()).concat('All');
     tableData = new MatTableDataSource<Chemical>(); // data source for table
@@ -137,7 +127,7 @@ export class CoshhComponent implements OnInit {
                     chem.editSDS = false;
                     chem.editCoshh = false;
                     chem.backgroundColour = this.getExpiryColour(chem);
-                    chem.hazardList = this.HazardService.getHazardListForChemical(chem);
+                    chem.hazardList = this.hazardService.getHazardListForChemical(chem);
 
                     return chem;
                 });
@@ -251,7 +241,7 @@ export class CoshhComponent implements OnInit {
     }
 
     updateHazards(chemical: Chemical): void {
-        return this.HazardService.updateHazards(chemical);
+        return this.hazardService.updateHazards(chemical);
     }
 
     onChemicalAdded(chemical: Chemical): void {
@@ -260,7 +250,7 @@ export class CoshhComponent implements OnInit {
         this.http.post<Chemical>(`${environment.backendUrl}/chemical`, chemical).subscribe((addedChemical: Chemical) => {
             addedChemical.editSDS = false;
             addedChemical.editCoshh = false;
-            addedChemical.hazardList = this.HazardService.getHazardListForChemical(addedChemical);  
+            addedChemical.hazardList = this.hazardService.getHazardListForChemical(addedChemical);  
             addedChemical.backgroundColour = this.getExpiryColour(chemical);
             this.chemicals.add(addedChemical);
             this.refresh();
@@ -273,7 +263,7 @@ export class CoshhComponent implements OnInit {
     onChemicalEdited(chemical: Chemical): void {
         chemical.editSDS = false;
         chemical.editCoshh = false;
-        chemical.hazardList = this.HazardService.getHazardListForChemical(chemical);
+        chemical.hazardList = this.hazardService.getHazardListForChemical(chemical);
         chemical.backgroundColour = this.getExpiryColour(chemical);
         chemical.lastUpdatedBy = this.loggedInUser;
         this.updateChemical(chemical);
@@ -331,7 +321,7 @@ export class CoshhComponent implements OnInit {
 
 
     getHazardPicture(hazard: Hazard): string {
-        return this.HazardService.getHazardPicture(hazard);
+        return this.hazardService.getHazardPicture(hazard);
     }
 
     /** Announce the change in sort state for assistive technology. */
