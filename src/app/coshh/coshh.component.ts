@@ -347,20 +347,20 @@ export class CoshhComponent implements OnInit {
         }
     }
 
-    // savePDF() {
-    //     return this.saveService.savePDF();
-    // }
+    savePDF() {
+        // return this.saveService.savePDF();
+    }
 
-    // // attempts to use css @media query to set print options programmatically were unsuccessful
-    // // in the print dialog window the user will need to change the orientation to landscape and the scale to 50% for
-    // // it to fit on an A4 page
-    // printInventory() {
-    //     return this.saveService.printInventory();
-    // }
+    // attempts to use css @media query to set print options programmatically were unsuccessful
+    // in the print dialog window the user will need to change the orientation to landscape and the scale to 50% for
+    // it to fit on an A4 page
+    printInventory() {
+        // return this.saveService.printInventory();
+    }
 
-    // saveExcel() {
-    //     return this.saveService.saveExcel();
-    // }
+    saveExcel() {
+        // return this.saveService.saveExcel();
+    }
 
     protected readonly isValidHttpUrl = isValidHttpUrl;
 
