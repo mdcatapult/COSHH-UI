@@ -1,32 +1,33 @@
 import * as moment from 'moment';
-import { AuthService } from '@auth0/auth0-angular';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { debounceTime, map } from 'rxjs/operators';
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { UntypedFormControl } from '@angular/forms';
+import {AuthService} from '@auth0/auth0-angular';
+import {BehaviorSubject, Observable} from 'rxjs';
+import {debounceTime, map} from 'rxjs/operators';
+import {Injectable} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
+import {UntypedFormControl} from '@angular/forms';
 
-import { Chemical, ExpiryColor, yellow, red, Expiry } from '../coshh/types';
-import { environment } from 'src/environments/environment';
-import { HazardService } from './hazard-service.service';
-import { MatTableDataSource } from '@angular/material/table';
+import {Chemical, ExpiryColor, yellow, red, Expiry} from '../coshh/types';
+import {environment} from 'src/environments/environment';
+import {HazardService} from './hazard-service.service';
+import {MatTableDataSource} from '@angular/material/table';
 
 
 @Injectable({
     providedIn: 'root'
 })
 export class ChemicalService {
-    private readonly allChemicals$: BehaviorSubject<Chemical[]> = new BehaviorSubject<Chemical[]>([]);
-    private readonly filteredChemicals$: BehaviorSubject<Chemical[]> = new BehaviorSubject<Chemical[]>([]);
-    tableData = new MatTableDataSource<Chemical>(); // data source for table
 
-    
+    private readonly allChemicals$: BehaviorSubject<Chemical[]> = new BehaviorSubject<Chemical[]>([]);
+    readonly filteredChemicals$: BehaviorSubject<Chemical[]> = new BehaviorSubject<Chemical[]>([]);
+
+    tableData = new MatTableDataSource<Chemical>(); // data source for table
     loggedInUser = '';
-    constructor( private http: HttpClient, 
-                 private authService: AuthService,
-                 private hazardService: HazardService) {
-        this.getChemicals();   
-        this.getLabs(); 
+
+    constructor(private http: HttpClient,
+                private authService: AuthService,
+                private hazardService: HazardService) {
+        this.getChemicals();
+        this.getLabs();
         this.getCupboards();
         this.getExpiryFilterValues();
         this.authService.user$.subscribe((user) => {
@@ -34,8 +35,8 @@ export class ChemicalService {
         });
 
         this.ownerSearchControl.valueChanges.subscribe(() => {
-            // TODO: change this to use the filteredChemicals$ observable
-            this.tableData.data = this.getFilterChemicals(
+
+            this.filterChemicals(
                 this.toggleArchiveControl.value,
                 this.cupboardFilterControl.value,
                 this.hazardService.hazardFilterControl.value,
@@ -43,11 +44,17 @@ export class ChemicalService {
                 this.expiryFilterControl.value,
                 this.nameOrNumberSearchControl.value ?? '',
                 this.ownerSearchControl.value ?? ''
-            );
+            )
+
+            this.tableData.data = this.getFilteredChemicals();
+
+            console.log(this.tableData.data, '   <-- this tabledata.data in owner search control')
         });
 
+
         this.nameOrNumberSearchControl.valueChanges.subscribe(() => {
-            this.tableData.data = this.getFilterChemicals(
+
+            this.filterChemicals(
                 this.toggleArchiveControl.value,
                 this.cupboardFilterControl.value,
                 this.hazardService.hazardFilterControl.value,
@@ -55,7 +62,9 @@ export class ChemicalService {
                 this.expiryFilterControl.value,
                 this.nameOrNumberSearchControl.value ?? '',
                 this.ownerSearchControl.value ?? ''
-            );
+            )
+
+            this.tableData.data = this.getFilteredChemicals();
         });
 
     }
@@ -80,7 +89,21 @@ export class ChemicalService {
 
 
     getAllChemicals(): Chemical[] {
+
         return this.allChemicals$.getValue();
+    }
+
+    setAllChemicals(chemicals: Chemical[]): void {
+        this.allChemicals$.next(chemicals);
+    }
+
+    getFilteredChemicals() {
+
+        return this.filteredChemicals$.getValue();
+    }
+
+    setFilteredChemicals(chemicals: Chemical[]): void {
+        this.filteredChemicals$.next(chemicals);
     }
 
     getLabs() {
@@ -101,43 +124,43 @@ export class ChemicalService {
         return this.expiryFilterValues;
     }
 
-    getFilterChemicals  = (includeArchived: boolean, 
-                           cupboard: string, 
-                           hazardCategory: string, 
-                           lab: string, 
-                           expiry: Expiry, 
-                           nameOrNumberSearchStr: string, 
-                           ownerSearchStr: string): Chemical[] => {
-            const nameOrNumberSearchLower = nameOrNumberSearchStr.toLowerCase();
-    
-            const ownerSearchLower = ownerSearchStr.toLowerCase();
+    filterChemicals = (includeArchived: boolean,
+                       cupboard: string,
+                       hazardCategory: string,
+                       lab: string,
+                       expiry: Expiry,
+                       nameOrNumberSearchStr: string,
+                       ownerSearchStr: string): Chemical[] => {
 
-            const allchemicalfiltered = this.getAllChemicals()
-                .filter((chemical) => includeArchived || !chemical.isArchived)
-                .filter((chemical) => cupboard === 'All' || chemical.cupboard?.toLowerCase().trim() === cupboard) // Note that cupboard is now set to lower case
-                .filter((chemical) => hazardCategory === 'All' ||
-                     chemical.hazards?.map((hazard) => hazard.toString()).includes(hazardCategory))
-                .filter((chemical) => lab === 'All' || chemical.location === lab)
-                .filter((chemical) => this.filterExpiryDate(chemical, expiry))
-                .filter((chemical) => chemical.name.toLowerCase().includes(nameOrNumberSearchLower) || chemical.chemicalNumber?.toLowerCase().includes(nameOrNumberSearchLower))
-                // // only filter if ownerSearchStr is not empty - this handles null values which we want to filter out only
-                // // if the user has entered a value in the owner filter
-                .filter((chemical) => ownerSearchStr ? chemical.owner?.toLowerCase().includes(ownerSearchLower) : true)
-                .sort((a, b) => {
-                    if (a.name < b.name) {
-                        return -1;
-                    }
-                    if (a.name > b.name) {
-                        return 1;
-                    }
-    
-                    return 0;
-                });
+        const nameOrNumberSearchLower = nameOrNumberSearchStr.toLowerCase();
 
-            console.log(allchemicalfiltered);
-            this.setFilteredChemicals(allchemicalfiltered);
+        const ownerSearchLower = ownerSearchStr.toLowerCase();
 
-                return allchemicalfiltered; 
+        const filteredChemicals = this.getAllChemicals()
+            .filter((chemical) => includeArchived || !chemical.isArchived)
+            .filter((chemical) => cupboard === 'All' || chemical.cupboard?.toLowerCase().trim() === cupboard) // Note that cupboard is now set to lower case
+            .filter((chemical) => hazardCategory === 'All' ||
+                chemical.hazards?.map((hazard) => hazard.toString()).includes(hazardCategory))
+            .filter((chemical) => lab === 'All' || chemical.location === lab)
+            .filter((chemical) => this.filterExpiryDate(chemical, expiry))
+            .filter((chemical) => chemical.name.toLowerCase().includes(nameOrNumberSearchLower) || chemical.chemicalNumber?.toLowerCase().includes(nameOrNumberSearchLower))
+            // // only filter if ownerSearchStr is not empty - this handles null values which we want to filter out only
+            // // if the user has entered a value in the owner filter
+            .filter((chemical) => ownerSearchStr ? chemical.owner?.toLowerCase().includes(ownerSearchLower) : true)
+            .sort((a, b) => {
+                if (a.name < b.name) {
+                    return -1;
+                }
+                if (a.name > b.name) {
+                    return 1;
+                }
+
+                return 0;
+            });
+
+        this.setFilteredChemicals(filteredChemicals);
+
+        return filteredChemicals;
     };
 
     private getChemicals(): void {
@@ -147,19 +170,10 @@ export class ChemicalService {
                 chemical.backgroundColour = this.getExpiryColour(chemical);
 
                 return chemical;
-            });   
+            });
             this.setAllChemicals(chemicals);
             this.setFilteredChemicals(chemicals);
         });
-    }
-
-    setAllChemicals(chemicals: Chemical[]): void {
-        this.allChemicals$.next(chemicals);
-
-    }
-
-    setFilteredChemicals(chemicals: Chemical[]): void {
-       this.filteredChemicals$.next(chemicals);
     }
 
     getExpiryColour(chemical: Chemical): ExpiryColor {
@@ -184,54 +198,38 @@ export class ChemicalService {
     filterExpiryDate(chemical: Chemical, expiry: Expiry): boolean {
 
         const timeUntilExpiry = this.daysUntilExpiry(chemical);
-
         switch (expiry) {
             case 'Any':
+
                 return true;
             case '< 30 Days':
+
                 return timeUntilExpiry < 30 && timeUntilExpiry > 0;
             case 'Expired':
+
                 return timeUntilExpiry <= 0;
         }
     }
 
     getNameOrNumberSearchObservable(): Observable<string[]> {
+
         return this.nameOrNumberSearchControl.valueChanges.pipe(
             map((search) => this.getNames(
-                this.getAllChemicals(),
+                this.getFilteredChemicals(),
                 search)
             )
         );
     }
 
     getOwnerSearchObservable(): Observable<string[]> {
-            const filterchemicals = this.getFilterChemicals(
-                this.toggleArchiveControl.value,
-                this.cupboardFilterControl.value,
-                this.hazardService.hazardFilterControl.value,
-                this.labFilterControl.value,
-                this.expiryFilterControl.value,
-                this.nameOrNumberSearchControl.value ?? '',
-                this.ownerSearchControl.value ?? ''
-            );
 
-            // console.log(filterchemicals);
-
-            return this.ownerSearchControl.valueChanges.pipe(
-                map((search) => this.getOwners(
-                    filterchemicals,
-                    //     this.toggleArchiveControl.value,
-                    //     this.cupboardFilterControl.value,
-                    //     this.hazardService.hazardFilterControl.value,
-                    //     this.labFilterControl.value,
-                    //     this.expiryFilterControl.value,
-                    //     this.nameOrNumberSearchControl.value ?? '',
-                    //     this.ownerSearchControl.value ?? ''
-                    // ),
-                    search)
-                )
-            );
-        }
+        return this.ownerSearchControl.valueChanges.pipe(
+            map((search) => this.getOwners(
+                this.getFilteredChemicals(),
+                search)
+            )
+        );
+    }
 
     getNames = (chemicals: Chemical[], search: string): string[] => {
         const searchLower = search.toLowerCase();
@@ -257,7 +255,7 @@ export class ChemicalService {
     onChemicalAdded(chemical: Chemical): void {
         chemical.cupboard = chemical.cupboard?.toLowerCase().trim();
         this.http.post<Chemical>(`${environment.backendUrl}/chemical`, chemical).subscribe((addedChemical: Chemical) => {
-            addedChemical.hazardList = this.hazardService.getHazardListForChemical(addedChemical);  
+            addedChemical.hazardList = this.hazardService.getHazardListForChemical(addedChemical);
             addedChemical.backgroundColour = this.getExpiryColour(addedChemical);
             this.setAllChemicals(this.getAllChemicals().concat(addedChemical));
             // this.refresh();
@@ -276,7 +274,7 @@ export class ChemicalService {
         this.nameOrNumberSearchOptions = this.getNameOrNumberSearchObservable();
         this.ownerSearchOptions = this.getOwnerSearchObservable();
     }
-        
+
     updateChemical(chemical: Chemical): void {
         // Lower case and remove trailing spaces from the cupboard name to make filtering and data integrity better
         chemical.cupboard = chemical.cupboard?.toLowerCase().trim();

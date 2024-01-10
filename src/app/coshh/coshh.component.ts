@@ -45,7 +45,7 @@ export class CoshhComponent implements OnInit {
                     chemicalNumber: this.scannedBarcode,
                     chemical: this.chemicalService.getAllChemicals()
                         .find((chemical) => chemical.chemicalNumber === this.scannedBarcode),
-                    archive: this.updateChemical
+                    archive: this.chemicalService.updateChemical
                 }
             });
 
@@ -126,33 +126,14 @@ export class CoshhComponent implements OnInit {
 
     ngOnInit(): void {
 
-        this.tableData = new MatTableDataSource<Chemical>(this.chemicalService.getAllChemicals());
+        this.tableData = new MatTableDataSource<Chemical>(this.chemicalService.getFilteredChemicals());
 
-        // this.http.get<Array<Chemical>>(`${environment.backendUrl}/chemicals`)
-        //     .subscribe((res: Array<Chemical>) => {
-        //         res = res?.map((chem: Chemical) => {
-        //             chem.backgroundColour = this.getExpiryColour(chem);
-        //             chem.hazardList = this.hazardService.getHazardListForChemical(chem);
-
-        //             return chem;
-        //         });
-
-        //         // this.chemicals.set(res || []);
-        //         // const inStock = this.getChemicals();
-
-        //         this.tableData = new MatTableDataSource<Chemical>(
-        //             this.
-        //         );
-        //         this.tableData.sort = this.sort;
-
-        //         this.nameOrNumberSearchOptions = this.getNameOrNumberSearchObservable();
-        //     });
-        
+        this.chemicalService.filteredChemicals$
+            .subscribe((filteredChemicals) => this.tableData.data = filteredChemicals);
 
         this.http.get<string[]>(`${environment.backendUrl}/users`).subscribe((users) => {
             this.users = users;
         });
-
 
         combineLatest([
                 this.hazardService.hazardFilterControl,
@@ -163,38 +144,25 @@ export class CoshhComponent implements OnInit {
             ].map((control) => control.valueChanges.pipe(startWith(control.value)))
         ).subscribe(() => {
             this.refresh();
-
             this.chemicalService.nameOrNumberSearchOptions = this.chemicalService.getNameOrNumberSearchObservable();
-            // this.nameOrNumberSearchOptions = this.getNameOrNumberSearchObservable();
             this.chemicalService.ownerSearchOptions = this.chemicalService.getOwnerSearchObservable();
         });
 
     }
 
-    // getChemicals(): Chemical[] {
-    //     return this.chemicals.get(
-    //         this.toggleArchiveControl.value,
-    //         this.cupboardFilterControl.value,
-    //         this.hazardFilterControl.value,
-    //         this.labFilterControl.value,
-    //         this.expiryFilterControl.value,
-    //         this.nameOrNumberSearchControl.value || '',
-    //         this.ownerSearchControl.value || ''
-    //     );
-    // }
-
 
     archive(chemical: Chemical): void {
         chemical.isArchived = !chemical.isArchived;
         this.chemicalService.updateChemical(chemical);
-
         this.refresh();
     }
 
+
     refresh(): void {
-        this.tableData.data = this.chemicalService.getAllChemicals();
+        this.tableData.data = this.chemicalService.getFilteredChemicals();
         this.refreshCupboardsFilterList();
     }
+
 
     /**
      * Show only cupboards for currently selected lab. If 'All' labs it will show cupboards currently used over all the chemicals.
@@ -218,74 +186,13 @@ export class CoshhComponent implements OnInit {
         }
     }
 
-    updateChemical(chemical: Chemical): void {
-        return this.chemicalService.updateChemical(chemical);
-    }
 
     updateHazards(chemical: Chemical): void {
         return this.hazardService.updateHazards(chemical);
     }
 
-    onChemicalAdded(chemical: Chemical): void {
-        return this.chemicalService.onChemicalAdded(chemical);
-        // Lower case and remove trailing spaces from the cupboard name to make filtering and data integrity better
-        // chemical.cupboard = chemical.cupboard?.toLowerCase().trim();
-        // this.http.post<Chemical>(`${environment.backendUrl}/chemical`, chemical).subscribe((addedChemical: Chemical) => {
-        //     addedChemical.hazardList = this.hazardService.getHazardListForChemical(addedChemical);  
-        //     addedChemical.backgroundColour = this.chemicalService.getExpiryColour(addedChemical);
-        //     this.chemicalService.setAllChemicals(this.chemicalService.getAllChemicals().concat(addedChemical));
-        //     this.refresh();
-        //     // this.nameOrNumberSearchOptions = this.getNameOrNumberSearchObservable();
-        //     // this.ownerSearchOptions = this.getOwnerSearchObservable();
-        // });
-    }
 
 
-    onChemicalEdited(chemical: Chemical): void {
-        return this.chemicalService.onChemicalEdited(chemical);
-        // chemical.hazardList = this.hazardService.getHazardListForChemical(chemical);
-        // chemical.backgroundColour = this.chemicalService.getExpiryColour(chemical);
-        // chemical.lastUpdatedBy = this.loggedInUser;
-        // this.updateChemical(chemical);
-        // this.updateHazards(chemical);
-        // this.chemicals.update(chemical);
-        // this.refresh();
-        // this.nameOrNumberSearchOptions = this.getNameOrNumberSearchObservable();
-        // this.ownerSearchOptions = this.getOwnerSearchObservable();
-    }
-
-    // getExpiryColour(chemical: Chemical): ExpiryColor {
-
-    //     const timeUntilExpiry = Chemicals.daysUntilExpiry(chemical);
-
-    //     if (timeUntilExpiry < 30 && timeUntilExpiry > 0) {
-    //         return yellow;
-    //     }
-    //     if (timeUntilExpiry <= 0) {
-    //         return red;
-    //     }
-
-    //     return '';
-    // }
-
-
-    // getNameOrNumberSearchObservable(): Observable<string[]> {
-    //     return this.nameOrNumberSearchControl.valueChanges.pipe(
-    //         map((search) => this.chemicals.getNames(
-    //             this.getChemicals(),
-    //             search)
-    //         )
-    //     );
-    // }
-
-    // getOwnerSearchObservable(): Observable<string[]> {
-    //     return this.ownerSearchControl.valueChanges.pipe(
-    //         map((search) => this.chemicals.getOwners(
-    //             this.getChemicals(),
-    //             search)
-    //         )
-    //     );
-    // }
 
     // set the activated property of all hazards other than the passed hazard to false and clear hazards from the passed chemical
     singleSelect(chemical: Chemical, hazardName: Hazard): Chemical {
@@ -304,6 +211,7 @@ export class CoshhComponent implements OnInit {
         return this.hazardService.getHazardPicture(hazard);
     }
 
+    // TODO sorting does not work at present
     /** Announce the change in sort state for assistive technology. */
     announceSortChange(sortState: Sort) {
         // This example uses English messages. If your application supports
