@@ -7,12 +7,13 @@ import { createExcelData, createPDFData } from '../utility/utilities';
 import { columnsForExport } from '../coshh/types';
 import jsPDF from 'jspdf';
 import writeXlsxFile from 'write-excel-file';
+import { ChemicalService } from './chemical-service.service';
 
 @Injectable({
     providedIn: 'root'
 })
 export class SaveService{
-    constructor(private coshhcomponent: CoshhComponent) {}
+    constructor(private coshhcomponent: CoshhComponent, public chemicalService: ChemicalService) {}
 
     // attempts to use css @media query to set print options programmatically were unsuccessful
     // in the print dialog window the user will need to change the orientation to landscape and the scale to 50% for
@@ -24,7 +25,7 @@ export class SaveService{
 
     async saveExcel() {
         const { data, columnOptions } = createExcelData(columnsForExport, 
-            this.coshhcomponent.getChemicals());
+            this.chemicalService.getAllChemicals());
 
         await writeXlsxFile(data, {
             columns: columnOptions,
@@ -34,7 +35,7 @@ export class SaveService{
     }
 
     savePDF() {
-        const chemicalsToPrint = createPDFData(this.coshhcomponent.getChemicals());
+        const chemicalsToPrint = createPDFData(this.chemicalService.getAllChemicals());
 
         const doc = new jsPDF('landscape');
 
