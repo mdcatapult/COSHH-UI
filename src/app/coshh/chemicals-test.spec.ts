@@ -27,8 +27,6 @@ describe('Chemicals', () => {
             hazards: [],
             hazardList: [],
             backgroundColour: '',
-            editCoshh: false,
-            editSDS: false,
             lastUpdatedBy: ''
         };
 
