@@ -1,20 +1,20 @@
 import { AuthService } from '@auth0/auth0-angular';
-import { combineLatest, debounceTime, map, Observable, startWith } from 'rxjs';
+import { combineLatest, Observable, startWith } from 'rxjs';
 import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSort, Sort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
 import { UntypedFormBuilder, UntypedFormControl } from '@angular/forms';
-
-import { allHazards, Chemical, columnTypes, ExpiryColor, Hazard, red, yellow } from './types';
-import { Chemicals } from './chemicals';
+import { MatTableDataSource } from '@angular/material/table';
+import { Chemical, columnTypes, Hazard } from './types';
+// import { Chemicals } from './chemicals';
 // environment.ts is added at compile time by npm run start command
 import { isValidHttpUrl, checkDuplicates } from '../utility/utilities';
 import { environment } from 'src/environments/environment';
 import { FilterService } from '../filter.service';
 import { HazardService } from '../services/hazard-service.service';
+import { ChemicalService } from '../services/chemical-service.service';
 // import { SaveService } from '../services/save-service.service';
 import { ScanChemicalComponent } from '../scan-chemical/scan-chemical.component';
 
@@ -43,7 +43,7 @@ export class CoshhComponent implements OnInit {
                 width: '20vw',
                 data: {
                     chemicalNumber: this.scannedBarcode,
-                    chemical: this.getChemicals()
+                    chemical: this.chemicalService.getAllChemicals()
                         .find((chemical) => chemical.chemicalNumber === this.scannedBarcode),
                     archive: this.updateChemical
                 }
@@ -77,39 +77,44 @@ export class CoshhComponent implements OnInit {
                 private authService: AuthService,
                 private filterService: FilterService,
                 public dialog: MatDialog, 
-                private hazardService: HazardService) {
+                public hazardService: HazardService,
+                public chemicalService: ChemicalService) {
+
     }
 
-    chemicals = new Chemicals(); // this represents all the chemicals returned from the API
+    // chemicals = new Chemicals(); // this represents all the chemicals returned from the API
     cupboards: string[] = [];
-    labs: string[] = [];
     users: string[] = [];
     freezeColumns = false;
     loggedInUser: string = '';
+    tableData!: MatTableDataSource<Chemical>;
+    
+    tableData$ = this.chemicalService.tableData;
+    
 
-    hazardFilterValues = (<string[]>allHazards()).concat('All');
-    tableData = new MatTableDataSource<Chemical>(); // data source for table
+    // hazardFilterValues = (<string[]>allHazards()).concat('All');
+   
     columns: string[] = columnTypes; // columns to display in table
-    toggleArchiveControl = new UntypedFormControl(false);
-    hazardFilterControl = new UntypedFormControl('All');
 
-    labFilterControl = new UntypedFormControl('');
-    labFilterValues: string[] = [];
+    // hazardFilterControl = new UntypedFormControl('All');
 
-    cupboardFilterControl = new UntypedFormControl('All');
-    cupboardFilterValues: string[] = [];
+    // labFilterControl = new UntypedFormControl('');
+    // labFilterValues: string[] = [];
 
-    expiryFilterControl = new UntypedFormControl('Any');
-    expiryFilterValues = ['Any', '< 30 Days', 'Expired'];
+    // cupboardFilterControl = new UntypedFormControl('All');
+    // cupboardFilterValues: string[] = [];
+
+    // expiryFilterControl = new UntypedFormControl('Any');
+    // expiryFilterValues = ['Any', '< 30 Days', 'Expired'];
 
     nameOrNumberSearchOptions: Observable<string[]> = new Observable();
     nameOrNumberSearchControl = new UntypedFormControl();
 
-    ownerSearchOptions: Observable<string[]> = new Observable();
-    ownerSearchControl = new UntypedFormControl();
+    // ownerSearchOptions: Observable<string[]> = new Observable();
+    // ownerSearchControl = new UntypedFormControl();
 
     tooltipText = () => {
-        const numberOfChemicals = this.getChemicals().length;
+        const numberOfChemicals = this.chemicalService.getAllChemicals().length;
 
         const chemicalOrChemicals = numberOfChemicals === 1 ? 'chemical' : 'chemicals';
 
@@ -121,87 +126,74 @@ export class CoshhComponent implements OnInit {
 
     ngOnInit(): void {
 
-        this.http.get<Array<Chemical>>(`${environment.backendUrl}/chemicals`)
-            .subscribe((res: Array<Chemical>) => {
-                res = res?.map((chem: Chemical) => {
-                    chem.editSDS = false;
-                    chem.editCoshh = false;
-                    chem.backgroundColour = this.getExpiryColour(chem);
-                    chem.hazardList = this.hazardService.getHazardListForChemical(chem);
+        this.tableData = new MatTableDataSource<Chemical>(this.chemicalService.getAllChemicals());
 
-                    return chem;
-                });
+        // this.http.get<Array<Chemical>>(`${environment.backendUrl}/chemicals`)
+        //     .subscribe((res: Array<Chemical>) => {
+        //         res = res?.map((chem: Chemical) => {
+        //             chem.backgroundColour = this.getExpiryColour(chem);
+        //             chem.hazardList = this.hazardService.getHazardListForChemical(chem);
 
-                this.chemicals.set(res || []);
-                const inStock = this.getChemicals();
+        //             return chem;
+        //         });
 
-                this.tableData = new MatTableDataSource<Chemical>(inStock);
-                this.tableData.sort = this.sort;
+        //         // this.chemicals.set(res || []);
+        //         // const inStock = this.getChemicals();
 
-                this.nameOrNumberSearchOptions = this.getNameOrNumberSearchObservable();
-            });
+        //         this.tableData = new MatTableDataSource<Chemical>(
+        //             this.
+        //         );
+        //         this.tableData.sort = this.sort;
 
-        this.http.get<string[]>(`${environment.backendUrl}/labs`).subscribe((labs) => {
-            this.labFilterValues = labs.concat('All');
-            this.labFilterControl.setValue('All');
-            this.labs = labs;
-        });
+        //         this.nameOrNumberSearchOptions = this.getNameOrNumberSearchObservable();
+        //     });
+        
 
         this.http.get<string[]>(`${environment.backendUrl}/users`).subscribe((users) => {
             this.users = users;
         });
 
-        this.nameOrNumberSearchControl.valueChanges.subscribe(() => {
-            this.tableData.data = this.getChemicals();
-        });
-
-        this.ownerSearchControl.valueChanges.subscribe(() => {
-            this.tableData.data = this.getChemicals();
-        });
-
-        this.authService.user$.subscribe((user) => {
-            this.loggedInUser = user?.email ?? '';
-        });
 
         combineLatest([
-                this.hazardFilterControl,
-                this.cupboardFilterControl,
-                this.labFilterControl,
-                this.expiryFilterControl,
-                this.toggleArchiveControl
+                this.hazardService.hazardFilterControl,
+                this.chemicalService.cupboardFilterControl,
+                this.chemicalService.labFilterControl,
+                this.chemicalService.expiryFilterControl,
+                this.chemicalService.toggleArchiveControl
             ].map((control) => control.valueChanges.pipe(startWith(control.value)))
         ).subscribe(() => {
             this.refresh();
-            this.nameOrNumberSearchOptions = this.getNameOrNumberSearchObservable();
-            this.ownerSearchOptions = this.getOwnerSearchObservable();
+
+            this.chemicalService.nameOrNumberSearchOptions = this.chemicalService.getNameOrNumberSearchObservable();
+            // this.nameOrNumberSearchOptions = this.getNameOrNumberSearchObservable();
+            this.chemicalService.ownerSearchOptions = this.chemicalService.getOwnerSearchObservable();
         });
 
     }
 
-    getChemicals(): Chemical[] {
-        return this.chemicals.get(
-            this.toggleArchiveControl.value,
-            this.cupboardFilterControl.value,
-            this.hazardFilterControl.value,
-            this.labFilterControl.value,
-            this.expiryFilterControl.value,
-            this.nameOrNumberSearchControl.value || '',
-            this.ownerSearchControl.value || ''
-        );
-    }
+    // getChemicals(): Chemical[] {
+    //     return this.chemicals.get(
+    //         this.toggleArchiveControl.value,
+    //         this.cupboardFilterControl.value,
+    //         this.hazardFilterControl.value,
+    //         this.labFilterControl.value,
+    //         this.expiryFilterControl.value,
+    //         this.nameOrNumberSearchControl.value || '',
+    //         this.ownerSearchControl.value || ''
+    //     );
+    // }
 
 
     archive(chemical: Chemical): void {
         chemical.isArchived = !chemical.isArchived;
-        this.updateChemical(chemical);
+        this.chemicalService.updateChemical(chemical);
 
         this.refresh();
     }
 
     refresh(): void {
-        this.tableData.data = this.getChemicals();
+        this.tableData.data = this.chemicalService.getAllChemicals();
         this.refreshCupboardsFilterList();
-
     }
 
     /**
@@ -209,35 +201,25 @@ export class CoshhComponent implements OnInit {
      * 'All' is always an option for cupboards filter so append it to the list
      */
     refreshCupboardsFilterList(): void {
-        if (this.labFilterControl.value == 'All') {
+        if (this.chemicalService.labFilterControl.value == 'All') {
             this.filterService.getCupboards().subscribe((cupboards) => {
                 const dedupedCupboards: string[] = checkDuplicates(cupboards);
 
-                this.cupboardFilterValues = dedupedCupboards.concat('All');
+                this.chemicalService.cupboardFilterValues = dedupedCupboards.concat('All');
                 this.cupboards = dedupedCupboards;
             });
         } else {
-            this.filterService.getCupboardsForLab(this.labFilterControl.value).subscribe((cupboards) => {
+            this.filterService.getCupboardsForLab(this.chemicalService.labFilterControl.value).subscribe((cupboards) => {
                 const dedupedCupboards: string[] = checkDuplicates(cupboards);
 
-                this.cupboardFilterValues = dedupedCupboards.concat('All');
+                this.chemicalService.cupboardFilterValues = dedupedCupboards.concat('All');
                 this.cupboards = dedupedCupboards;
             });
         }
     }
 
-    updateChemical(chemical: Chemical, refresh?: boolean): void {
-        // Lower case and remove trailing spaces from the cupboard name to make filtering and data integrity better
-        chemical.cupboard = chemical.cupboard?.toLowerCase().trim();
-        chemical.lastUpdatedBy = this.loggedInUser;
-        this.http.put(`${environment.backendUrl}/chemical`, chemical).pipe(
-            debounceTime(100)
-        ).subscribe(() => {
-            this.chemicals.update(chemical);
-            chemical.backgroundColour = this.getExpiryColour(chemical);
-            if (refresh) this.refresh();
-        });
-
+    updateChemical(chemical: Chemical): void {
+        return this.chemicalService.updateChemical(chemical);
     }
 
     updateHazards(chemical: Chemical): void {
@@ -245,67 +227,65 @@ export class CoshhComponent implements OnInit {
     }
 
     onChemicalAdded(chemical: Chemical): void {
+        return this.chemicalService.onChemicalAdded(chemical);
         // Lower case and remove trailing spaces from the cupboard name to make filtering and data integrity better
-        chemical.cupboard = chemical.cupboard?.toLowerCase().trim();
-        this.http.post<Chemical>(`${environment.backendUrl}/chemical`, chemical).subscribe((addedChemical: Chemical) => {
-            addedChemical.editSDS = false;
-            addedChemical.editCoshh = false;
-            addedChemical.hazardList = this.hazardService.getHazardListForChemical(addedChemical);  
-            addedChemical.backgroundColour = this.getExpiryColour(chemical);
-            this.chemicals.add(addedChemical);
-            this.refresh();
-            this.nameOrNumberSearchOptions = this.getNameOrNumberSearchObservable();
-            this.ownerSearchOptions = this.getOwnerSearchObservable();
-        });
+        // chemical.cupboard = chemical.cupboard?.toLowerCase().trim();
+        // this.http.post<Chemical>(`${environment.backendUrl}/chemical`, chemical).subscribe((addedChemical: Chemical) => {
+        //     addedChemical.hazardList = this.hazardService.getHazardListForChemical(addedChemical);  
+        //     addedChemical.backgroundColour = this.chemicalService.getExpiryColour(addedChemical);
+        //     this.chemicalService.setAllChemicals(this.chemicalService.getAllChemicals().concat(addedChemical));
+        //     this.refresh();
+        //     // this.nameOrNumberSearchOptions = this.getNameOrNumberSearchObservable();
+        //     // this.ownerSearchOptions = this.getOwnerSearchObservable();
+        // });
     }
 
 
     onChemicalEdited(chemical: Chemical): void {
-        chemical.editSDS = false;
-        chemical.editCoshh = false;
-        chemical.hazardList = this.hazardService.getHazardListForChemical(chemical);
-        chemical.backgroundColour = this.getExpiryColour(chemical);
-        chemical.lastUpdatedBy = this.loggedInUser;
-        this.updateChemical(chemical);
-        this.updateHazards(chemical);
-        this.chemicals.update(chemical);
-        this.refresh();
-        this.nameOrNumberSearchOptions = this.getNameOrNumberSearchObservable();
-        this.ownerSearchOptions = this.getOwnerSearchObservable();
+        return this.chemicalService.onChemicalEdited(chemical);
+        // chemical.hazardList = this.hazardService.getHazardListForChemical(chemical);
+        // chemical.backgroundColour = this.chemicalService.getExpiryColour(chemical);
+        // chemical.lastUpdatedBy = this.loggedInUser;
+        // this.updateChemical(chemical);
+        // this.updateHazards(chemical);
+        // this.chemicals.update(chemical);
+        // this.refresh();
+        // this.nameOrNumberSearchOptions = this.getNameOrNumberSearchObservable();
+        // this.ownerSearchOptions = this.getOwnerSearchObservable();
     }
 
-    getExpiryColour(chemical: Chemical): ExpiryColor {
+    // getExpiryColour(chemical: Chemical): ExpiryColor {
 
-        const timeUntilExpiry = Chemicals.daysUntilExpiry(chemical);
+    //     const timeUntilExpiry = Chemicals.daysUntilExpiry(chemical);
 
-        if (timeUntilExpiry < 30 && timeUntilExpiry > 0) {
-            return yellow;
-        }
-        if (timeUntilExpiry <= 0) {
-            return red;
-        }
+    //     if (timeUntilExpiry < 30 && timeUntilExpiry > 0) {
+    //         return yellow;
+    //     }
+    //     if (timeUntilExpiry <= 0) {
+    //         return red;
+    //     }
 
-        return '';
-    }
+    //     return '';
+    // }
 
 
-    getNameOrNumberSearchObservable(): Observable<string[]> {
-        return this.nameOrNumberSearchControl.valueChanges.pipe(
-            map((search) => this.chemicals.getNames(
-                this.getChemicals(),
-                search)
-            )
-        );
-    }
+    // getNameOrNumberSearchObservable(): Observable<string[]> {
+    //     return this.nameOrNumberSearchControl.valueChanges.pipe(
+    //         map((search) => this.chemicals.getNames(
+    //             this.getChemicals(),
+    //             search)
+    //         )
+    //     );
+    // }
 
-    getOwnerSearchObservable(): Observable<string[]> {
-        return this.ownerSearchControl.valueChanges.pipe(
-            map((search) => this.chemicals.getOwners(
-                this.getChemicals(),
-                search)
-            )
-        );
-    }
+    // getOwnerSearchObservable(): Observable<string[]> {
+    //     return this.ownerSearchControl.valueChanges.pipe(
+    //         map((search) => this.chemicals.getOwners(
+    //             this.getChemicals(),
+    //             search)
+    //         )
+    //     );
+    // }
 
     // set the activated property of all hazards other than the passed hazard to false and clear hazards from the passed chemical
     singleSelect(chemical: Chemical, hazardName: Hazard): Chemical {

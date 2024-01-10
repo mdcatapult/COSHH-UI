@@ -1,6 +1,7 @@
-import { Injectable, OnInit } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { debounceTime } from 'rxjs/operators';
+import { UntypedFormControl } from '@angular/forms';
 
 import { allHazards } from '../coshh/types';
 import { Chemical } from '../coshh/types';
@@ -10,9 +11,11 @@ import { Hazard } from '../coshh/types';
 @Injectable({
     providedIn: 'root'
 })
-export class HazardService implements OnInit {
+export class HazardService {
     constructor(private http: HttpClient) { }
-    ngOnInit() {}
+
+    hazardFilterValues = (<string[]>allHazards()).concat('All');
+    hazardFilterControl = new UntypedFormControl('All');
 
     getHazardPicture(hazard: Hazard): string {
         switch (hazard) {

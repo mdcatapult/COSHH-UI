@@ -19,7 +19,7 @@
                     <div id="add-scan-container">
                         <div class="add-chemical">
                             <app-add-chemical
-                                    [labs]="labFilterValues"
+                                    [labs]="chemicalService.labFilterValues"
                                     [users]="users"
                                     (onChemicalAdded)="onChemicalAdded($event)"
                                     (onDialogOpen)="onDialogOpen($event)"
@@ -50,7 +50,7 @@
                     <mat-checkbox
                             (change)="scanningMode = false"
                             class="coshh-checkbox"
-                            [formControl]="toggleArchiveControl"
+                            [formControl]="chemicalService.toggleArchiveControl"
                             color="primary">Display archived chemicals
                     </mat-checkbox>
                     <mat-checkbox
@@ -69,8 +69,8 @@
                     <div class="filter-control">
                         <mat-form-field className="filter-select">
                             <mat-label>Filter by lab</mat-label>
-                            <mat-select (focus)="scanningMode = false" required [formControl]="labFilterControl">
-                                <mat-option *ngFor="let lab of labFilterValues" [value]="lab">{{lab}}</mat-option>
+                            <mat-select (focus)="scanningMode = false" required [formControl]="chemicalService.labFilterControl">
+                                <mat-option *ngFor="let lab of chemicalService.labFilterValues" [value]="lab">{{lab}}</mat-option>
                             </mat-select>
                         </mat-form-field>
                     </div>
@@ -78,8 +78,8 @@
                     <div class="filter-control">
                         <mat-form-field className="filter-select">
                             <mat-label>Filter by cupboard</mat-label>
-                            <mat-select (focus)="scanningMode = false" required [formControl]="cupboardFilterControl">
-                                <mat-option *ngFor="let cupboard of cupboardFilterValues"
+                            <mat-select (focus)="scanningMode = false" required [formControl]="chemicalService.cupboardFilterControl">
+                                <mat-option *ngFor="let cupboard of chemicalService.cupboardFilterValues"
                                             [value]="cupboard">{{cupboard}}</mat-option>
                             </mat-select>
                         </mat-form-field>
@@ -88,8 +88,8 @@
                     <div class="filter-control">
                         <mat-form-field>
                             <mat-label>Filter by expiry</mat-label>
-                            <mat-select (focus)="scanningMode = false" required [formControl]="expiryFilterControl">
-                                <mat-option *ngFor="let expiry of expiryFilterValues"
+                            <mat-select (focus)="scanningMode = false" required [formControl]="chemicalService.expiryFilterControl">
+                                <mat-option *ngFor="let expiry of chemicalService.expiryFilterValues"
                                             [value]="expiry">{{expiry}}</mat-option>
                             </mat-select>
                         </mat-form-field>
@@ -98,8 +98,8 @@
                     <div class="filter-control">
                         <mat-form-field>
                             <mat-label>Filter by hazard</mat-label>
-                            <mat-select (focus)="scanningMode = false" required [formControl]="hazardFilterControl">
-                                <mat-option *ngFor="let hazard of hazardFilterValues"
+                            <mat-select (focus)="scanningMode = false" required [formControl]="hazardService.hazardFilterControl">
+                                <mat-option *ngFor="let hazard of hazardService.hazardFilterValues"
                                             [value]="hazard">{{hazard}}</mat-option>
                             </mat-select>
                         </mat-form-field>
@@ -113,11 +113,11 @@
                                    aria-label="Search"
                                    matInput
                                    (focus)="scanningMode = false"
-                                   [formControl]="nameOrNumberSearchControl"
+                                   [formControl]="chemicalService.nameOrNumberSearchControl"
                                    [matAutocomplete]="autoNameNum">
                             <mat-autocomplete #autoNameNum="matAutocomplete">
                                 <mat-option
-                                        *ngFor="let nameOrNumber of nameOrNumberSearchOptions | async | slice : 0 : 10"
+                                        *ngFor="let nameOrNumber of chemicalService.nameOrNumberSearchOptions | async | slice : 0 : 10"
                                         [value]="nameOrNumber">
                                     {{nameOrNumber}}
                                 </mat-option>
@@ -133,10 +133,10 @@
                                    placeholder="Type to search..."
                                    aria-label="Search"
                                    matInput
-                                   [formControl]="ownerSearchControl"
+                                   [formControl]="chemicalService.ownerSearchControl"
                                    [matAutocomplete]="autoOwner">
                             <mat-autocomplete #autoOwner="matAutocomplete">
-                                <mat-option *ngFor="let owner of ownerSearchOptions | async | slice : 0 : 10"
+                                <mat-option *ngFor="let owner of chemicalService.ownerSearchOptions | async | slice : 0 : 10"
                                             [value]="owner">
                                     {{owner}}
                                 </mat-option>
@@ -325,7 +325,7 @@
                     </button>
                     <mat-menu #menu="matMenu">
                         <app-edit-chemical
-                                [labs]="labFilterValues"
+                                [labs]="chemicalService.labFilterValues"
                                 [users]="users"
                                 [chemical]="chemical"
                                 (onChemicalEdited)="onChemicalEdited($event)"
@@ -352,7 +352,7 @@
                             <mat-icon id="unarchive-icon">unarchive</mat-icon>
                         </button>
                         <app-clone-chemical
-                                [labs]="labFilterValues"
+                                [labs]="chemicalService.labFilterValues"
                                 [users]="users"
                                 [chemical]="chemical"
                                 (onChemicalCloned)="onChemicalAdded($event)"

@@ -19,8 +19,6 @@ export type Chemical = {
     hazards: Hazard[],
     hazardList: HazardListItem[],
     backgroundColour: ExpiryColor,
-    editSDS: boolean,
-    editCoshh: boolean,
     lastUpdatedBy: string,
 }
 
