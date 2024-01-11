@@ -21,7 +21,7 @@
                             <app-add-chemical
                                     [labs]="chemicalService.labFilterValues"
                                     [users]="users"
-                                    (onChemicalAdded)="onChemicalAdded($event)"
+                                    (onChemicalAdded)="chemicalService.onChemicalAdded($event)"
                                     (onDialogOpen)="onDialogOpen($event)"
                             ></app-add-chemical>
                         </div>
@@ -328,7 +328,7 @@
                                 [labs]="chemicalService.labFilterValues"
                                 [users]="users"
                                 [chemical]="chemical"
-                                (onChemicalEdited)="onChemicalEdited($event)"
+                                (onChemicalEdited)="chemicalService.onChemicalEdited($event)"
                         ></app-edit-chemical>
                         <button
                                 *ngIf="!chemical.isArchived"
@@ -355,7 +355,7 @@
                                 [labs]="chemicalService.labFilterValues"
                                 [users]="users"
                                 [chemical]="chemical"
-                                (onChemicalCloned)="onChemicalAdded($event)"
+                                (onChemicalCloned)="chemicalService.onChemicalAdded($event)"
                         ></app-clone-chemical>
                     </mat-menu>
                 </ng-container>
