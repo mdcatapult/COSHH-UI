@@ -135,6 +135,8 @@ export class CoshhComponent implements OnInit {
             this.users = users;
         });
 
+        
+
         combineLatest([
                 this.hazardService.hazardFilterControl,
                 this.chemicalService.cupboardFilterControl,

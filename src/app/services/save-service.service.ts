@@ -13,7 +13,7 @@ import { ChemicalService } from './chemical-service.service';
     providedIn: 'root'
 })
 export class SaveService{
-    constructor(private coshhcomponent: CoshhComponent, public chemicalService: ChemicalService) {}
+    constructor(public chemicalService: ChemicalService) {}
 
     // attempts to use css @media query to set print options programmatically were unsuccessful
     // in the print dialog window the user will need to change the orientation to landscape and the scale to 50% for

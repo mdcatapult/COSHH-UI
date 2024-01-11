@@ -1,15 +1,15 @@
 import * as moment from 'moment';
-import {AuthService} from '@auth0/auth0-angular';
-import {BehaviorSubject, Observable} from 'rxjs';
-import {debounceTime, map} from 'rxjs/operators';
-import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {UntypedFormControl} from '@angular/forms';
+import { AuthService } from '@auth0/auth0-angular';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { debounceTime, map } from 'rxjs/operators';
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { UntypedFormControl } from '@angular/forms';
 
-import {Chemical, ExpiryColor, yellow, red, Expiry} from '../coshh/types';
-import {environment} from 'src/environments/environment';
-import {HazardService} from './hazard-service.service';
-import {MatTableDataSource} from '@angular/material/table';
+import { Chemical, ExpiryColor, yellow, red, Expiry } from '../coshh/types';
+import { environment } from 'src/environments/environment';
+import { HazardService } from './hazard-service.service';
+import { MatTableDataSource } from '@angular/material/table';
 
 
 @Injectable({
@@ -44,11 +44,11 @@ export class ChemicalService {
                 this.expiryFilterControl.value,
                 this.nameOrNumberSearchControl.value ?? '',
                 this.ownerSearchControl.value ?? ''
-            )
+            );
 
             this.tableData.data = this.getFilteredChemicals();
 
-            console.log(this.tableData.data, '   <-- this tabledata.data in owner search control')
+            console.log(this.tableData.data, '   <-- this tabledata.data in owner search control');
         });
 
 
@@ -62,10 +62,87 @@ export class ChemicalService {
                 this.expiryFilterControl.value,
                 this.nameOrNumberSearchControl.value ?? '',
                 this.ownerSearchControl.value ?? ''
-            )
+            );
 
             this.tableData.data = this.getFilteredChemicals();
         });
+
+        this.labFilterControl.valueChanges.subscribe(() => {
+
+            this.filterChemicals(
+                this.toggleArchiveControl.value,
+                this.cupboardFilterControl.value,
+                this.hazardService.hazardFilterControl.value,
+                this.labFilterControl.value,
+                this.expiryFilterControl.value,
+                this.nameOrNumberSearchControl.value ?? '',
+                this.ownerSearchControl.value ?? ''
+            );
+
+            this.tableData.data = this.getFilteredChemicals();
+        });
+
+        this.cupboardFilterControl.valueChanges.subscribe(() => {
+
+            this.filterChemicals(
+                this.toggleArchiveControl.value,
+                this.cupboardFilterControl.value,
+                this.hazardService.hazardFilterControl.value,
+                this.labFilterControl.value,
+                this.expiryFilterControl.value,
+                this.nameOrNumberSearchControl.value ?? '',
+                this.ownerSearchControl.value ?? ''
+            );
+
+            this.tableData.data = this.getFilteredChemicals();
+        });
+
+        this.expiryFilterControl.valueChanges.subscribe(() => {
+
+            this.filterChemicals(
+                this.toggleArchiveControl.value,
+                this.cupboardFilterControl.value,
+                this.hazardService.hazardFilterControl.value,
+                this.labFilterControl.value,
+                this.expiryFilterControl.value,
+                this.nameOrNumberSearchControl.value ?? '',
+                this.ownerSearchControl.value ?? ''
+            );
+
+            this.tableData.data = this.getFilteredChemicals();
+        });
+
+        this.hazardService.hazardFilterControl.valueChanges.subscribe(() => {
+
+            this.filterChemicals(
+                this.toggleArchiveControl.value,
+                this.cupboardFilterControl.value,
+                this.hazardService.hazardFilterControl.value,
+                this.labFilterControl.value,
+                this.expiryFilterControl.value,
+                this.nameOrNumberSearchControl.value ?? '',
+                this.ownerSearchControl.value ?? ''
+            );
+
+            this.tableData.data = this.getFilteredChemicals();
+        });
+
+        this.toggleArchiveControl.valueChanges.subscribe(() => {
+
+            this.filterChemicals(
+                this.toggleArchiveControl.value,
+                this.cupboardFilterControl.value,
+                this.hazardService.hazardFilterControl.value,
+                this.labFilterControl.value,
+                this.expiryFilterControl.value,
+                this.nameOrNumberSearchControl.value ?? '',
+                this.ownerSearchControl.value ?? ''
+            );
+
+            this.tableData.data = this.getFilteredChemicals();
+        });
+
+        
 
     }
 
@@ -198,6 +275,7 @@ export class ChemicalService {
     filterExpiryDate(chemical: Chemical, expiry: Expiry): boolean {
 
         const timeUntilExpiry = this.daysUntilExpiry(chemical);
+
         switch (expiry) {
             case 'Any':
 
