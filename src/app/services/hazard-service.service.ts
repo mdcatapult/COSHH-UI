@@ -48,7 +48,9 @@ export class HazardService {
     updateHazards(chemical: Chemical): void {
         this.http.put(`${environment.backendUrl}/hazards`, chemical).pipe(
             debounceTime(100)
-        ).subscribe(() => {
+        ).subscribe((changes) => {
+            console.log(changes, 'changes');
+            console.log(chemical, 'chemical');
         });
     };
 

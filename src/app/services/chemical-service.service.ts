@@ -142,8 +142,6 @@ export class ChemicalService {
             this.tableData.data = this.getFilteredChemicals();
         });
 
-        
-
     }
 
 
@@ -336,9 +334,10 @@ export class ChemicalService {
             addedChemical.hazardList = this.hazardService.getHazardListForChemical(addedChemical);
             addedChemical.backgroundColour = this.getExpiryColour(addedChemical);
             this.setAllChemicals(this.getAllChemicals().concat(addedChemical));
+            console.log(this.getAllChemicals(), '   <-- this.getAllChemicals() in onChemicalAdded');
             // this.refresh();
-            // this.nameOrNumberSearchOptions = this.getNameOrNumberSearchObservable();
-            // this.ownerSearchOptions = this.getOwnerSearchObservable();
+            this.nameOrNumberSearchOptions = this.getNameOrNumberSearchObservable();
+            this.ownerSearchOptions = this.getOwnerSearchObservable();
         });
 
     }
@@ -347,8 +346,11 @@ export class ChemicalService {
         chemical.hazardList = this.hazardService.getHazardListForChemical(chemical);
         chemical.backgroundColour = this.getExpiryColour(chemical);
         chemical.lastUpdatedBy = this.loggedInUser;
+        console.log(chemical.lastUpdatedBy, '   <-- loggerUpdateBy');
         this.updateChemical(chemical);
+        console.log(chemical, '   <-- chemical in onChemicalEdited');
         this.hazardService.updateHazards(chemical);
+        this.update(chemical);
         this.nameOrNumberSearchOptions = this.getNameOrNumberSearchObservable();
         this.ownerSearchOptions = this.getOwnerSearchObservable();
     }
@@ -364,5 +366,12 @@ export class ChemicalService {
             // if (refresh) this.coshhcomponent.refresh();
         });
     }
+
+    update = (chemical: Chemical) => {
+        const chemicalIndex = this.getFilteredChemicals().findIndex((chem) => chem.id === chemical.id);
+
+                         
+        this.getFilteredChemicals()[chemicalIndex] = chemical;
+    };
 
 }

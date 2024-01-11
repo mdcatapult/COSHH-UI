@@ -15,7 +15,7 @@ import { environment } from 'src/environments/environment';
 import { FilterService } from '../filter.service';
 import { HazardService } from '../services/hazard-service.service';
 import { ChemicalService } from '../services/chemical-service.service';
-// import { SaveService } from '../services/save-service.service';
+import { SaveService } from '../services/save-service.service';
 import { ScanChemicalComponent } from '../scan-chemical/scan-chemical.component';
 
 
@@ -78,7 +78,8 @@ export class CoshhComponent implements OnInit {
                 private filterService: FilterService,
                 public dialog: MatDialog, 
                 public hazardService: HazardService,
-                public chemicalService: ChemicalService) {
+                public chemicalService: ChemicalService,
+                public saveService: SaveService) {
 
     }
 
@@ -127,15 +128,15 @@ export class CoshhComponent implements OnInit {
     ngOnInit(): void {
 
         this.tableData = new MatTableDataSource<Chemical>(this.chemicalService.getFilteredChemicals());
-
+        
         this.chemicalService.filteredChemicals$
-            .subscribe((filteredChemicals) => this.tableData.data = filteredChemicals);
+            .subscribe((filteredChemicals) => 
+            {this.tableData.data = filteredChemicals;
+                this.tableData.sort = this.sort;});
 
         this.http.get<string[]>(`${environment.backendUrl}/users`).subscribe((users) => {
             this.users = users;
         });
-
-        
 
         combineLatest([
                 this.hazardService.hazardFilterControl,

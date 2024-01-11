@@ -1,6 +1,5 @@
 import * as moment from 'moment';
 import { Injectable } from '@angular/core';
-import { CoshhComponent  } from '../coshh/coshh.component';
 
 import autoTable from 'jspdf-autotable';
 import { createExcelData, createPDFData } from '../utility/utilities';
@@ -25,7 +24,9 @@ export class SaveService{
 
     async saveExcel() {
         const { data, columnOptions } = createExcelData(columnsForExport, 
-            this.chemicalService.getAllChemicals());
+            this.chemicalService.getFilteredChemicals());
+        
+            console.log(data, columnOptions, 'data and columnOptions');
 
         await writeXlsxFile(data, {
             columns: columnOptions,
@@ -35,7 +36,9 @@ export class SaveService{
     }
 
     savePDF() {
-        const chemicalsToPrint = createPDFData(this.chemicalService.getAllChemicals());
+        const chemicalsToPrint = createPDFData(this.chemicalService.getFilteredChemicals());
+
+        console.log(chemicalsToPrint, 'chemicalsToPrint');
 
         const doc = new jsPDF('landscape');
 

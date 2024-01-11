@@ -159,14 +159,14 @@
                             id="excel-button"
                             matTooltip="Save inventory with current filters to Excel (name, quantity, location, SDS, added and expiry columns only)"
                             matTooltipPosition="left"
-                            (click)="saveExcel()">
+                            (click)="saveService.saveExcel()">
                         <mat-icon [ngStyle]="{'color': 'purple'}">save_alt</mat-icon>
                     </button>
                     <button mat-mini-fab color="accent"
                             id="pdf-button"
                             matTooltip="Save inventory with current filters to PDF (name, quantity, location, SDS, added and expiry columns only)"
                             matTooltipPosition="above"
-                            (click)="savePDF()">
+                            (click)="saveService.savePDF()">
                         <mat-icon [ngStyle]="{'color': 'purple'}">picture_as_pdf</mat-icon>
                     </button>
                     <button mat-mini-fab color="accent"
@@ -188,7 +188,8 @@
 <div class="table-container">
     <table id="coshh-table" mat-table [dataSource]="tableData"
            matSort (matSortChange)="announceSortChange($event)"
-           class="mat-elevation-z8">
+           class="mat-elevation-z8"
+           matSortDisableClear="true">
 
         <ng-container matColumnDef="casNumber" [sticky]="freezeColumns">
             <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by number">
