@@ -1,6 +1,6 @@
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { debounceTime } from 'rxjs/operators';
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
 
 import { allHazards } from '../coshh/types';
