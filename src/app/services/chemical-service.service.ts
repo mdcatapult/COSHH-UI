@@ -334,6 +334,8 @@ export class ChemicalService {
             addedChemical.hazardList = this.hazardService.getHazardListForChemical(addedChemical);
             addedChemical.backgroundColour = this.getExpiryColour(addedChemical);
             this.setAllChemicals(this.getAllChemicals().concat(addedChemical));
+            this.setFilteredChemicals(this.getFilteredChemicals().concat(addedChemical));
+
             console.log(this.getAllChemicals(), '   <-- this.getAllChemicals() in onChemicalAdded');
             // this.refresh();
             this.nameOrNumberSearchOptions = this.getNameOrNumberSearchObservable();
@@ -351,6 +353,7 @@ export class ChemicalService {
         console.log(chemical, '   <-- chemical in onChemicalEdited');
         this.hazardService.updateHazards(chemical);
         this.update(chemical);
+        // this.refresh();
         this.nameOrNumberSearchOptions = this.getNameOrNumberSearchObservable();
         this.ownerSearchOptions = this.getOwnerSearchObservable();
     }
@@ -363,15 +366,36 @@ export class ChemicalService {
             debounceTime(100)
         ).subscribe(() => {
             chemical.backgroundColour = this.getExpiryColour(chemical);
+
             // if (refresh) this.coshhcomponent.refresh();
         });
     }
 
     update = (chemical: Chemical) => {
-        const chemicalIndex = this.getFilteredChemicals().findIndex((chem) => chem.id === chemical.id);
+        const chemicalIndex = this.getAllChemicals().findIndex((chem) => chem.id === chemical.id);
 
-                         
-        this.getFilteredChemicals()[chemicalIndex] = chemical;
+        const allUpdatedChemicals = this.getAllChemicals();
+
+        allUpdatedChemicals[chemicalIndex] = chemical;
+
+        this.setAllChemicals(allUpdatedChemicals);
+
+        this.filterChemicals(
+            this.toggleArchiveControl.value,
+            this.cupboardFilterControl.value,
+            this.hazardService.hazardFilterControl.value,
+            this.labFilterControl.value,
+            this.expiryFilterControl.value,
+            this.nameOrNumberSearchControl.value ?? '',
+            this.ownerSearchControl.value ?? ''
+        );
     };
+
+
+    archive(chemical: Chemical): void {
+        chemical.isArchived = !chemical.isArchived;
+        this.updateChemical(chemical);
+        this.update(chemical);
+    }
 
 }

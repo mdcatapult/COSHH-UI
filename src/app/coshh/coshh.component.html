@@ -173,7 +173,7 @@
                             id="print-button"
                             matTooltip="Print inventory with current filters"
                             matTooltipPosition="below"
-                            (click)="printInventory()">
+                            (click)="saveService.printInventory()">
                         <mat-icon [ngStyle]="{'color': 'purple'}">print</mat-icon>
                     </button>
                 </mat-menu>
@@ -220,7 +220,7 @@
                 <ul>
                     <li *ngFor="let hazard of chemical.hazardList">
                         <img *ngIf="hazard.activated" class="img-responsive hazard"
-                             [src]="getHazardPicture(hazard.title)" [alt]="hazard.title" [title]="hazard.title">
+                             [src]="hazardService.getHazardPicture(hazard.title)" [alt]="hazard.title" [title]="hazard.title">
                     </li>
                 </ul>
             </td>
@@ -338,7 +338,7 @@
                                 class="archive-button"
                                 mat-mini-fab
                                 color="warn"
-                                (click)="archive(chemical)"
+                                (click)="chemicalService.archive(chemical)"
                         >
                             <mat-icon>archive</mat-icon>
                         </button>
@@ -348,7 +348,7 @@
                                 matTooltipPosition="above"
                                 class="unarchive-button"
                                 mat-mini-fab
-                                (click)="archive(chemical)"
+                                (click)="chemicalService.archive(chemical)"
                         >
                             <mat-icon id="unarchive-icon">unarchive</mat-icon>
                         </button>

@@ -1,14 +1,13 @@
 import { AuthService } from '@auth0/auth0-angular';
-import { combineLatest, Observable, startWith } from 'rxjs';
+import { combineLatest, startWith } from 'rxjs';
 import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSort, Sort } from '@angular/material/sort';
-import { UntypedFormBuilder, UntypedFormControl } from '@angular/forms';
+import { UntypedFormBuilder } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
 import { Chemical, columnTypes, Hazard } from './types';
-// import { Chemicals } from './chemicals';
 // environment.ts is added at compile time by npm run start command
 import { isValidHttpUrl, checkDuplicates } from '../utility/utilities';
 import { environment } from 'src/environments/environment';
@@ -91,28 +90,8 @@ export class CoshhComponent implements OnInit {
     tableData!: MatTableDataSource<Chemical>;
     
     tableData$ = this.chemicalService.tableData;
-    
-
-    // hazardFilterValues = (<string[]>allHazards()).concat('All');
    
     columns: string[] = columnTypes; // columns to display in table
-
-    // hazardFilterControl = new UntypedFormControl('All');
-
-    // labFilterControl = new UntypedFormControl('');
-    // labFilterValues: string[] = [];
-
-    // cupboardFilterControl = new UntypedFormControl('All');
-    // cupboardFilterValues: string[] = [];
-
-    // expiryFilterControl = new UntypedFormControl('Any');
-    // expiryFilterValues = ['Any', '< 30 Days', 'Expired'];
-
-    nameOrNumberSearchOptions: Observable<string[]> = new Observable();
-    nameOrNumberSearchControl = new UntypedFormControl();
-
-    // ownerSearchOptions: Observable<string[]> = new Observable();
-    // ownerSearchControl = new UntypedFormControl();
 
     tooltipText = () => {
         const numberOfChemicals = this.chemicalService.getAllChemicals().length;
@@ -154,13 +133,6 @@ export class CoshhComponent implements OnInit {
     }
 
 
-    archive(chemical: Chemical): void {
-        chemical.isArchived = !chemical.isArchived;
-        this.chemicalService.updateChemical(chemical);
-        this.refresh();
-    }
-
-
     refresh(): void {
         this.tableData.data = this.chemicalService.getFilteredChemicals();
         this.refreshCupboardsFilterList();
@@ -190,13 +162,6 @@ export class CoshhComponent implements OnInit {
     }
 
 
-    updateHazards(chemical: Chemical): void {
-        return this.hazardService.updateHazards(chemical);
-    }
-
-
-
-
     // set the activated property of all hazards other than the passed hazard to false and clear hazards from the passed chemical
     singleSelect(chemical: Chemical, hazardName: Hazard): Chemical {
         chemical.hazards = [hazardName];
@@ -208,13 +173,6 @@ export class CoshhComponent implements OnInit {
 
         return chemical;
     }
-
-
-    getHazardPicture(hazard: Hazard): string {
-        return this.hazardService.getHazardPicture(hazard);
-    }
-
-    // TODO sorting does not work at present
     /** Announce the change in sort state for assistive technology. */
     announceSortChange(sortState: Sort) {
         // This example uses English messages. If your application supports
@@ -226,21 +184,6 @@ export class CoshhComponent implements OnInit {
         } else {
             this._liveAnnouncer.announce('Sorting cleared');
         }
-    }
-
-    savePDF() {
-        // return this.saveService.savePDF();
-    }
-
-    // attempts to use css @media query to set print options programmatically were unsuccessful
-    // in the print dialog window the user will need to change the orientation to landscape and the scale to 50% for
-    // it to fit on an A4 page
-    printInventory() {
-        // return this.saveService.printInventory();
-    }
-
-    saveExcel() {
-        // return this.saveService.saveExcel();
     }
 
     protected readonly isValidHttpUrl = isValidHttpUrl;
