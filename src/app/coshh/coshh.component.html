@@ -117,7 +117,7 @@
                                    [matAutocomplete]="autoNameNum">
                             <mat-autocomplete #autoNameNum="matAutocomplete">
                                 <mat-option
-                                        *ngFor="let nameOrNumber of chemicalService.nameOrNumberSearchOptions | async | slice : 0 : 10"
+                                        *ngFor="let nameOrNumber of nameOrNumberSearchOptions | async | slice : 0 : 10"
                                         [value]="nameOrNumber">
                                     {{nameOrNumber}}
                                 </mat-option>
@@ -136,7 +136,7 @@
                                    [formControl]="chemicalService.ownerSearchControl"
                                    [matAutocomplete]="autoOwner">
                             <mat-autocomplete #autoOwner="matAutocomplete">
-                                <mat-option *ngFor="let owner of chemicalService.ownerSearchOptions | async | slice : 0 : 10"
+                                <mat-option *ngFor="let owner of ownerSearchOptions | async | slice : 0 : 10"
                                             [value]="owner">
                                     {{owner}}
                                 </mat-option>
@@ -186,8 +186,9 @@
 <br/>
 
 <div class="table-container">
-    <table id="coshh-table" mat-table [dataSource]="tableData"
-           matSort (matSortChange)="announceSortChange($event)"
+    <table id="coshh-table"
+           mat-table [dataSource]="tableData"
+           matSort
            class="mat-elevation-z8"
            matSortDisableClear="true">
 

@@ -1,18 +1,19 @@
 import * as moment from 'moment';
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 
 import autoTable from 'jspdf-autotable';
-import { createExcelData, createPDFData } from '../utility/utilities';
-import { columnsForExport } from '../coshh/types';
+import {createExcelData, createPDFData} from '../utility/utilities';
+import {columnsForExport} from '../coshh/types';
 import jsPDF from 'jspdf';
 import writeXlsxFile from 'write-excel-file';
-import { ChemicalService } from './chemical-service.service';
+import {ChemicalService} from './chemical-service.service';
 
 @Injectable({
     providedIn: 'root'
 })
-export class SaveService{
-    constructor(public chemicalService: ChemicalService) {}
+export class SaveService {
+    constructor(public chemicalService: ChemicalService) {
+    }
 
     // attempts to use css @media query to set print options programmatically were unsuccessful
     // in the print dialog window the user will need to change the orientation to landscape and the scale to 50% for
@@ -23,10 +24,8 @@ export class SaveService{
     }
 
     async saveExcel() {
-        const { data, columnOptions } = createExcelData(columnsForExport, 
+        const {data, columnOptions} = createExcelData(columnsForExport,
             this.chemicalService.getFilteredChemicals());
-        
-            console.log(data, columnOptions, 'data and columnOptions');
 
         await writeXlsxFile(data, {
             columns: columnOptions,
@@ -37,8 +36,6 @@ export class SaveService{
 
     savePDF() {
         const chemicalsToPrint = createPDFData(this.chemicalService.getFilteredChemicals());
-
-        console.log(chemicalsToPrint, 'chemicalsToPrint');
 
         const doc = new jsPDF('landscape');
 

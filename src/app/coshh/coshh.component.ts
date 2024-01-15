@@ -16,6 +16,7 @@ import { HazardService } from '../services/hazard-service.service';
 import { isValidHttpUrl, checkDuplicates } from '../utility/utilities';
 import { SaveService } from '../services/save-service.service';
 import { ScanChemicalComponent } from '../scan-chemical/scan-chemical.component';
+import {Observable} from "rxjs";
 
 
 @Component({
@@ -53,7 +54,6 @@ export class CoshhComponent implements OnInit {
             });
 
             dialog.afterClosed().subscribe(() => {
-                this.refresh();
                 this.scannedBarcode = '';
                 this.dialogOpen = false;
             });
@@ -79,6 +79,8 @@ export class CoshhComponent implements OnInit {
     freezeColumns = false;
     isAuthenticated$ = this.authService.isAuthenticated$;
     loggedInUser: string = '';
+    nameOrNumberSearchOptions: Observable<string[]> = new Observable();
+    ownerSearchOptions: Observable<string[]> = new Observable();
     tableData!: MatTableDataSource<Chemical>;
     users: string[] = [];
 
@@ -90,7 +92,9 @@ export class CoshhComponent implements OnInit {
 
 
     ngOnInit(): void {
-        this.tableData = new MatTableDataSource<Chemical>(this.chemicalService.getFilteredChemicals());
+        this.ownerSearchOptions = this.chemicalService.getOwnerSearchObservable();
+        this.nameOrNumberSearchOptions = this.chemicalService.getNameOrNumberSearchObservable();
+        this.tableData = new MatTableDataSource();
         this.chemicalService.filteredChemicals$
             .subscribe((filteredChemicals) => {
                 this.tableData.data = filteredChemicals;
@@ -103,11 +107,6 @@ export class CoshhComponent implements OnInit {
         });
     }
 
-
-    refresh(): void {
-        this.tableData.data = this.chemicalService.getFilteredChemicals();
-        this.refreshCupboardsFilterList();
-    }
 
     /**
      * Show only cupboards for currently selected lab. If 'All' labs it will show cupboards currently used over all the chemicals.
@@ -132,37 +131,8 @@ export class CoshhComponent implements OnInit {
     }
 
 
-    // set the activated property of all hazards other than the passed hazard to false and clear hazards from the passed chemical
-    singleSelect(chemical: Chemical, hazardName: Hazard): Chemical {
-        chemical.hazards = [hazardName];
-        chemical.hazardList.forEach((hl) => {
-            if (hl.title !== hazardName) {
-                hl.activated = false;
-            }
-        });
-
-        return chemical;
-    }
-
-
-    // TODO should we remove this as we don;t use assistive technology anywhere else in the app (this will have ben copied from the Angular docs...)
-    /** Announce the change in sort state for assistive technology. */
-    announceSortChange(sortState: Sort) {
-        // This example uses English messages. If your application supports
-        // multiple language, you would internationalize these strings.
-        // Furthermore, you can customize the message to add additional
-        // details about the values being sorted.
-        if (sortState.direction) {
-            this._liveAnnouncer.announce(`Sorted ${sortState.direction}ending`);
-        } else {
-            this._liveAnnouncer.announce('Sorting cleared');
-        }
-    }
-
-
     tooltipText = () => {
         const numberOfChemicals = this.chemicalService.getFilteredChemicals().length;
-
         const chemicalOrChemicals = numberOfChemicals === 1 ? 'chemical' : 'chemicals';
 
         return `${numberOfChemicals} ${chemicalOrChemicals} found with current filters`;

@@ -1,15 +1,14 @@
 import * as moment from 'moment';
-import { AuthService } from '@auth0/auth0-angular';
-import { BehaviorSubject, combineLatest, Observable, startWith } from 'rxjs';
-import { debounceTime, map } from 'rxjs/operators';
-import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { MatTableDataSource } from '@angular/material/table';
-import { UntypedFormControl } from '@angular/forms';
+import {AuthService} from '@auth0/auth0-angular';
+import {BehaviorSubject, combineLatest, Observable, startWith} from 'rxjs';
+import {debounceTime, map} from 'rxjs/operators';
+import {HttpClient} from '@angular/common/http';
+import {Injectable} from '@angular/core';
+import {UntypedFormControl} from '@angular/forms';
 
-import { Chemical, ExpiryColor, yellow, red, Expiry } from '../coshh/types';
-import { environment } from 'src/environments/environment';
-import { HazardService } from './hazard-service.service';
+import {Chemical, ExpiryColor, yellow, red, Expiry} from '../coshh/types';
+import {environment} from 'src/environments/environment';
+import {HazardService} from './hazard-service.service';
 
 
 @Injectable({
@@ -20,7 +19,6 @@ export class ChemicalService {
     private readonly allChemicals$: BehaviorSubject<Chemical[]> = new BehaviorSubject<Chemical[]>([]);
     readonly filteredChemicals$: BehaviorSubject<Chemical[]> = new BehaviorSubject<Chemical[]>([]);
     loggedInUser = '';
-    tableData = new MatTableDataSource<Chemical>(); // data source for table
 
     // TODO move these into a filter service?
     cupboardFilterControl = new UntypedFormControl('All');
@@ -33,10 +31,10 @@ export class ChemicalService {
     labFilterValues: string[] = [];
 
     nameOrNumberSearchOptions: Observable<string[]> = new Observable();
-    nameOrNumberSearchControl = new UntypedFormControl();
+    nameOrNumberSearchControl = new UntypedFormControl('');
 
     ownerSearchOptions: Observable<string[]> = new Observable();
-    ownerSearchControl = new UntypedFormControl();
+    ownerSearchControl = new UntypedFormControl('');
 
     toggleArchiveControl = new UntypedFormControl(false);
 
@@ -47,12 +45,11 @@ export class ChemicalService {
         this.getChemicals();
         this.getLabs();
         this.getCupboards();
-        // TODO does this function serve a purpose?
-        this.getExpiryFilterValues();
 
         this.authService.user$.subscribe((user) => {
             this.loggedInUser = user?.email ?? '';
         });
+
 
         combineLatest([
             this.hazardService.hazardFilterControl,
@@ -74,7 +71,6 @@ export class ChemicalService {
                     this.nameOrNumberSearchControl.value ?? '',
                     this.ownerSearchControl.value ?? ''
                 );
-                this.tableData.data = this.getFilteredChemicals();
             });
     }
 
@@ -116,10 +112,6 @@ export class ChemicalService {
         });
     }
 
-
-    getExpiryFilterValues(): string[] {
-        return this.expiryFilterValues;
-    }
 
 
     // TODO move this to a filter service?
@@ -185,9 +177,11 @@ export class ChemicalService {
         const timeUntilExpiry = this.daysUntilExpiry(chemical);
 
         if (timeUntilExpiry < 30 && timeUntilExpiry > 0) {
+
             return yellow;
         }
         if (timeUntilExpiry <= 0) {
+
             return red;
         }
 
@@ -218,7 +212,6 @@ export class ChemicalService {
     }
 
 
-    // TODO do we need these 2 functions at all?
     getNameOrNumberSearchObservable(): Observable<string[]> {
 
         return this.nameOrNumberSearchControl.valueChanges.pipe(
@@ -278,9 +271,6 @@ export class ChemicalService {
             addedChemical.backgroundColour = this.getExpiryColour(addedChemical);
             this.setAllChemicals(this.getAllChemicals().concat(addedChemical));
             this.setFilteredChemicals(this.getFilteredChemicals().concat(addedChemical));
-            // TODO do we actually need to do this?
-            // this.nameOrNumberSearchOptions = this.getNameOrNumberSearchObservable();
-            // this.ownerSearchOptions = this.getOwnerSearchObservable();
         });
 
     }
@@ -293,9 +283,6 @@ export class ChemicalService {
         this.updateChemical(chemical);
         this.hazardService.updateHazards(chemical);
         this.update(chemical);
-        // TODO do we actually need to do this?
-        // this.nameOrNumberSearchOptions = this.getNameOrNumberSearchObservable();
-        // this.ownerSearchOptions = this.getOwnerSearchObservable();
     }
 
 
