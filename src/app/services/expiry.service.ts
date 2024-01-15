@@ -1,7 +1,7 @@
-import * as moment from "moment";
+import * as moment from 'moment';
 import { Injectable } from '@angular/core';
 
-import {Chemical, Expiry, ExpiryColor, red, yellow} from "../coshh/types";
+import { Chemical, Expiry, ExpiryColor, red, yellow } from '../coshh/types';
 
 @Injectable({
   providedIn: 'root'

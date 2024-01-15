@@ -1,12 +1,12 @@
 import * as moment from 'moment';
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 
 import autoTable from 'jspdf-autotable';
-import {createExcelData, createPDFData} from '../utility/utilities';
-import {columnsForExport} from '../coshh/types';
+import { createExcelData, createPDFData } from '../utility/utilities';
+import { columnsForExport } from '../coshh/types';
 import jsPDF from 'jspdf';
 import writeXlsxFile from 'write-excel-file';
-import {ChemicalService} from './chemical-service.service';
+import { ChemicalService } from './chemical.service';
 
 @Injectable({
     providedIn: 'root'
@@ -24,7 +24,7 @@ export class SaveService {
     }
 
     async saveExcel() {
-        const {data, columnOptions} = createExcelData(columnsForExport,
+        const { data, columnOptions } = createExcelData(columnsForExport,
             this.chemicalService.getFilteredChemicals());
 
         await writeXlsxFile(data, {
