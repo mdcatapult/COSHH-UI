@@ -1,15 +1,15 @@
 import * as moment from 'moment';
-import {AuthService} from '@auth0/auth0-angular';
-import {BehaviorSubject, combineLatest, Observable, startWith} from 'rxjs';
-import {debounceTime, map} from 'rxjs/operators';
-import {HttpClient} from '@angular/common/http';
-import {Injectable} from '@angular/core';
-import {MatTableDataSource} from '@angular/material/table';
-import {UntypedFormControl} from '@angular/forms';
+import { AuthService } from '@auth0/auth0-angular';
+import { BehaviorSubject, combineLatest, Observable, startWith } from 'rxjs';
+import { debounceTime, map } from 'rxjs/operators';
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { MatTableDataSource } from '@angular/material/table';
+import { UntypedFormControl } from '@angular/forms';
 
-import {Chemical, ExpiryColor, yellow, red, Expiry} from '../coshh/types';
-import {environment} from 'src/environments/environment';
-import {HazardService} from './hazard-service.service';
+import { Chemical, ExpiryColor, yellow, red, Expiry } from '../coshh/types';
+import { environment } from 'src/environments/environment';
+import { HazardService } from './hazard-service.service';
 
 
 @Injectable({
@@ -132,6 +132,7 @@ export class ChemicalService {
                        ownerSearchStr: string): Chemical[] => {
 
         const nameOrNumberSearchLower = nameOrNumberSearchStr.toLowerCase();
+
         const ownerSearchLower = ownerSearchStr.toLowerCase();
 
         const filteredChemicals = this.getAllChemicals()
@@ -300,7 +301,9 @@ export class ChemicalService {
 
     update = (chemical: Chemical) => {
         const chemicalIndex = this.getAllChemicals().findIndex((chem) => chem.id === chemical.id);
+
         const allUpdatedChemicals = this.getAllChemicals();
+
         allUpdatedChemicals[chemicalIndex] = chemical;
         this.setAllChemicals(allUpdatedChemicals);
         this.filterChemicals(

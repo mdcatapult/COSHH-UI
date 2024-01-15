@@ -1,21 +1,21 @@
-import {AuthService} from '@auth0/auth0-angular';
-import {Component, HostListener, OnInit, ViewChild} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {LiveAnnouncer} from '@angular/cdk/a11y';
-import {MatDialog} from '@angular/material/dialog';
-import {MatSort, Sort} from '@angular/material/sort';
-import {UntypedFormBuilder} from '@angular/forms';
-import {MatTableDataSource} from '@angular/material/table';
+import { AuthService } from '@auth0/auth0-angular';
+import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { LiveAnnouncer } from '@angular/cdk/a11y';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSort, Sort } from '@angular/material/sort';
+import { UntypedFormBuilder } from '@angular/forms';
+import { MatTableDataSource } from '@angular/material/table';
 
-import {Chemical, columnTypes, Hazard} from './types';
+import { Chemical, columnTypes, Hazard } from './types';
 // environment.ts is added at compile time by npm run start command
-import {environment} from 'src/environments/environment';
-import {ChemicalService} from '../services/chemical-service.service';
-import {FilterService} from '../filter.service';
-import {HazardService} from '../services/hazard-service.service';
-import {isValidHttpUrl, checkDuplicates} from '../utility/utilities';
-import {SaveService} from '../services/save-service.service';
-import {ScanChemicalComponent} from '../scan-chemical/scan-chemical.component';
+import { environment } from 'src/environments/environment';
+import { ChemicalService } from '../services/chemical-service.service';
+import { FilterService } from '../filter.service';
+import { HazardService } from '../services/hazard-service.service';
+import { isValidHttpUrl, checkDuplicates } from '../utility/utilities';
+import { SaveService } from '../services/save-service.service';
+import { ScanChemicalComponent } from '../scan-chemical/scan-chemical.component';
 
 
 @Component({
@@ -162,6 +162,7 @@ export class CoshhComponent implements OnInit {
 
     tooltipText = () => {
         const numberOfChemicals = this.chemicalService.getFilteredChemicals().length;
+
         const chemicalOrChemicals = numberOfChemicals === 1 ? 'chemical' : 'chemicals';
 
         return `${numberOfChemicals} ${chemicalOrChemicals} found with current filters`;
