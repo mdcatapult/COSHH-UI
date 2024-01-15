@@ -6,8 +6,9 @@ import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {UntypedFormControl} from '@angular/forms';
 
-import {Chemical, ExpiryColor, yellow, red, Expiry} from '../coshh/types';
+import {Chemical, Expiry} from '../coshh/types';
 import {environment} from 'src/environments/environment';
+import {ExpiryService} from "./expiry.service";
 import {HazardService} from './hazard-service.service';
 
 
@@ -40,7 +41,8 @@ export class ChemicalService {
 
     constructor(private http: HttpClient,
                 private authService: AuthService,
-                private hazardService: HazardService) {
+                private hazardService: HazardService,
+                private expiryService: ExpiryService) {
 
         this.getChemicals();
         this.getLabs();
@@ -133,7 +135,7 @@ export class ChemicalService {
             .filter((chemical) => hazardCategory === 'All' ||
                 chemical.hazards?.map((hazard) => hazard.toString()).includes(hazardCategory))
             .filter((chemical) => lab === 'All' || chemical.location === lab)
-            .filter((chemical) => this.filterExpiryDate(chemical, expiry))
+            .filter((chemical) => this.expiryService.filterExpiryDate(chemical, expiry))
             .filter((chemical) => chemical.name.toLowerCase().includes(nameOrNumberSearchLower) || chemical.chemicalNumber?.toLowerCase().includes(nameOrNumberSearchLower))
             // // only filter if ownerSearchStr is not empty - this handles null values which we want to filter out only
             // // if the user has entered a value in the owner filter
@@ -161,54 +163,13 @@ export class ChemicalService {
         this.http.get<Chemical[]>(`${environment.backendUrl}/chemicals`).subscribe((chemicals: Chemical[]) => {
             chemicals = chemicals.map((chemical) => {
                 chemical.hazardList = this.hazardService.getHazardListForChemical(chemical);
-                chemical.backgroundColour = this.getExpiryColour(chemical);
+                chemical.backgroundColour = this.expiryService.getExpiryColour(chemical);
 
                 return chemical;
             });
             this.setAllChemicals(chemicals);
             this.setFilteredChemicals(chemicals);
         });
-    }
-
-
-    // TODO move these functions to an expiry service?
-    getExpiryColour(chemical: Chemical): ExpiryColor {
-
-        const timeUntilExpiry = this.daysUntilExpiry(chemical);
-
-        if (timeUntilExpiry < 30 && timeUntilExpiry > 0) {
-
-            return yellow;
-        }
-        if (timeUntilExpiry <= 0) {
-
-            return red;
-        }
-
-        return '';
-    }
-
-
-    private daysUntilExpiry(chemical: Chemical): number {
-        return moment(chemical.expiry).startOf('day').diff(moment().startOf('day'), 'days');
-    }
-
-
-    filterExpiryDate(chemical: Chemical, expiry: Expiry): boolean {
-
-        const timeUntilExpiry = this.daysUntilExpiry(chemical);
-
-        switch (expiry) {
-            case 'Any':
-
-                return true;
-            case '< 30 Days':
-
-                return timeUntilExpiry < 30 && timeUntilExpiry > 0;
-            case 'Expired':
-
-                return timeUntilExpiry <= 0;
-        }
     }
 
 
@@ -268,7 +229,7 @@ export class ChemicalService {
         chemical.cupboard = chemical.cupboard?.toLowerCase().trim();
         this.http.post<Chemical>(`${environment.backendUrl}/chemical`, chemical).subscribe((addedChemical: Chemical) => {
             addedChemical.hazardList = this.hazardService.getHazardListForChemical(addedChemical);
-            addedChemical.backgroundColour = this.getExpiryColour(addedChemical);
+            addedChemical.backgroundColour = this.expiryService.getExpiryColour(addedChemical);
             this.setAllChemicals(this.getAllChemicals().concat(addedChemical));
             this.setFilteredChemicals(this.getFilteredChemicals().concat(addedChemical));
         });
@@ -278,7 +239,7 @@ export class ChemicalService {
 
     onChemicalEdited(chemical: Chemical): void {
         chemical.hazardList = this.hazardService.getHazardListForChemical(chemical);
-        chemical.backgroundColour = this.getExpiryColour(chemical);
+        chemical.backgroundColour = this.expiryService.getExpiryColour(chemical);
         chemical.lastUpdatedBy = this.loggedInUser;
         this.updateChemical(chemical);
         this.hazardService.updateHazards(chemical);
@@ -312,7 +273,7 @@ export class ChemicalService {
         this.http.put(`${environment.backendUrl}/chemical`, chemical).pipe(
             debounceTime(100)
         ).subscribe(() => {
-            chemical.backgroundColour = this.getExpiryColour(chemical);
+            chemical.backgroundColour = this.expiryService.getExpiryColour(chemical);
         });
     }
 

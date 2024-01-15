@@ -11,7 +11,7 @@ import { Chemical, columnTypes, Hazard } from './types';
 // environment.ts is added at compile time by npm run start command
 import { environment } from 'src/environments/environment';
 import { ChemicalService } from '../services/chemical-service.service';
-import { FilterService } from '../filter.service';
+import { FilterService } from '../services/filter.service';
 import { HazardService } from '../services/hazard-service.service';
 import { isValidHttpUrl, checkDuplicates } from '../utility/utilities';
 import { SaveService } from '../services/save-service.service';
