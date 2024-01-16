@@ -32,25 +32,7 @@ export type Expiry = 'Any' | '< 30 Days' | 'Expired'
 
 export type ExpiryColor = '' | typeof yellow | typeof red
 export const yellow = 'rgb(255,255,0,0.6)'; 
-export const red = 'rgb(255,0,0,0.6)'; 
-
-export const columnTypes = [
-    'added',
-    'archive',
-    'casNumber',
-    'chemicalNumber',
-    'coshhLink',
-    'cupboard',
-    'expiry',
-    'hazards',
-    'location',
-    'matterState',
-    'name',
-    'owner',
-    'quantity',
-    'safetyDataSheet',
-    'storageTemp'
-];
+export const red = 'rgb(255,0,0,0.6)';
 
 export function allHazards(): Hazard[] {
     return ALL_HAZARDS.map((e) => e);

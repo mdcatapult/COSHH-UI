@@ -1,12 +1,12 @@
 import { AuthService } from '@auth0/auth0-angular';
 import { BehaviorSubject, combineLatest, Observable, startWith } from 'rxjs';
-import { debounceTime, map } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
 
+import { allHazards, Chemical, Expiry } from '../coshh/types';
 import { checkDuplicates } from '../utility/utilities';
-import {allHazards, Chemical, Expiry} from '../coshh/types';
 import { environment } from 'src/environments/environment';
 import { ExpiryService } from './expiry.service';
 import { DataService } from './data.service';
@@ -54,18 +54,28 @@ export class ChemicalService {
         // colour based on the expiry date
         this.filterService.getChemicals()
             .subscribe((response) => {
-            const chemicals = response.map((chemical) => {
-                chemical.hazardList = this.hazardService.getHazardListForChemical(chemical);
-                chemical.backgroundColour = this.expiryService.getExpiryColour(chemical);
+                const chemicals = response.map((chemical) => {
+                    chemical.hazardList = this.hazardService.getHazardListForChemical(chemical);
+                    chemical.backgroundColour = this.expiryService.getExpiryColour(chemical);
 
-                return chemical;
+                    return chemical;
+                });
+
+                //set chemicals in state
+                this.setAllChemicals(chemicals);
+                // apply default filters
+                const filteredChemicals = this.filterChemicals(
+                    this.toggleArchiveControl.value,
+                    this.cupboardFilterControl.value,
+                    this.hazardFilterControl.value,
+                    this.labFilterControl.value,
+                    this.expiryFilterControl.value,
+                    this.nameOrNumberSearchControl.value ?? '',
+                    this.ownerSearchControl.value ?? ''
+                );
+                // set filtered chemicals in state
+                this.setFilteredChemicals(filteredChemicals);
             });
-
-            //set chemicals in state - filteredChemicals$ and allChemicals$ are identical at this stage as the only default
-            // filter is to display only non-archived chemicals
-            this.setAllChemicals(chemicals);
-            this.setFilteredChemicals(chemicals);
-        });
 
         // get labs from the API and set the filter values in the subscription
         this.filterService.getLabs()
@@ -76,18 +86,18 @@ export class ChemicalService {
         // get cupboards from the API and set the filter values in the subscription
         this.filterService.getCupboards()
             .subscribe((cupboards) => {
-            this.cupboardFilterValues = cupboards.concat('All');
-        });
+                this.cupboardFilterValues = cupboards.concat('All');
+            });
 
         // set up subscription to Auth0 authService to check whether the user is logged in and get their email address if so
         this.authService.user$
             .subscribe((user) => {
-            this.loggedInUser = user?.email ?? '';
-        });
+                this.loggedInUser = user?.email ?? '';
+            });
 
         // get the latest value of all the filters
         combineLatest([
-            this.hazardService.hazardFilterControl,
+            this.hazardFilterControl,
             this.cupboardFilterControl,
             this.labFilterControl,
             this.expiryFilterControl,
@@ -98,7 +108,7 @@ export class ChemicalService {
             .map((control) => control.valueChanges.pipe(startWith(control.value))))
             .subscribe(() => {
                 // filter the chemicals based on the latest values of the filters
-                this.filterChemicals(
+                const filteredChemicals = this.filterChemicals(
                     this.toggleArchiveControl.value,
                     this.cupboardFilterControl.value,
                     this.hazardFilterControl.value,
@@ -107,8 +117,11 @@ export class ChemicalService {
                     this.nameOrNumberSearchControl.value ?? '',
                     this.ownerSearchControl.value ?? ''
                 );
-              // refresh the list of options for the cupboards search box
-              this.refreshCupboardsFilterList();
+
+                // set updated filtered chemicals in state
+                this.setFilteredChemicals(filteredChemicals);
+                // refresh the list of options for the cupboards search box
+                this.refreshCupboardsFilterList();
             });
     }
 
@@ -183,9 +196,10 @@ export class ChemicalService {
                        ownerSearchStr: string): Chemical[] => {
 
         const nameOrNumberSearchLower = nameOrNumberSearchStr.toLowerCase();
+
         const ownerSearchLower = ownerSearchStr.toLowerCase();
 
-        const filteredChemicals = this.getAllChemicals()
+        return this.getAllChemicals()
             .filter((chemical) => includeArchived || !chemical.isArchived)
             .filter((chemical) => cupboard === 'All' || chemical.cupboard?.toLowerCase().trim() === cupboard) // Note that cupboard is now set to lower case
             .filter((chemical) => hazardCategory === 'All' ||
@@ -208,11 +222,6 @@ export class ChemicalService {
 
                 return 0;
             });
-
-        // TODO don't do this in the same function - set filtered chemicals from where this is called
-        this.setFilteredChemicals(filteredChemicals);
-
-        return filteredChemicals;
     };
 
 
@@ -300,11 +309,13 @@ export class ChemicalService {
     update = (chemical: Chemical) => {
         // find the index of the chemical which has been updated in the array of all chemicals
         const chemicalIndex = this.getAllChemicals().findIndex((chem) => chem.id === chemical.id);
+
         // update that chemical in the array of all chemicals and then re-filter and set filtered chemicals
         const allUpdatedChemicals = this.getAllChemicals();
+
         allUpdatedChemicals[chemicalIndex] = chemical;
         this.setAllChemicals(allUpdatedChemicals);
-        this.filterChemicals(
+        const filteredChemicals = this.filterChemicals(
             this.toggleArchiveControl.value,
             this.cupboardFilterControl.value,
             this.hazardFilterControl.value,
@@ -313,6 +324,8 @@ export class ChemicalService {
             this.nameOrNumberSearchControl.value ?? '',
             this.ownerSearchControl.value ?? ''
         );
+
+        this.setFilteredChemicals(filteredChemicals);
     };
 
 
@@ -326,13 +339,10 @@ export class ChemicalService {
         // Lower case and remove trailing spaces from the cupboard name to make filtering and data integrity better
         chemical.cupboard = chemical.cupboard?.toLowerCase().trim();
         chemical.lastUpdatedBy = this.loggedInUser;
-        // TODO do we need to debounce?  I have a feeling this is a hangover from when each table row was a form which could
-        //  be edited inline and the chemical was updated on each key press
-        this.http.put(`${environment.backendUrl}/chemical`, chemical).pipe(
-            debounceTime(100)
-        ).subscribe(() => {
-            chemical.backgroundColour = this.expiryService.getExpiryColour(chemical);
-        });
+        this.http.put(`${environment.backendUrl}/chemical`, chemical)
+            .subscribe(() => {
+                chemical.backgroundColour = this.expiryService.getExpiryColour(chemical);
+            });
     };
 
 }

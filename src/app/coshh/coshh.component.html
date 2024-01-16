@@ -98,8 +98,8 @@
                     <div class="filter-control">
                         <mat-form-field>
                             <mat-label>Filter by hazard</mat-label>
-                            <mat-select (focus)="scanningMode = false" required [formControl]="hazardService.hazardFilterControl">
-                                <mat-option *ngFor="let hazard of hazardService.hazardFilterValues"
+                            <mat-select (focus)="scanningMode = false" required [formControl]="chemicalService.hazardFilterControl">
+                                <mat-option *ngFor="let hazard of chemicalService.hazardFilterValues"
                                             [value]="hazard">{{hazard}}</mat-option>
                             </mat-select>
                         </mat-form-field>

@@ -1,7 +1,6 @@
 import { debounceTime } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { UntypedFormControl } from '@angular/forms';
 
 import { allHazards } from '../coshh/types';
 import { Chemical } from '../coshh/types';
@@ -39,17 +38,11 @@ export class HazardService {
             default:
                 return 'assets/unknown.jpg';
         }
-    }
+    };
     
 
-    // TODO do we need to debounce here?  Can we get rid of the subscription altogether?
     updateHazards = (chemical: Chemical): void => {
-        this.http.put(`${environment.backendUrl}/hazards`, chemical).pipe(
-            debounceTime(100)
-        ).subscribe((changes) => {
-            console.log(changes, 'changes');
-            console.log(chemical, 'chemical');
-        });
+        this.http.put(`${environment.backendUrl}/hazards`, chemical)
     };
 
 

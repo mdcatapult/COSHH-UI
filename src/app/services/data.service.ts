@@ -1,10 +1,10 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 
 import { Chemical } from '../coshh/types';
 // environment.ts is added at compile time by npm run start command
 import { environment } from '../../environments/environment';
-import {Observable} from "rxjs";
 
 @Injectable({
     providedIn: 'root'

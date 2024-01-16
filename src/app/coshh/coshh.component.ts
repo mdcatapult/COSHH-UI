@@ -1,19 +1,17 @@
 import { AuthService } from '@auth0/auth0-angular';
 import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSort } from '@angular/material/sort';
-import { UntypedFormBuilder } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
+import { Observable } from 'rxjs';
 
-import { Chemical, columnTypes } from './types';
+import { Chemical } from './types';
 import { ChemicalService } from '../services/chemical.service';
 import { DataService } from '../services/data.service';
 import { HazardService } from '../services/hazard.service';
 import { isValidHttpUrl } from '../utility/utilities';
 import { SaveService } from '../services/save.service';
 import { ScanChemicalComponent } from '../scan-chemical/scan-chemical.component';
-import { Observable } from 'rxjs';
 
 
 @Component({
@@ -60,26 +58,20 @@ export class CoshhComponent implements OnInit {
     constructor(private authService: AuthService,
                 public chemicalService: ChemicalService,
                 public dialog: MatDialog,
-                private fb: UntypedFormBuilder,
                 private filterService: DataService,
                 public hazardService: HazardService,
-                private http: HttpClient,
                 public saveService: SaveService) {
 
     }
 
-    // TODO this is unused
-    columns: string[] = columnTypes; // columns to display in table
-    cupboards: string[] = [];
-    // TODO can we just refer directly to columnTypes now that it is ordered?
     // N.B. the order of the columns in the displayedColumns array determines the order of the columns in the table
     displayedColumns = ['buttons', 'casNumber', 'name', 'hazards', 'location', 'cupboard', 'chemicalNumber', 'matterState',
         'quantity', 'added', 'expiry', 'safetyDataSheet', 'coshhLink', 'storageTemp', 'owner'];
     freezeColumns = false;
     isAuthenticated$ = this.authService.isAuthenticated$;
     loggedInUser: string = '';
-    nameOrNumberSearchOptions: Observable<string[]>;
-    ownerSearchOptions: Observable<string[]>;
+    nameOrNumberSearchOptions: Observable<string[]> = new Observable<string[]>();
+    ownerSearchOptions: Observable<string[]> = new Observable<string[]>();
     tableData!: MatTableDataSource<Chemical>;
     users: string[] = [];
 
