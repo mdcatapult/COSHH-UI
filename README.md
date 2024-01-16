@@ -47,7 +47,7 @@ Go to `http://localhost:4200` in your browser.
 ### CI Environment Variables
 
 Different env vars are used by the `publish-ui` and `publish-ui-master` stages so that the correct Auth0 details are passed in to the docker image.
-Development and branches:
+Development and feature branches:
 ```bash
 CLIENT_ORIGIN_URL: "$DEV_CLIENT_ORIGIN_URL"
 AUTH0_DOMAIN: "$DEV_AUTH0_DOMAIN"
@@ -56,7 +56,7 @@ AUTH0_CLIENT_ID: "$DEV_AUTH0_CLIENT_ID"
 DEPLOYMENT_ENV: "dev"
 BACKEND_URL: "$DEV_BACKEND_URL"
 ```
-Master:
+Main:
 ```bash
 CLIENT_ORIGIN_URL: "$PROD_CLIENT_ORIGIN_URL"
 AUTH0_DOMAIN: "$PROD_AUTH0_DOMAIN"
@@ -88,8 +88,22 @@ The save service contains functions to print and save the table.
 The hazard service contains functions retrieving the hazard icons for a particular hazard and updating the hazards and
 retrieving a hazard list for a particular chemical (hazards are stored in a separate table in the database).
 
+The scanning service handles logic relating to barcode scanning and the dialog windows which open once a code has been
+scanned.
+
 ### Scanning mode
-TODO write this section
+Scanning mode is activated by clicking the scan button in the nav bar.  This effectively activates a listener which allows
+the user to scan a barcode in order to archive a chemical.
+
+If the scanned  barcode corresponds to a chemical number in the database a dialog opens prompting the user to confirm that
+they would like to archive that chemical.  If the scanned barcode does not correspond to any chemical within the database,
+or belongs to a chemical which has already been archived, a dialog wll notify the user of this.
+
+
+A barcode scanner works like a keyboard, i.e. it does not interpret what the barcode is, it just ‘types’ out a string of
+alpha-numeric characters that the barcode represents, ending with 'Enter'.  The coshh component contains a listener for
+the 'Enter' key.  The scan button is automatically disabled when the user clicks on any filters or checkboxes, to avoid
+any scanned numbers appearing in those inputs should focus be on those elements.
 
 ### Attributions
 
