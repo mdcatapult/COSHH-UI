@@ -1,6 +1,5 @@
 import { AuthService } from '@auth0/auth0-angular';
 import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Observable } from 'rxjs';
@@ -11,7 +10,7 @@ import { DataService } from '../services/data.service';
 import { HazardService } from '../services/hazard.service';
 import { isValidHttpUrl } from '../utility/utilities';
 import { SaveService } from '../services/save.service';
-import { ScanChemicalComponent } from '../scan-chemical/scan-chemical.component';
+import { ScanningService } from '../services/scanning.service';
 
 
 @Component({
@@ -21,46 +20,12 @@ import { ScanChemicalComponent } from '../scan-chemical/scan-chemical.component'
 })
 export class CoshhComponent implements OnInit {
 
-    // TODO move these functions into a scanning service?
-    scanningMode: boolean = false;
-    private scannedBarcode: string = '';
-    dialogOpen: boolean = false;
-
-    onDialogOpen(v: boolean): void {
-        this.dialogOpen = v;
-        this.scanningMode = !v;
-    }
-
-
-    barcodeScanned = () => {
-        if (!this.dialogOpen) {
-            const dialog = this.dialog.open(ScanChemicalComponent, {
-                width: '20vw',
-                data: {
-                    chemicalNumber: this.scannedBarcode,
-                    chemical: this.chemicalService.getAllChemicals()
-                        .find((chemical) => chemical.chemicalNumber === this.scannedBarcode),
-                    archive: this.chemicalService.updateChemical
-                }
-            });
-
-            dialog.afterOpened().subscribe(() => {
-                this.dialogOpen = true;
-            });
-
-            dialog.afterClosed().subscribe(() => {
-                this.scannedBarcode = '';
-                this.dialogOpen = false;
-            });
-        }
-    };
-
     constructor(private authService: AuthService,
                 public chemicalService: ChemicalService,
-                public dialog: MatDialog,
                 private filterService: DataService,
                 public hazardService: HazardService,
-                public saveService: SaveService) {
+                public saveService: SaveService,
+                public scanningService: ScanningService) {
 
     }
 
@@ -77,8 +42,14 @@ export class CoshhComponent implements OnInit {
 
     @HostListener('window:keypress', ['$event'])
     keyEvent(event: KeyboardEvent): void {
-        event.key === 'Enter' && this.scanningMode ? this.barcodeScanned() : this.scannedBarcode += event.key;
+        // disregard any key presses if not in scanning mode
+        if (!this.scanningService.scanningMode) return;
+        // barcode scanners work as inputs, so scanning a barcode will be the same as typing the numbers in and hitting
+        // enter, so we listen for the enter key and treat it as a barcode scan
+        event.key === 'Enter' ? this.scanningService.barcodeScanned()
+            : this.scanningService.scannedBarcode += event.key;
     }
+
     @ViewChild(MatSort) sort!: MatSort;
 
 
@@ -102,6 +73,7 @@ export class CoshhComponent implements OnInit {
 
     tooltipText = () => {
         const numberOfChemicals = this.chemicalService.getFilteredChemicals().length;
+
         const chemicalOrChemicals = numberOfChemicals === 1 ? 'chemical' : 'chemicals';
 
         return `${numberOfChemicals} ${chemicalOrChemicals} found with current filters`;

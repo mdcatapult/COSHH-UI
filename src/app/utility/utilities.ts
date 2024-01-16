@@ -16,6 +16,7 @@ export function getAutocompleteObservable(formControl: UntypedFormControl, data:
     );
 }
 
+// TODO move this into the save service
 export function createExcelData(columnNames: string[], chemicals: Chemical[]) {
     const HEADER_ROW: SheetData = [columnNames.map((columnName) => {
 
@@ -47,6 +48,7 @@ export function createExcelData(columnNames: string[], chemicals: Chemical[]) {
     return { data, columnOptions };
 }
 
+// TODO move this into the save service
 export function createPDFData(chemicals: Chemical[]) {
     const dateTimePipe = new DateTimeFormatPipe();
 

@@ -1,4 +1,3 @@
-import { debounceTime } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
@@ -42,7 +41,7 @@ export class HazardService {
     
 
     updateHazards = (chemical: Chemical): void => {
-        this.http.put(`${environment.backendUrl}/hazards`, chemical)
+        this.http.put(`${environment.backendUrl}/hazards`, chemical);
     };
 
 

@@ -88,6 +88,8 @@ The save service contains functions to print and save the table.
 The hazard service contains functions retrieving the hazard icons for a particular hazard and updating the hazards and
 retrieving a hazard list for a particular chemical (hazards are stored in a separate table in the database).
 
+### Scanning mode
+TODO write this section
 
 ### Attributions
 

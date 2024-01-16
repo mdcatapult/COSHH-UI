@@ -73,6 +73,7 @@ export class ChemicalService {
                     this.nameOrNumberSearchControl.value ?? '',
                     this.ownerSearchControl.value ?? ''
                 );
+
                 // set filtered chemicals in state
                 this.setFilteredChemicals(filteredChemicals);
             });
