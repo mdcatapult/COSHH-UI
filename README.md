@@ -70,6 +70,27 @@ The CI stage `publish-ui-master` runs on a merge to `master` branch and uses the
 The CI stage `publish-ui` runs on `development` and other branches and uses `Dockerfile-dev` which runs `ng build --configuration=development`.  
 Change things like `PROD_CLIENT_ORIGIN_URL` in the gitlab repo via `settings>CI/CD>Variables` to whatever Auth0 settings the app needs to use.
 
+### Architecture
+The main page including the table and nav bar is in the coshh component.  This subscribes to `filteredChemicals$` in the
+chemicals service, which is the single source of truth where the chemicals retrieved from the API are stored in state and
+filtered.
+
+There are separate components for adding, cloning, editing and scanning chemicals, all of which use the chemical dialog
+component.
+
+The data service contains API calls and functions which return specific fields from the filtered chemicals list.
+
+The expiry service contains functions which determine the expiry status of chemicals and set the background colour of the
+chemicals (used in the expiry column) accordingly.
+
+The save service contains functions to print and save the table.
+
+The hazard service contains functions retrieving the hazard icons for a particular hazard and updating the hazards and
+retrieving a hazard list for a particular chemical (hazards are stored in a separate table in the database).
+
+
+
+
 ### Attributions
 
 <a href="https://www.flaticon.com/free-icons/flammable" title="flammable icons">Flammable icons created by Freepik - Flaticon</a>

@@ -6,7 +6,7 @@ import { Injectable } from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
 
 import { checkDuplicates } from '../utility/utilities';
-import { Chemical, Expiry } from '../coshh/types';
+import {allHazards, Chemical, Expiry} from '../coshh/types';
 import { environment } from 'src/environments/environment';
 import { ExpiryService } from './expiry.service';
 import { DataService } from './data.service';
@@ -29,6 +29,9 @@ export class ChemicalService {
 
     expiryFilterControl = new UntypedFormControl('Any');
     expiryFilterValues = ['Any', '< 30 Days', 'Expired'];
+
+    hazardFilterValues = (<string[]>allHazards()).concat('All');
+    hazardFilterControl = new UntypedFormControl('All');
 
     labFilterControl = new UntypedFormControl('All');
     labFilterValues: string[] = [];
@@ -98,7 +101,7 @@ export class ChemicalService {
                 this.filterChemicals(
                     this.toggleArchiveControl.value,
                     this.cupboardFilterControl.value,
-                    this.hazardService.hazardFilterControl.value,
+                    this.hazardFilterControl.value,
                     this.labFilterControl.value,
                     this.expiryFilterControl.value,
                     this.nameOrNumberSearchControl.value ?? '',
@@ -304,7 +307,7 @@ export class ChemicalService {
         this.filterChemicals(
             this.toggleArchiveControl.value,
             this.cupboardFilterControl.value,
-            this.hazardService.hazardFilterControl.value,
+            this.hazardFilterControl.value,
             this.labFilterControl.value,
             this.expiryFilterControl.value,
             this.nameOrNumberSearchControl.value ?? '',

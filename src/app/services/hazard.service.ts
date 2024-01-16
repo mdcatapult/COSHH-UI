@@ -14,10 +14,7 @@ import { Hazard } from '../coshh/types';
 export class HazardService {
     constructor(private http: HttpClient) { }
 
-    hazardFilterValues = (<string[]>allHazards()).concat('All');
-    hazardFilterControl = new UntypedFormControl('All');
-
-    getHazardPicture(hazard: Hazard): string {
+    getHazardPicture = (hazard: Hazard): string => {
         switch (hazard) {
             case 'Corrosive':
                 return 'assets/corrosive.jpg';
@@ -45,7 +42,8 @@ export class HazardService {
     }
     
 
-    updateHazards(chemical: Chemical): void {
+    // TODO do we need to debounce here?  Can we get rid of the subscription altogether?
+    updateHazards = (chemical: Chemical): void => {
         this.http.put(`${environment.backendUrl}/hazards`, chemical).pipe(
             debounceTime(100)
         ).subscribe((changes) => {
@@ -56,6 +54,7 @@ export class HazardService {
 
 
     getHazardListForChemical = (chemical: Chemical) => {
+
         return allHazards().map((hazard: Hazard) => {
             return {
                 title: hazard,
