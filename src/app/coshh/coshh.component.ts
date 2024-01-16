@@ -8,7 +8,7 @@ import { MatTableDataSource } from '@angular/material/table';
 
 import { Chemical, columnTypes } from './types';
 import { ChemicalService } from '../services/chemical.service';
-import { FilterService } from '../services/filter.service';
+import { DataService } from '../services/data.service';
 import { HazardService } from '../services/hazard.service';
 import { isValidHttpUrl } from '../utility/utilities';
 import { SaveService } from '../services/save.service';
@@ -61,22 +61,25 @@ export class CoshhComponent implements OnInit {
                 public chemicalService: ChemicalService,
                 public dialog: MatDialog,
                 private fb: UntypedFormBuilder,
-                private filterService: FilterService,
+                private filterService: DataService,
                 public hazardService: HazardService,
                 private http: HttpClient,
                 public saveService: SaveService) {
 
     }
 
+    // TODO this is unused
     columns: string[] = columnTypes; // columns to display in table
     cupboards: string[] = [];
+    // TODO can we just refer directly to columnTypes now that it is ordered?
+    // N.B. the order of the columns in the displayedColumns array determines the order of the columns in the table
     displayedColumns = ['buttons', 'casNumber', 'name', 'hazards', 'location', 'cupboard', 'chemicalNumber', 'matterState',
         'quantity', 'added', 'expiry', 'safetyDataSheet', 'coshhLink', 'storageTemp', 'owner'];
     freezeColumns = false;
     isAuthenticated$ = this.authService.isAuthenticated$;
     loggedInUser: string = '';
-    nameOrNumberSearchOptions: Observable<string[]> = new Observable();
-    ownerSearchOptions: Observable<string[]> = new Observable();
+    nameOrNumberSearchOptions: Observable<string[]>;
+    ownerSearchOptions: Observable<string[]>;
     tableData!: MatTableDataSource<Chemical>;
     users: string[] = [];
 
@@ -90,8 +93,9 @@ export class CoshhComponent implements OnInit {
     ngOnInit(): void {
         this.ownerSearchOptions = this.chemicalService.getOwnerSearchObservable();
         this.nameOrNumberSearchOptions = this.chemicalService.getNameOrNumberSearchObservable();
-        this.tableData = new MatTableDataSource();
 
+        this.tableData = new MatTableDataSource();
+        // subscribe to filteredChemicals$ and update and sort tableData when it changes
         this.chemicalService.filteredChemicals$
             .subscribe((filteredChemicals) => {
                 this.tableData.data = filteredChemicals;
@@ -106,7 +110,6 @@ export class CoshhComponent implements OnInit {
 
     tooltipText = () => {
         const numberOfChemicals = this.chemicalService.getFilteredChemicals().length;
-
         const chemicalOrChemicals = numberOfChemicals === 1 ? 'chemical' : 'chemicals';
 
         return `${numberOfChemicals} ${chemicalOrChemicals} found with current filters`;

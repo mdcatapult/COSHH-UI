@@ -35,21 +35,21 @@ export const yellow = 'rgb(255,255,0,0.6)';
 export const red = 'rgb(255,0,0,0.6)'; 
 
 export const columnTypes = [
+    'added',
+    'archive',
     'casNumber',
-    'name',
+    'chemicalNumber',
+    'coshhLink',
+    'cupboard',
+    'expiry',
     'hazards',
     'location',
-    'cupboard',
-    'chemicalNumber',
     'matterState',
-    'quantity',
-    'added',
-    'expiry',
-    'safetyDataSheet',
-    'coshhLink',
-    'storageTemp',
+    'name',
     'owner',
-    'archive'
+    'quantity',
+    'safetyDataSheet',
+    'storageTemp'
 ];
 
 export function allHazards(): Hazard[] {
