@@ -96,7 +96,7 @@ release-ui:
     variables:
       - "$CI_COMMIT_MESSAGE =~ /^Setting version to.*/"
 
-scan:
+sast:
   stage: test-lint-build
 include:
   - template: Security/Container-Scanning.gitlab-ci.yml
