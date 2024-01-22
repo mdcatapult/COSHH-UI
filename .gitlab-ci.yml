@@ -96,13 +96,26 @@ release-ui:
     variables:
       - "$CI_COMMIT_MESSAGE =~ /^Setting version to.*/"
 
+container_scanning:
+  stage: test-lint-build
+
+dependency_scanning:
+    stage: test-lint-build
+
 sast:
   stage: test-lint-build
+
+sast-iac:
+  stage: test-lint-build
+
+secret_detection:
+  stage: test-lint-build
+
 include:
-#  - template: Security/Container-Scanning.gitlab-ci.yml
-#  - template: Security/Dependency-Scanning.gitlab-ci.yml
+  - template: Security/Container-Scanning.gitlab-ci.yml
+  - template: Security/Dependency-Scanning.gitlab-ci.yml
   - template: Security/SAST.gitlab-ci.yml
-#  - template: Security/SAST-IaC.gitlab-ci.yml
-#  - template: Jobs/Secret-Detection.gitlab-ci.yml
+  - template: Security/SAST-IaC.gitlab-ci.yml
+  - template: Jobs/Secret-Detection.gitlab-ci.yml
 
 
