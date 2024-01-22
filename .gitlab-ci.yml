@@ -101,7 +101,6 @@ container_scanning:
   stage: test-lint-build
   variables:
     CS_IMAGE: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
-    GIT_STRATEGY: fetch
 
 dependency_scanning:
     stage: test-lint-build
