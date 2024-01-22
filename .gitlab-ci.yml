@@ -1,5 +1,6 @@
 stages:
   - test-lint-build
+  - test
   - publish
   - release-ui
 
@@ -99,7 +100,6 @@ release-ui:
 container_scanning:
   stage: test-lint-build
   variables:
-#    CS_DEFAULT_BRANCH_IMAGE: $CI_REGISTRY_IMAGE/$CI_DEFAULT_BRANCH:$CI_COMMIT_SHA
     CS_IMAGE: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
     GIT_STRATEGY: fetch
 
@@ -109,8 +109,9 @@ dependency_scanning:
 sast:
   stage: test-lint-build
 
-#sast_iac:
-#  stage: test-lint-build
+# the test stage is required for IaC scanning
+sast_iac:
+  stage: test
 
 secret_detection:
   stage: test-lint-build
@@ -119,7 +120,7 @@ include:
   - template: Security/Container-Scanning.gitlab-ci.yml
   - template: Security/Dependency-Scanning.gitlab-ci.yml
   - template: Security/SAST.gitlab-ci.yml
-#  - template: Security/SAST-IaC.gitlab-ci.yml
+  - template: Security/SAST-IaC.gitlab-ci.yml
   - template: Jobs/Secret-Detection.gitlab-ci.yml
 
 
