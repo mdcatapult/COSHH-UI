@@ -109,10 +109,6 @@ dependency_scanning:
 sast:
   stage: test-lint-build
 
-# the test stage is required for IaC scanning
-sast_iac:
-  stage: test
-
 secret_detection:
   stage: test-lint-build
 
