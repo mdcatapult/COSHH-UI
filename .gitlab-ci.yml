@@ -1,6 +1,5 @@
 stages:
   - test-lint-build
-  - scan
   - publish
   - release-ui
 
@@ -98,7 +97,7 @@ release-ui:
       - "$CI_COMMIT_MESSAGE =~ /^Setting version to.*/"
 
 scan:
-  stage: scan
+  stage: test-lint-build
 include:
   - template: Security/Container-Scanning.gitlab-ci.yml
   - template: Security/Dependency-Scanning.gitlab-ci.yml
