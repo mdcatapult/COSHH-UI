@@ -97,7 +97,7 @@ release-ui:
       - "$CI_COMMIT_MESSAGE =~ /^Setting version to.*/"
 
 container_scanning:
-  stage: test-lint-build
+  stage: publish
 
 dependency_scanning:
     stage: test-lint-build
