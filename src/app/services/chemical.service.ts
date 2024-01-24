@@ -13,6 +13,8 @@ import { DataService } from './data.service';
 import { HazardService } from './hazard.service';
 
 
+// This service is responsible for getting the chemicals from the API and storing them in state.  It also handles the
+// filtering of the chemicals based on the various filters and search boxes and stores the filtered chemicals in state.
 @Injectable({
     providedIn: 'root'
 })

@@ -6,6 +6,7 @@ import { Chemical } from '../coshh/types';
 import { environment } from 'src/environments/environment';
 import { Hazard } from '../coshh/types';
 
+// This service is used to get the hazard picture for a given hazard and to update the hazards for a given chemical
 @Injectable({
     providedIn: 'root'
 })
@@ -41,7 +42,10 @@ export class HazardService {
     
 
     updateHazards = (chemical: Chemical): void => {
-        this.http.put(`${environment.backendUrl}/hazards`, chemical);
+        this.http.put(`${environment.backendUrl}/hazards`, chemical).subscribe(() => {
+            chemical.hazardList = this.getHazardListForChemical(chemical);
+        });
+       
     };
 
 
