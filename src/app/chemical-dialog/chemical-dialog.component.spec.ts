@@ -20,7 +20,7 @@ describe('ChemicalDialogComponent', () => {
                 HttpClient,
                 { provide: MatDialogRef, useValue: {} },
                 { provide: MAT_DIALOG_DATA, useValue: {
-                    chemical: { hazards: [] }
+                    chemical: { hazards: null }
                 } },
                 DateAdapter
             ],
@@ -40,5 +40,8 @@ describe('ChemicalDialogComponent', () => {
 
     it('should create', () => {
         expect(component).toBeTruthy();
+    });
+    it('should set hazards to ["Unknown"] if initial hazard is null', () => {
+        expect(component.selectedHazardCategories).toEqual(['Unknown']);
     });
 });
