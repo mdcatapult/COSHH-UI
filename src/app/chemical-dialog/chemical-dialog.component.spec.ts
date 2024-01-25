@@ -56,10 +56,6 @@ describe('ChemicalDialogComponent', () => {
     it('should set hazards to ["Unknown"] if initial hazard is null', () => {
         expect(component.selectedHazardCategories).toEqual(['Unknown']);
     });
-    it('should set hazards to ["Unknown"] if initial hazard is null', () => {
-          expect(component.selectedHazardCategories).toEqual(['Unknown']);
-        });
-
     it('should do something else if initial hazard is not null', () => {
         data.chemical.hazards = ['Hazard1', 'Hazard2']; // Modify data before creating component
                 fixture = TestBed.createComponent(ChemicalDialogComponent);
