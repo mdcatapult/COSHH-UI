@@ -1,8 +1,8 @@
 FROM node:14-alpine as build
 
-#Create a new user then switch into that user’s context
-RUN adduser user1
-USER user1
+#Alpine images have a generic user already bundled
+RUN chown -R node:node /app
+USER node
 
 WORKDIR /app
 
@@ -25,7 +25,7 @@ RUN npm run build-prod
 
 FROM nginx:1.21-alpine
 
-USER user1
+USER node
 
 COPY --from=build app/dist/coshh /usr/share/nginx/html
 
