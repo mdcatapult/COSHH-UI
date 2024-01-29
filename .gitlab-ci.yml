@@ -9,6 +9,9 @@ stages:
 default:
   image: registry.gitlab.com/medicines-discovery-catapult/informatics/docker-images/ci/node
 
+variables:
+  FF_NETWORK_PER_BUILD: "true" # enable network per build so all services can communicate on the same network
+
 test-lint-build-ui:
   stage: test-lint-build
   variables:
@@ -105,6 +108,7 @@ container_scanning:
     CS_IMAGE: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
 
 dast:
+  dependencies: []
   services: # use services to link your app container to the dast job
     - name: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
       alias: coshhui
@@ -112,6 +116,13 @@ dast:
     DAST_WEBSITE: https://coshhui
     DAST_FULL_SCAN_ENABLED: "true" # do a full scan
     DAST_BROWSER_SCAN: "true" # use the browser-based GitLab DAST crawler
+    DAST_BROWSER_LOG: "auth:debug"                               # console log defaults to INFO level, logs AUTH module at DEBUG
+    DAST_BROWSER_FILE_LOG: "loglevel:debug,cache:warn"           # file log defaults to DEBUG level, logs CACHE module at WARN
+    DAST_BROWSER_FILE_LOG_PATH: "$CI_PROJECT_DIR/dast-scan.log"  # Save the file log in the project directory so it can be recognized as an artifact
+  artifacts:
+    paths:
+      - dast-scan.log
+    when: always
 
 dependency_scanning:
     stage: test-lint-build
@@ -123,11 +134,11 @@ secret_detection:
   stage: test-lint-build
 
 include:
-  - template: Security/Container-Scanning.gitlab-ci.yml
   - template: DAST.gitlab-ci.yml
+  - template: Jobs/Secret-Detection.gitlab-ci.yml
+  - template: Security/Container-Scanning.gitlab-ci.yml
   - template: Security/Dependency-Scanning.gitlab-ci.yml
   - template: Security/SAST.gitlab-ci.yml
   - template: Security/SAST-IaC.gitlab-ci.yml
-  - template: Jobs/Secret-Detection.gitlab-ci.yml
 
 
