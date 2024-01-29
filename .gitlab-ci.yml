@@ -119,6 +119,12 @@ dast:
     DAST_BROWSER_LOG: "auth:debug"                               # console log defaults to INFO level, logs AUTH module at DEBUG
     DAST_BROWSER_FILE_LOG: "loglevel:debug,cache:warn"           # file log defaults to DEBUG level, logs CACHE module at WARN
     DAST_BROWSER_FILE_LOG_PATH: "$CI_PROJECT_DIR/dast-scan.log"  # Save the file log in the project directory so it can be recognized as an artifact
+    CLIENT_ORIGIN_URL: "$DEV_CLIENT_ORIGIN_URL"
+    AUTH0_DOMAIN: "$DEV_AUTH0_DOMAIN"
+    AUTH0_AUDIENCE: "$DEV_AUTH0_AUDIENCE"
+    AUTH0_CLIENT_ID: "$DEV_AUTH0_CLIENT_ID"
+    DEPLOYMENT_ENV: "dev"
+    BACKEND_URL: "$DEV_BACKEND_URL"
   artifacts:
     paths:
       - dast-scan.log
