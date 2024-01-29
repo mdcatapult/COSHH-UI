@@ -1,10 +1,10 @@
 FROM node:14-alpine as build
 
+WORKDIR /app
+
 #Alpine images have a generic user already bundled
 RUN chown -R node:node /app
 USER node
-
-WORKDIR /app
 
 COPY package.json package-lock.json ./
 
