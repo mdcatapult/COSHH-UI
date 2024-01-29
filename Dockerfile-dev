@@ -1,5 +1,9 @@
 FROM node:14-alpine as build
 
+#Create a new user then switch into that user’s context
+RUN adduser user1
+USER user1
+
 WORKDIR /app
 
 COPY package.json package-lock.json ./
@@ -9,10 +13,6 @@ RUN npm install
 RUN npm install -g @angular/cli
 
 COPY . .
-
-#Create a new user (user1) and new group (group1); then switch into that user’s context
-RUN useradd user1 && groupadd group1
-USER user1:group1
 
 ARG CLIENT_ORIGIN_URL
 ARG AUTH0_DOMAIN
