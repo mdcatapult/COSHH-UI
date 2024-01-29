@@ -10,6 +10,10 @@ RUN npm install -g @angular/cli
 
 COPY . .
 
+#Create a new user (user1) and new group (group1); then switch into that user’s context
+RUN useradd user1 && groupadd group1
+USER user1:group1
+
 ARG CLIENT_ORIGIN_URL
 ARG AUTH0_DOMAIN
 ARG AUTH0_AUDIENCE
