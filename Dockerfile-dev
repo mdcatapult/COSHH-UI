@@ -1,10 +1,14 @@
 FROM node:14-alpine as build
 
-WORKDIR /app
-
 #Alpine images have a generic user already bundled
 RUN chown -R node:node /app
 USER node
+
+# Folders created by WORKDIR are owned by rooteven if created after a USER directive.
+# To get around this, create the folder first.
+RUN mkdir /app
+
+WORKDIR /app
 
 COPY package.json package-lock.json ./
 
