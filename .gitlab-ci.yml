@@ -108,7 +108,7 @@ container_scanning:
     CS_IMAGE: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
 
 dast:
-  dependencies: []
+  dependencies: [] # override default download of all artifacts defined by previous jobs in the pipeline
   services: # use services to link your app container to the dast job
     - name: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
       alias: coshhui
@@ -116,20 +116,7 @@ dast:
     DAST_WEBSITE: http://coshhui
     DAST_FULL_SCAN_ENABLED: "true" # do a full scan
     DAST_BROWSER_SCAN: "true" # use the browser-based GitLab DAST crawler
-    DAST_BROWSER_LOG: "auth:debug"                               # console log defaults to INFO level, logs AUTH module at DEBUG
-    DAST_BROWSER_FILE_LOG: "loglevel:debug,cache:warn"           # file log defaults to DEBUG level, logs CACHE module at WARN
-    DAST_BROWSER_FILE_LOG_PATH: "$CI_PROJECT_DIR/dast-scan.log"  # Save the file log in the project directory so it can be recognized as an artifact
-#    CLIENT_ORIGIN_URL: "https://coshhui"
-#    AUTH0_DOMAIN: "$DEV_AUTH0_DOMAIN"
-#    AUTH0_AUDIENCE: "$DEV_AUTH0_AUDIENCE"
-#    AUTH0_CLIENT_ID: "$DEV_AUTH0_CLIENT_ID"
-#    DEPLOYMENT_ENV: "dev"
-#    BACKEND_URL: "$DEV_BACKEND_URL"
-    GITLAB_HTTPS: "false"             # ensure that plain http works
-  artifacts:
-    paths:
-      - dast-scan.log
-    when: always
+    GITLAB_HTTPS: "false" # ensure that plain http works
 
 dependency_scanning:
     stage: test-lint-build
