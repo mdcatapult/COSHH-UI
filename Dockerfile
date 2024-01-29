@@ -25,6 +25,8 @@ RUN npm run build-prod
 
 FROM nginx:1.21-alpine
 
+USER user1
+
 COPY --from=build app/dist/coshh /usr/share/nginx/html
 
 EXPOSE 80
