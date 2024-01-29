@@ -13,11 +13,15 @@ import { DataService } from './data.service';
 import { HazardService } from './hazard.service';
 
 
-// This service is responsible for getting the chemicals from the API and storing them in state.  It also handles the
-// filtering of the chemicals based on the various filters and search boxes and stores the filtered chemicals in state.
 @Injectable({
     providedIn: 'root'
 })
+/**
+ * Service which acts as the single source of truth for chemicals.  On initialisation the service gets a list of all chemicals
+ * from the API and sets these in state.  This list of chemicals is then filtered when filter controls are applied by a user,
+ * and the filtered list is then set in state.  The filtered list is used by the coshh component to display the relevant
+ * chemicals in the table.
+ */
 export class ChemicalService {
 
     private readonly allChemicals$: BehaviorSubject<Chemical[]> = new BehaviorSubject<Chemical[]>([]);
@@ -48,13 +52,13 @@ export class ChemicalService {
 
     constructor(private http: HttpClient,
                 private authService: AuthService,
-                private filterService: DataService,
+                private dataService: DataService,
                 private hazardService: HazardService,
                 private expiryService: ExpiryService) {
 
         // get the complete list of chemicals from the API, set the hazard list on each chemical and set the background
         // colour based on the expiry date
-        this.filterService.getChemicals()
+        this.dataService.getChemicals()
             .subscribe((response) => {
                 const chemicals = response.map((chemical) => {
                     chemical.hazardList = this.hazardService.getHazardListForChemical(chemical);
@@ -81,13 +85,13 @@ export class ChemicalService {
             });
 
         // get labs from the API and set the filter values in the subscription
-        this.filterService.getLabs()
+        this.dataService.getLabs()
             .subscribe((labs) => {
                 this.labFilterValues = labs.concat('All');
             });
 
         // get cupboards from the API and set the filter values in the subscription
-        this.filterService.getCupboards()
+        this.dataService.getCupboards()
             .subscribe((cupboards) => {
                 this.cupboardFilterValues = cupboards.concat('All');
             });
@@ -235,7 +239,7 @@ export class ChemicalService {
     getNameOrNumberSearchObservable = (): Observable<string[]> => {
 
         return this.nameOrNumberSearchControl.valueChanges.pipe(
-            map((search) => this.filterService.getNames(
+            map((search) => this.dataService.getNames(
                 this.getFilteredChemicals(),
                 search)
             )
@@ -249,7 +253,7 @@ export class ChemicalService {
     getOwnerSearchObservable = (): Observable<string[]> => {
 
         return this.ownerSearchControl.valueChanges.pipe(
-            map((search) => this.filterService.getOwners(
+            map((search) => this.dataService.getOwners(
                 this.getFilteredChemicals(),
                 search)
             )
@@ -291,13 +295,13 @@ export class ChemicalService {
      */
     refreshCupboardsFilterList = (): void => {
         if (this.labFilterControl.value == 'All') {
-            this.filterService.getCupboards().subscribe((cupboards) => {
+            this.dataService.getCupboards().subscribe((cupboards) => {
                 const dedupedCupboards: string[] = checkDuplicates(cupboards);
 
                 this.cupboardFilterValues = dedupedCupboards.concat('All');
             });
         } else {
-            this.filterService.getCupboardsForLab(this.labFilterControl.value).subscribe((cupboards) => {
+            this.dataService.getCupboardsForLab(this.labFilterControl.value).subscribe((cupboards) => {
                 const dedupedCupboards: string[] = checkDuplicates(cupboards);
 
                 this.cupboardFilterValues = dedupedCupboards.concat('All');

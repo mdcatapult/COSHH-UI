@@ -14,18 +14,20 @@ export class DataService {
        constructor(private http: HttpClient) {
     }
 
+    API_URL = environment.backendUrl;
+
     /**
      * Get all the chemicals from the database
      * @returns {Observable<Chemical[]>}
      */
-    getChemicals = (): Observable<Chemical[]> => this.http.get<Chemical[]>(`${environment.backendUrl}/chemicals`);
+    getChemicals = (): Observable<Chemical[]> => this.http.get<Chemical[]>(`${this.API_URL}/chemicals`);
 
 
     /**
      * Get all the cupboards for all the labs
      * @returns {Observable<string[]>}
      */
-    getCupboards = (): Observable<string[]> => this.http.get<[string]>(`${environment.backendUrl}/cupboards`);
+    getCupboards = (): Observable<string[]> => this.http.get<[string]>(`${this.API_URL}/cupboards`);
 
 
     /**
@@ -37,7 +39,7 @@ export class DataService {
         const options = lab ?
             { params: new HttpParams().set('lab', lab) } : {};
 
-        return this.http.get<[string]>(`${environment.backendUrl}/cupboards`, options);
+        return this.http.get<[string]>(`${this.API_URL}/cupboards`, options);
     };
 
 
@@ -45,7 +47,7 @@ export class DataService {
      * Get all the labs
      * @returns {Observable<string[]>}
      */
-    getLabs = (): Observable<string[]> => this.http.get<string[]>(`${environment.backendUrl}/labs`);
+    getLabs = (): Observable<string[]> => this.http.get<string[]>(`${this.API_URL}/labs`);
 
     /**
      * Search the passed array of chemicals for chemical names or numbers containing the search string (case-insensitive)
@@ -84,6 +86,6 @@ export class DataService {
      * Get all users from the database
      * @returns {Observable<string[]>}
      */
-    getUsers = (): Observable<string[]> =>  this.http.get<string[]>(`${environment.backendUrl}/users`);
+    getUsers = (): Observable<string[]> =>  this.http.get<string[]>(`${this.API_URL}/users`);
 
 }
