@@ -14,8 +14,12 @@ COPY package.json package-lock.json ./
 
 RUN npm install
 
+# can't install globally with node user
+
+USER root
 RUN npm install -g @angular/cli
 
+USER node
 COPY . .
 
 ARG CLIENT_ORIGIN_URL
