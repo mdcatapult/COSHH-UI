@@ -114,10 +114,9 @@ dast:
     - name: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
       alias: coshhui
   variables:
-    DAST_WEBSITE: http://coshhui
+    DAST_WEBSITE: https://coshhui
     DAST_FULL_SCAN_ENABLED: "true" # do a full scan
     DAST_BROWSER_SCAN: "true" # use the browser-based GitLab DAST crawler
-    #GITLAB_HTTPS: "false" # ensure that plain http works
 
 dependency_scanning:
     stage: test-lint-build
