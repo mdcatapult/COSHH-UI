@@ -2,7 +2,7 @@ FROM node:14-alpine as build
 
 # Folders created by WORKDIR are owned by rooteven if created after a USER directive.
 # To get around this, create the folder first.
-RUN mkdir /app
+#RUN mkdir /app
 
 WORKDIR /app
 
@@ -12,9 +12,10 @@ RUN npm ci --only=production
 
 RUN npm install -g @angular/cli
 
+# SAST complains about running commands as root but using the node user makes DAST fail - WHY????
 #Alpine images have a generic user already bundled
-RUN chown -R node:node /app
-USER node
+#RUN chown -R node:node /app
+#USER node
 
 COPY . .
 
@@ -29,7 +30,7 @@ RUN npm run build-prod
 
 FROM nginx:1.21-alpine
 
-USER node
+#USER node
 
 COPY --from=build app/dist/coshh /usr/share/nginx/html
 
