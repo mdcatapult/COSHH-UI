@@ -109,7 +109,7 @@ container_scanning:
 
 dast:
   allow_failure: false
-  dependencies: [] # override default download of all artifacts defined by previous jobs in the pipeline
+  #dependencies: [] # override default download of all artifacts defined by previous jobs in the pipeline
   services: # use services to link your app container to the dast job
     - name: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
       alias: coshhui

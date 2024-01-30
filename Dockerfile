@@ -14,8 +14,8 @@ RUN npm install -g @angular/cli
 
 # SAST complains about running commands as root but using the node user makes DAST fail - WHY????
 #Alpine images have a generic user already bundled
-#RUN chown -R node:node /app
-#USER node
+RUN chown -R node:node /app
+USER node
 
 COPY . .
 
@@ -30,7 +30,7 @@ RUN npm run build-prod
 
 FROM nginx:1.21-alpine
 
-#USER node
+USER node
 
 COPY --from=build app/dist/coshh /usr/share/nginx/html
 
