@@ -4,22 +4,18 @@ FROM node:14-alpine as build
 # To get around this, create the folder first.
 RUN mkdir /app
 
-#Alpine images have a generic user already bundled
-RUN chown -R node:node /app
-USER node
-
 WORKDIR /app
 
 COPY package.json package-lock.json ./
 
 RUN npm install
 
-# can't install globally with node user
-
-USER root
 RUN npm install -g @angular/cli
 
+#Alpine images have a generic user already bundled
+RUN chown -R node:node /app
 USER node
+
 COPY . .
 
 ARG CLIENT_ORIGIN_URL
