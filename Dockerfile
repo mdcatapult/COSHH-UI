@@ -6,7 +6,7 @@ COPY package.json package-lock.json ./
 
 RUN npm ci --only=production
 
-RUN npm install -g @angular/cli:17.1.1
+RUN npm install -g @angular/cli:16.0.0
 
 COPY . .
 
