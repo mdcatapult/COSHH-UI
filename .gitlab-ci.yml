@@ -104,6 +104,7 @@ release-ui:
 
 container_scanning:
   stage: test-lint-build
+  allow_failure: false
   variables:
     CS_IMAGE: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
 
@@ -121,12 +122,15 @@ dast:
 
 dependency_scanning:
     stage: test-lint-build
+    allow_failure: false
 
 sast:
   stage: test-lint-build
+  allow_failure: false
 
 secret_detection:
   stage: test-lint-build
+  allow_failure: false
 
 include:
   - template: DAST.gitlab-ci.yml
