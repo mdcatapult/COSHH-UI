@@ -26,7 +26,7 @@ ARG BACKEND_URL
 
 RUN env
 
-#RUN mkdir -p /home/$SERVICE_NAME
+RUN mkdir -p /home/$SERVICE_NAME
 
 RUN npm run build
 
