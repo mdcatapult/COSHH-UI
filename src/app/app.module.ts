@@ -34,6 +34,7 @@ import { NAPipe } from './utility/pipes/na-pipe';
 import { ScanChemicalComponent } from './scan-chemical/scan-chemical.component';
 import { SharedModule } from './shared';
 
+
 @NgModule({
     declarations: [
         AddChemicalComponent,

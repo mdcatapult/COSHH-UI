@@ -1,9 +1,6 @@
 import { AbstractControl, UntypedFormControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { map, Observable } from 'rxjs';
 
-import { Chemical } from '../coshh/types';
-import { Columns, SheetData } from 'write-excel-file';
-import { DateTimeFormatPipe } from './pipes/my-datetime-format.pipe';
 
 export function getAutocompleteObservable(formControl: UntypedFormControl, data: string[]): Observable<string[]> {
     return formControl.valueChanges.pipe(
@@ -16,56 +13,6 @@ export function getAutocompleteObservable(formControl: UntypedFormControl, data:
     );
 }
 
-export function createExcelData(columnNames: string[], chemicals: Chemical[]) {
-    const HEADER_ROW: SheetData = [columnNames.map((columnName) => {
-
-        return { value: columnName, fontSize: 15, fontWeight: 'bold', align: 'center' };
-    })];
-
-    const chemicalsToSave: SheetData = chemicals.map((chemical) => {
-        const row: SheetData = [[
-            { type: String, value: chemical.name || '', wrap: true },
-            { type: String, value: chemical.quantity || '' },
-            { type: String, value: chemical.casNumber || '' },
-            { type: String, value: chemical.matterState || '' },
-            { type: String, value: chemical.location || '' },
-            { type: String, value: chemical.cupboard || '' },
-            { type: String, value: chemical.safetyDataSheet || '', wrap: true },
-            chemical.added ? { type: Date, value: new Date(chemical.added.toString()), format: 'dd/mm/yyyy' } : { type: String, value: '' },
-            chemical.expiry ? { type: Date, value: new Date(chemical.expiry.toString()), format: 'dd/mm/yyyy' } : { type: String, value: '' },
-            { type: String, wrap: true }
-        ]];
-
-        // this looks weird but it's the only way to get the types to play ball
-        return row[0];
-    });
-
-    const data: SheetData = [...HEADER_ROW, ...chemicalsToSave];
-
-    const columnOptions: Columns = [{ width: 30 }, {}, { width: 15 }, { width: 15 }, { width: 15 }, { width: 15 }, { width: 50 }, { width: 12 }, { width: 12 }, { width: 50 }];
-
-    return { data, columnOptions };
-}
-
-export function createPDFData(chemicals: Chemical[]) {
-    const dateTimePipe = new DateTimeFormatPipe();
-
-    return chemicals.map((chemical) => {
-
-        return {
-            'Name': chemical.name || '',
-            'Quantity': chemical.quantity || '',
-            'CAS No.': chemical.casNumber || '',
-            'State': chemical.matterState || '',
-            'Location': chemical.location || '',
-            'Cupboard': chemical.cupboard || '',
-            'Safety data sheet': chemical.safetyDataSheet || '',
-            'Added': chemical.added ? dateTimePipe.transform(chemical.added.toString()) : '',
-            'Expiry': chemical.expiry ? dateTimePipe.transform(chemical.expiry.toString()) : ''
-        };
-    });
-}
-
 /**
  * Test whether a string is a valid Http URL
  * @param urlString
@@ -76,6 +23,7 @@ export function isValidHttpUrl(urlString: string): boolean {
     try {
         url = new URL(urlString);
     } catch (_) {
+
         return false;
     }
 
