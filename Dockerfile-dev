@@ -1,4 +1,4 @@
-FROM node:14-alpine as build
+FROM node:21-alpine as build
 
 WORKDIR /app
 
@@ -28,7 +28,7 @@ RUN env
 
 RUN npm run build
 
-FROM nginx:1.21-alpine
+FROM nginx:1.25.3-alpine
 
 USER $SERVICE_NAME
 
