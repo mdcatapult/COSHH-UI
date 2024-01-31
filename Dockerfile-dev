@@ -13,7 +13,7 @@ COPY . .
 ENV SERVICE_NAME="coshh-ui-service"
 
 RUN addgroup --gid 1001 -S $SERVICE_NAME && \
-    adduser -G $SERVICE_NAME --shell /bin/false --disabled-password -H --uid 1001 $SERVICE_NAME
+    adduser -G $SERVICE_NAME --disabled-password -H --uid 1001 $SERVICE_NAME
 
 USER $SERVICE_NAME
 
@@ -26,7 +26,7 @@ ARG BACKEND_URL
 
 RUN env
 
-RUN mkdir -p /home/$SERVICE_NAME
+#RUN mkdir -p /home/$SERVICE_NAME
 
 RUN npm run build
 
