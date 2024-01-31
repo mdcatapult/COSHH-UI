@@ -1,4 +1,4 @@
-FROM node:14-alpine as build
+FROM node:21-alpine as build
 
 WORKDIR /app
 
@@ -15,8 +15,6 @@ ENV SERVICE_NAME="coshh-ui-service"
 RUN addgroup --gid 1001 -S $SERVICE_NAME && \
     adduser -G $SERVICE_NAME --shell /bin/false --disabled-password -H --uid 1001 $SERVICE_NAME
 
-USER $SERVICE_NAME
-
 ARG CLIENT_ORIGIN_URL
 ARG AUTH0_DOMAIN
 ARG AUTH0_AUDIENCE
@@ -26,7 +24,9 @@ ARG BACKEND_URL
 
 RUN npm run build-prod
 
-FROM nginx:1.21-alpine
+USER $SERVICE_NAME
+
+FROM nginx:1.25-alpine
 
 USER $SERVICE_NAME
 
