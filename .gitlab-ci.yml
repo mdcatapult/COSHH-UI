@@ -3,8 +3,9 @@ stages:
   #  the test stage is required for sast-iac scanning
   - test
   - publish
-  - release-ui
+  - container-scanning
   - dast
+  - release-ui
 
 default:
   image: registry.gitlab.com/medicines-discovery-catapult/informatics/docker-images/ci/node
@@ -103,7 +104,7 @@ release-ui:
       - "$CI_COMMIT_MESSAGE =~ /^Setting version to.*/"
 
 container_scanning:
-  stage: test-lint-build
+  stage: container-scanning
   allow_failure: false
   variables:
     CS_IMAGE: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
