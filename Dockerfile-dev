@@ -26,6 +26,8 @@ ARG BACKEND_URL
 
 RUN env
 
+RUN chmod 777 /home
+
 RUN npm run build
 
 FROM nginx:1.21-alpine
