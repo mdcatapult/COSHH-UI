@@ -3,7 +3,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { HttpClient } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
 
-import { FilterService } from './filter.service';
+import { DataService } from './data.service';
 
 /**
  * Create async observable that emits-once and completes
@@ -14,18 +14,18 @@ export function asyncData<T>(data: T) {
 }
 
 
-describe('FilterService', () => {
-  let service: FilterService;
+describe('DataService', () => {
+  let service: DataService;
 
   let httpClientSpy: jasmine.SpyObj<HttpClient>;
 
-  let filterService: FilterService;
+  let filterService: DataService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule]
     });
-    service = TestBed.inject(FilterService);
+    service = TestBed.inject(DataService);
   });
 
   it('should be created', () => {
@@ -33,7 +33,7 @@ describe('FilterService', () => {
   });
   it('can return cupboards', (done: DoneFn) => {
     httpClientSpy = jasmine.createSpyObj('HttpClient', ['get']);
-    filterService = new FilterService(httpClientSpy);
+    filterService = new DataService(httpClientSpy);
     const expectedCupboards = ['1', '2', '3'];
 
     httpClientSpy.get.and.returnValue(asyncData(expectedCupboards));
