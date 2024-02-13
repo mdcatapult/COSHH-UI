@@ -48,7 +48,7 @@ export class ChemicalDialogComponent {
            this.hazardCategoryList.find((hazard) => hazard.name === 'Unknown')!.selected = true;
         }
 
-        this.selectedHazardCategories = chemical.hazards;
+        this.selectedHazardCategories = chemical.hazards ?? ['Unknown'];
 
         this.form = this.fb.group({
             casNumber: new FormControl(chemical.casNumber, Validators.pattern(/^([1-9]{1}\d{1,5}-\d{2}-\d|N\/?A)$/i)),

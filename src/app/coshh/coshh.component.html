@@ -19,17 +19,17 @@
                     <div id="add-scan-container">
                         <div class="add-chemical">
                             <app-add-chemical
-                                    [labs]="labFilterValues"
+                                    [labs]="chemicalService.labFilterValues"
                                     [users]="users"
-                                    (onChemicalAdded)="onChemicalAdded($event)"
-                                    (onDialogOpen)="onDialogOpen($event)"
+                                    (onChemicalAdded)="chemicalService.onChemicalAdded($event)"
+                                    (onDialogOpen)="scanningService.onDialogOpen($event)"
                             ></app-add-chemical>
                         </div>
                         <button id="scan-button"
-                                [matTooltip]="scanningMode ? 'Barcode scanning mode enabled'  : 'Click to enable barcode scanning mode'"
+                                [matTooltip]="scanningService.scanningMode ? 'Barcode scanning mode enabled'  : 'Click to enable barcode scanning mode'"
                                 mat-mini-fab
-                                (click)="scanningMode = true">
-                            <mat-icon [ngStyle]="scanningMode ? {'color': 'green'} : {'color': 'purple'}">
+                                (click)="scanningService.scanningMode = true">
+                            <mat-icon [ngStyle]="scanningService.scanningMode ? {'color': 'green'} : {'color': 'purple'}">
                                 settings_remote
                             </mat-icon>
                         </button>
@@ -48,13 +48,13 @@
 
                 <div class="filter-control archive-checkbox-container">
                     <mat-checkbox
-                            (change)="scanningMode = false"
+                            (change)="scanningService.scanningMode = false"
                             class="coshh-checkbox"
-                            [formControl]="toggleArchiveControl"
+                            [formControl]="chemicalService.toggleArchiveControl"
                             color="primary">Display archived chemicals
                     </mat-checkbox>
                     <mat-checkbox
-                            (change)="scanningMode = false"
+                            (change)="scanningService.scanningMode = false"
                             class="coshh-checkbox"
                             [(ngModel)]="freezeColumns"
                             color="primary">Freeze 'Name' and 'CAS' columns
@@ -69,8 +69,8 @@
                     <div class="filter-control">
                         <mat-form-field className="filter-select">
                             <mat-label>Filter by lab</mat-label>
-                            <mat-select (focus)="scanningMode = false" required [formControl]="labFilterControl">
-                                <mat-option *ngFor="let lab of labFilterValues" [value]="lab">{{lab}}</mat-option>
+                            <mat-select (focus)="scanningService.scanningMode = false" required [formControl]="chemicalService.labFilterControl">
+                                <mat-option *ngFor="let lab of chemicalService.labFilterValues" [value]="lab">{{lab}}</mat-option>
                             </mat-select>
                         </mat-form-field>
                     </div>
@@ -78,8 +78,8 @@
                     <div class="filter-control">
                         <mat-form-field className="filter-select">
                             <mat-label>Filter by cupboard</mat-label>
-                            <mat-select (focus)="scanningMode = false" required [formControl]="cupboardFilterControl">
-                                <mat-option *ngFor="let cupboard of cupboardFilterValues"
+                            <mat-select (focus)="scanningService.scanningMode = false" required [formControl]="chemicalService.cupboardFilterControl">
+                                <mat-option *ngFor="let cupboard of chemicalService.cupboardFilterValues"
                                             [value]="cupboard">{{cupboard}}</mat-option>
                             </mat-select>
                         </mat-form-field>
@@ -88,8 +88,8 @@
                     <div class="filter-control">
                         <mat-form-field>
                             <mat-label>Filter by expiry</mat-label>
-                            <mat-select (focus)="scanningMode = false" required [formControl]="expiryFilterControl">
-                                <mat-option *ngFor="let expiry of expiryFilterValues"
+                            <mat-select (focus)="scanningService.scanningMode = false" required [formControl]="chemicalService.expiryFilterControl">
+                                <mat-option *ngFor="let expiry of chemicalService.expiryFilterValues"
                                             [value]="expiry">{{expiry}}</mat-option>
                             </mat-select>
                         </mat-form-field>
@@ -98,8 +98,8 @@
                     <div class="filter-control">
                         <mat-form-field>
                             <mat-label>Filter by hazard</mat-label>
-                            <mat-select (focus)="scanningMode = false" required [formControl]="hazardFilterControl">
-                                <mat-option *ngFor="let hazard of hazardFilterValues"
+                            <mat-select (focus)="scanningService.scanningMode = false" required [formControl]="chemicalService.hazardFilterControl">
+                                <mat-option *ngFor="let hazard of chemicalService.hazardFilterValues"
                                             [value]="hazard">{{hazard}}</mat-option>
                             </mat-select>
                         </mat-form-field>
@@ -112,8 +112,8 @@
                                    placeholder="Type to search..."
                                    aria-label="Search"
                                    matInput
-                                   (focus)="scanningMode = false"
-                                   [formControl]="nameOrNumberSearchControl"
+                                   (focus)="scanningService.scanningMode = false"
+                                   [formControl]="chemicalService.nameOrNumberSearchControl"
                                    [matAutocomplete]="autoNameNum">
                             <mat-autocomplete #autoNameNum="matAutocomplete">
                                 <mat-option
@@ -129,11 +129,11 @@
                         <mat-form-field>
                             <mat-label>Owner</mat-label>
                             <input type="text"
-                                   (focus)="scanningMode = false"
+                                   (focus)="scanningService.scanningMode = false"
                                    placeholder="Type to search..."
                                    aria-label="Search"
                                    matInput
-                                   [formControl]="ownerSearchControl"
+                                   [formControl]="chemicalService.ownerSearchControl"
                                    [matAutocomplete]="autoOwner">
                             <mat-autocomplete #autoOwner="matAutocomplete">
                                 <mat-option *ngFor="let owner of ownerSearchOptions | async | slice : 0 : 10"
@@ -147,7 +147,7 @@
                 <span class="spacer"></span>
 
                 <button
-                        (click)="scanningMode = false"
+                        (click)="scanningService.scanningMode = false"
                         id="save-button"
                         matTooltip="Print or export chemicals"
                         mat-mini-fab
@@ -159,21 +159,21 @@
                             id="excel-button"
                             matTooltip="Save inventory with current filters to Excel (name, quantity, location, SDS, added and expiry columns only)"
                             matTooltipPosition="left"
-                            (click)="saveExcel()">
+                            (click)="saveService.saveExcel()">
                         <mat-icon [ngStyle]="{'color': 'purple'}">save_alt</mat-icon>
                     </button>
                     <button mat-mini-fab color="accent"
                             id="pdf-button"
                             matTooltip="Save inventory with current filters to PDF (name, quantity, location, SDS, added and expiry columns only)"
                             matTooltipPosition="above"
-                            (click)="savePDF()">
+                            (click)="saveService.savePDF()">
                         <mat-icon [ngStyle]="{'color': 'purple'}">picture_as_pdf</mat-icon>
                     </button>
                     <button mat-mini-fab color="accent"
                             id="print-button"
                             matTooltip="Print inventory with current filters"
                             matTooltipPosition="below"
-                            (click)="printInventory()">
+                            (click)="saveService.printInventory()">
                         <mat-icon [ngStyle]="{'color': 'purple'}">print</mat-icon>
                     </button>
                 </mat-menu>
@@ -186,9 +186,11 @@
 <br/>
 
 <div class="table-container">
-    <table id="coshh-table" mat-table [dataSource]="tableData"
-           matSort (matSortChange)="announceSortChange($event)"
-           class="mat-elevation-z8">
+    <table id="coshh-table"
+           mat-table [dataSource]="tableData"
+           matSort
+           class="mat-elevation-z8"
+           matSortDisableClear="true">
 
         <ng-container matColumnDef="casNumber" [sticky]="freezeColumns">
             <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by number">
@@ -219,7 +221,7 @@
                 <ul>
                     <li *ngFor="let hazard of chemical.hazardList">
                         <img *ngIf="hazard.activated" class="img-responsive hazard"
-                             [src]="getHazardPicture(hazard.title)" [alt]="hazard.title" [title]="hazard.title">
+                             [src]="hazardService.getHazardPicture(hazard.title)" [alt]="hazard.title" [title]="hazard.title">
                     </li>
                 </ul>
             </td>
@@ -317,7 +319,7 @@
             <td mat-cell *matCellDef="let chemical" class="coshh-buttons-cell">
                 <ng-container *ngIf="isAuthenticated$ | async;">
                     <button
-                            (click)="scanningMode = false"
+                            (click)="scanningService.scanningMode = false"
                             matTooltip="Edit, clone or archive this chemical"
                             mat-button
                             [matMenuTriggerFor]="menu">
@@ -325,10 +327,10 @@
                     </button>
                     <mat-menu #menu="matMenu">
                         <app-edit-chemical
-                                [labs]="labFilterValues"
+                                [labs]="chemicalService.labFilterValues"
                                 [users]="users"
                                 [chemical]="chemical"
-                                (onChemicalEdited)="onChemicalEdited($event)"
+                                (onChemicalEdited)="chemicalService.onChemicalEdited($event)"
                         ></app-edit-chemical>
                         <button
                                 *ngIf="!chemical.isArchived"
@@ -337,7 +339,7 @@
                                 class="archive-button"
                                 mat-mini-fab
                                 color="warn"
-                                (click)="archive(chemical)"
+                                (click)="chemicalService.archive(chemical)"
                         >
                             <mat-icon>archive</mat-icon>
                         </button>
@@ -347,15 +349,15 @@
                                 matTooltipPosition="above"
                                 class="unarchive-button"
                                 mat-mini-fab
-                                (click)="archive(chemical)"
+                                (click)="chemicalService.archive(chemical)"
                         >
                             <mat-icon id="unarchive-icon">unarchive</mat-icon>
                         </button>
                         <app-clone-chemical
-                                [labs]="labFilterValues"
+                                [labs]="chemicalService.labFilterValues"
                                 [users]="users"
                                 [chemical]="chemical"
-                                (onChemicalCloned)="onChemicalAdded($event)"
+                                (onChemicalCloned)="chemicalService.onChemicalAdded($event)"
                         ></app-clone-chemical>
                     </mat-menu>
                 </ng-container>

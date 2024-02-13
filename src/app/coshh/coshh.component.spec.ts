@@ -2,11 +2,13 @@ import { AuthModule } from '@auth0/auth0-angular';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpClient, HttpHandler } from '@angular/common/http';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatDialogModule } from '@angular/material/dialog';
 import { MatMenuModule } from '@angular/material/menu';
 import { UntypedFormBuilder } from '@angular/forms';
 
 import { CoshhComponent } from './coshh.component';
-import { MAT_DIALOG_DATA, MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { HazardService } from '../services/hazard.service';
+import { SaveService } from '../services/save.service';
 
 describe('CoshhComponent', () => {
     let component: CoshhComponent;
@@ -17,14 +19,11 @@ describe('CoshhComponent', () => {
         await TestBed.configureTestingModule({
             declarations: [CoshhComponent],
             providers: [
+                HazardService,
                 HttpClient,
                 HttpHandler,
-                MatDialog,
-                UntypedFormBuilder,
-                { provide: MatDialogRef, useValue: {} },
-                { provide: MAT_DIALOG_DATA, useValue: {
-                        chemical: { hazards: [] }
-                    } }
+                SaveService,
+                UntypedFormBuilder
             ],
             imports: [
                 MatAutocompleteModule,

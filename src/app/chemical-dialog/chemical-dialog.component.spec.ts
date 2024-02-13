@@ -12,6 +12,12 @@ describe('ChemicalDialogComponent', () => {
 
     let fixture: ComponentFixture<ChemicalDialogComponent>;
 
+    let data = {
+                            labs: ['lab1', 'lab2'],
+                            users: ['user1', 'user2'],
+                            chemical: { hazards: null as string[] | null }
+                    };
+
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [ChemicalDialogComponent],
@@ -19,9 +25,7 @@ describe('ChemicalDialogComponent', () => {
                 MatDialog,
                 HttpClient,
                 { provide: MatDialogRef, useValue: {} },
-                { provide: MAT_DIALOG_DATA, useValue: {
-                    chemical: { hazards: [] }
-                } },
+                { provide: MAT_DIALOG_DATA,  useFactory: () => data } ,
                 DateAdapter
             ],
             imports: [
@@ -38,7 +42,25 @@ describe('ChemicalDialogComponent', () => {
         fixture.detectChanges();
     });
 
+    afterEach(() => {
+                data = {  // Reset the data
+                                labs: ['lab1', 'lab2'],
+                               users: ['user1', 'user2'],
+                                chemical: { hazards: null }
+                        };
+            });
+
     it('should create', () => {
         expect(component).toBeTruthy();
+    });
+    it('should set hazards to ["Unknown"] if initial hazard is null', () => {
+        expect(component.selectedHazardCategories).toEqual(['Unknown']);
+    });
+    it('should do something else if initial hazard is not null', () => {
+        data.chemical.hazards = ['Hazard1', 'Hazard2']; // Modify data before creating component
+                fixture = TestBed.createComponent(ChemicalDialogComponent);
+                component = fixture.componentInstance;
+                fixture.detectChanges();
+        expect(component.selectedHazardCategories).toEqual(['Hazard1', 'Hazard2']);
     });
 });

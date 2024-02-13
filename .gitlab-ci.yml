@@ -1,10 +1,17 @@
 stages:
   - test-lint-build
+  #  the test stage is required for sast-iac scanning
+  - test
   - publish
+  - container-scanning
+  - dast
   - release-ui
 
 default:
   image: registry.gitlab.com/medicines-discovery-catapult/informatics/docker-images/ci/node
+
+variables:
+  FF_NETWORK_PER_BUILD: "true" # enable network per build so all services can communicate on the same network
 
 test-lint-build-ui:
   stage: test-lint-build
@@ -96,7 +103,42 @@ release-ui:
     variables:
       - "$CI_COMMIT_MESSAGE =~ /^Setting version to.*/"
 
+container_scanning:
+  stage: container-scanning
+  allow_failure: false
+  variables:
+    CS_IMAGE: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
+
+dast:
+  allow_failure: false
+  dependencies: [] # override default download of all artifacts defined by previous jobs in the pipeline
+  services: # use services to link your app container to the dast job
+    - name: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
+      alias: coshhui
+  variables:
+    # why won't this work with https????
+    DAST_WEBSITE: http://coshhui
+    DAST_FULL_SCAN_ENABLED: "true" # do a full scan
+    DAST_BROWSER_SCAN: "true" # use the browser-based GitLab DAST crawler
+
+dependency_scanning:
+    stage: test-lint-build
+    allow_failure: false
+
 sast:
   stage: test-lint-build
+  allow_failure: false
+
+secret_detection:
+  stage: test-lint-build
+  allow_failure: false
+
 include:
+  - template: DAST.gitlab-ci.yml
+  - template: Jobs/Secret-Detection.gitlab-ci.yml
+  - template: Security/Container-Scanning.gitlab-ci.yml
+  - template: Security/Dependency-Scanning.gitlab-ci.yml
   - template: Security/SAST.gitlab-ci.yml
+  - template: Security/SAST-IaC.gitlab-ci.yml
+
+

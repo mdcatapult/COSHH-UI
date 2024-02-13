@@ -19,8 +19,6 @@ export type Chemical = {
     hazards: Hazard[],
     hazardList: HazardListItem[],
     backgroundColour: ExpiryColor,
-    editSDS: boolean,
-    editCoshh: boolean,
     lastUpdatedBy: string,
 }
 
@@ -34,25 +32,7 @@ export type Expiry = 'Any' | '< 30 Days' | 'Expired'
 
 export type ExpiryColor = '' | typeof yellow | typeof red
 export const yellow = 'rgb(255,255,0,0.6)'; 
-export const red = 'rgb(255,0,0,0.6)'; 
-
-export const columnTypes = [
-    'casNumber',
-    'name',
-    'hazards',
-    'location',
-    'cupboard',
-    'chemicalNumber',
-    'matterState',
-    'quantity',
-    'added',
-    'expiry',
-    'safetyDataSheet',
-    'coshhLink',
-    'storageTemp',
-    'owner',
-    'archive'
-];
+export const red = 'rgb(255,0,0,0.6)';
 
 export function allHazards(): Hazard[] {
     return ALL_HAZARDS.map((e) => e);
