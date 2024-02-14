@@ -63,7 +63,31 @@ publish-ui:
     variables:
       - $CI_COMMIT_MESSAGE =~ /^Setting version to.*/
 
-publish-ui-main:
+publish-api-main:
+  stage: publish
+  image:
+    name: gcr.io/kaniko-project/executor:debug
+    entrypoint:
+      - ""
+  before_script:
+    - echo "{\"auths\":{\"$CI_REGISTRY\":{\"username\":\"$CI_REGISTRY_USER\",\"password\":\"$CI_REGISTRY_PASSWORD\"}}}" > /kaniko/.docker/config.json
+  script:
+    - >
+      /kaniko/executor
+      --context $CI_PROJECT_DIR
+      --build-arg VERSION_HASH=$CI_COMMIT_SHORT_SHA
+      --build-arg CLIENT_ORIGIN_URL=$PROD_CLIENT_ORIGIN_URL
+      --build-arg AUTH0_DOMAIN=$PROD_AUTH0_DOMAIN
+      --build-arg AUTH0_AUDIENCE=$PROD_AUTH0_AUDIENCE
+      --build-arg AUTH0_CLIENT_ID=$PROD_AUTH0_CLIENT_ID
+      --build-arg DEPLOYMENT_ENV=prod
+      --build-arg BACKEND_URL=$PROD_BACKEND_URL
+      --destination $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
+      --dockerfile $CI_PROJECT_DIR/Dockerfile
+  rules:
+    - if: $CI_COMMIT_BRANCH == 'main'
+
+publish-ui-tags:
   stage: publish
   image:
     name: gcr.io/kaniko-project/executor:debug
