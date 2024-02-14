@@ -4,7 +4,7 @@ WORKDIR /app
 
 COPY package.json package-lock.json ./
 
-RUN npm ci --only=production
+RUN npm ci
 
 RUN npm install -g @angular/cli@16.2.12
 
