@@ -6,6 +6,7 @@ stages:
   - container-scanning
   - dast
   - release-ui
+  - deploy
 
 default:
   image: registry.gitlab.com/medicines-discovery-catapult/informatics/docker-images/ci/node
@@ -63,7 +64,7 @@ publish-ui:
     variables:
       - $CI_COMMIT_MESSAGE =~ /^Setting version to.*/
 
-publish-api-main:
+publish-ui-main:
   stage: publish
   image:
     name: gcr.io/kaniko-project/executor:debug
@@ -126,6 +127,19 @@ release-ui:
   except:
     variables:
       - "$CI_COMMIT_MESSAGE =~ /^Setting version to.*/"
+
+deploy:
+  stage: deploy
+  image:
+    name: bitnami/kubectl:latest
+    entrypoint: ['']
+  script:
+    - kubectl config use-context medicines-discovery-catapult/informatics/coshh/coshh-api:coshh-gitlab-agent
+    - kubectl rollout restart deployment -n coshh-prod coshh-ui
+  only:
+    - main
+  inherit:
+    default: false
 
 container_scanning:
   stage: container-scanning
