@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 
-import * as moment from 'moment';
+import moment from 'moment';
 import { Chemical } from '../coshh/types';
 import { ChemicalDialogComponent } from '../chemical-dialog/chemical-dialog.component';
 import { environment } from '../../environments/environment';
