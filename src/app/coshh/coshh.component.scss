@@ -4,7 +4,7 @@ table {
   border-radius: 4px !important;
 }
 
-.mat-header-cell {
+.mat-mdc-header-cell {
   font-size: 20px;
 }
 
@@ -76,8 +76,8 @@ ul {
   max-width: 5vw;
 }
 
-.mat-cell,
-.mat-header-cell {
+.mat-mdc-cell,
+.mat-mdc-header-cell {
   word-wrap: initial;
   display: table-cell;
   line-break: unset;
@@ -85,8 +85,8 @@ ul {
   padding-right: 0.5vw;
 }
 
-.mat-row,
-.mat-header-row {
+.mat-mdc-row,
+.mat-mdc-header-row {
   display: table-row;
 }
 
@@ -157,7 +157,7 @@ th.mat-sort-header-sorted {
   color: white;
 }
 
-::ng-deep .mat-menu-content{
+::ng-deep .mat-mdc-menu-content{
   background: lightgrey;
   height: 75%;
 }

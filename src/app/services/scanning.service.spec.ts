@@ -1,6 +1,6 @@
 import { AuthModule } from '@auth0/auth0-angular';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { MatLegacyDialogModule as MatDialogModule } from '@angular/material/legacy-dialog';
+import { MatDialogModule } from '@angular/material/dialog';
 import { TestBed } from '@angular/core/testing';
 
 import { ChemicalService } from './chemical.service';
