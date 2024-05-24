@@ -84,10 +84,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "coshh:build:production"
+              "buildTarget": "coshh:build:production"
             },
             "development": {
-              "browserTarget": "coshh:build:development"
+              "buildTarget": "coshh:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -95,7 +95,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "coshh:build"
+            "buildTarget": "coshh:build"
           }
         },
         "test": {
