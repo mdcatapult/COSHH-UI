@@ -1,7 +1,7 @@
 import { AuthService } from '@auth0/auth0-angular';
 import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
 import { Observable } from 'rxjs';
 
 import { Chemical } from './types';
