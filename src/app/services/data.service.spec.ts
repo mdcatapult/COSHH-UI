@@ -6,7 +6,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { Chemical } from '../coshh/types';
 import { DataService } from './data.service';
-import {environment} from "../../environments/environment";
+import { environment } from '../../environments/environment';
 
 /**
  * Create async observable that emits-once and completes
