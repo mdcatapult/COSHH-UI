@@ -1,12 +1,11 @@
-import {defer} from 'rxjs';
-import {provideHttpClientTesting} from '@angular/common/http/testing';
-import {HttpClient, HttpParams, provideHttpClient, withInterceptorsFromDi} from '@angular/common/http';
-import {TestBed} from '@angular/core/testing';
+import { defer } from 'rxjs';
+import { HttpClient, HttpParams, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import moment from 'moment/moment';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { TestBed } from '@angular/core/testing';
 
-import {DataService} from './data.service';
-import {Chemical} from "../coshh/types";
-import moment from "moment/moment";
-import {NONE_TYPE} from "@angular/compiler";
+import { DataService } from './data.service';
+import { Chemical } from "../coshh/types";
 
 /**
  * Create async observable that emits-once and completes
@@ -36,7 +35,7 @@ const chemicalOne: Chemical = {
     hazardList: [],
     backgroundColour: '',
     lastUpdatedBy: ''
-}
+};
 
 const chemicalTwo: Chemical = {
     name: 'Chemical 2',
@@ -58,7 +57,7 @@ const chemicalTwo: Chemical = {
     hazardList: [],
     backgroundColour: '',
     lastUpdatedBy: ''
-}
+};
 
 const chemicalThree: Chemical = {
     name: 'Chemical 3',
@@ -80,7 +79,7 @@ const chemicalThree: Chemical = {
     hazardList: [],
     backgroundColour: '',
     lastUpdatedBy: ''
-}
+};
 
 const chemicalFour: Chemical = {
     name: 'Chemical 3',
@@ -102,7 +101,7 @@ const chemicalFour: Chemical = {
     hazardList: [],
     backgroundColour: '',
     lastUpdatedBy: ''
-}
+};
 
 const chemicalFive: Chemical = {
     name: 'Chemical 5',
@@ -124,7 +123,7 @@ const chemicalFive: Chemical = {
     hazardList: [],
     backgroundColour: '',
     lastUpdatedBy: ''
-}
+};
 
 
 describe('DataService', () => {
@@ -170,7 +169,7 @@ describe('DataService', () => {
             httpClientSpy = jasmine.createSpyObj('HttpClient', ['get']);
             filterService = new DataService(httpClientSpy);
             const options =
-                {params: new HttpParams().set('lab', 'Lab 1')};
+                { params: new HttpParams().set('lab', 'Lab 1') };
 
             httpClientSpy.get.and.returnValue(asyncData(['1', '2', '3']));
             filterService.getCupboardsForLab('Lab 1').subscribe({
@@ -318,6 +317,7 @@ describe('DataService', () => {
 
         it('can return owners', () => {
             const chemicals: Chemical[] = [chemicalOne];
+
             const expectedOwners = ['Owner 1'];
 
             expect(service.getOwners(chemicals, '')).toEqual(expectedOwners);
@@ -325,14 +325,16 @@ describe('DataService', () => {
 
         it('returns sorted list', () => {
             const chemicals: Chemical[] = [chemicalTwo, chemicalOne];
+
             const expectedOwners = ['Owner 1', 'Owner 2'];
 
             expect(service.getOwners(chemicals, '')).toEqual(expectedOwners);
             expect(service.getOwners(chemicals, '')).not.toEqual(expectedOwners.reverse());
         });
 
-        it("return value doesn't include duplicates", () => {
+        it(`return value doesn't include duplicates`, () => {
             const chemicals: Chemical[] = [chemicalOne, chemicalTwo, chemicalThree];
+
             const expectedOwners = ['Owner 1', 'Owner 2'];
 
             expect(service.getOwners(chemicals, '')).toEqual(expectedOwners);
@@ -340,6 +342,7 @@ describe('DataService', () => {
 
         it('can handle missing owners', () => {
             const chemicals: Chemical[] = [chemicalFive];
+
             const expectedOwners = [''];
 
             expect(service.getOwners(chemicals, '')).toEqual(expectedOwners);
@@ -351,6 +354,7 @@ describe('DataService', () => {
 
         it('can return names and numbers', () => {
             const chemicals: Chemical[] = [chemicalOne];
+
             const expectedNamesAndNumbers = ['1', 'Chemical 1'];
 
             expect(service.getNamesAndNumbers(chemicals, '')).toEqual(expectedNamesAndNumbers);
@@ -358,13 +362,15 @@ describe('DataService', () => {
 
         it('returns sorted list', () => {
             const chemicals: Chemical[] = [chemicalTwo, chemicalOne, chemicalThree];
+
             const expectedNamesAndNumbers = ['1', '2','3', 'Chemical 1', 'Chemical 2', 'Chemical 3'];
 
             expect(service.getNamesAndNumbers(chemicals, '')).toEqual(expectedNamesAndNumbers);
         });
 
-        it("return value doesn't include duplicates", () => {
+        it(`return value doesn't include duplicates`, () => {
             const chemicals: Chemical[] = [chemicalOne, chemicalTwo, chemicalThree, chemicalFour];
+
             const expectedNamesAndNumbers = ['1', '2', '3', 'Chemical 1', 'Chemical 2', 'Chemical 3'];
 
             expect(service.getNamesAndNumbers(chemicals, '')).toEqual(expectedNamesAndNumbers);
@@ -372,6 +378,7 @@ describe('DataService', () => {
 
         it('can handle missing chemical numbers', () => {
             const chemicals: Chemical[] = [chemicalFive];
+
             const expectedNamesAndNumbers = ['', 'Chemical 5'];
 
             expect(service.getNamesAndNumbers(chemicals, '')).toEqual(expectedNamesAndNumbers);
