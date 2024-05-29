@@ -4,8 +4,8 @@ import moment from 'moment/moment';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 
+import { Chemical } from '../coshh/types';
 import { DataService } from './data.service';
-import { Chemical } from "../coshh/types";
 
 /**
  * Create async observable that emits-once and completes
@@ -332,7 +332,7 @@ describe('DataService', () => {
             expect(service.getOwners(chemicals, '')).not.toEqual(expectedOwners.reverse());
         });
 
-        it(`return value doesn't include duplicates`, () => {
+        it('return value doesn`t include duplicates', () => {
             const chemicals: Chemical[] = [chemicalOne, chemicalTwo, chemicalThree];
 
             const expectedOwners = ['Owner 1', 'Owner 2'];
@@ -368,7 +368,7 @@ describe('DataService', () => {
             expect(service.getNamesAndNumbers(chemicals, '')).toEqual(expectedNamesAndNumbers);
         });
 
-        it(`return value doesn't include duplicates`, () => {
+        it('return value doesn`t include duplicates', () => {
             const chemicals: Chemical[] = [chemicalOne, chemicalTwo, chemicalThree, chemicalFour];
 
             const expectedNamesAndNumbers = ['1', '2', '3', 'Chemical 1', 'Chemical 2', 'Chemical 3'];
