@@ -6,6 +6,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { Chemical } from '../coshh/types';
 import { DataService } from './data.service';
+import {environment} from "../../environments/environment";
 
 /**
  * Create async observable that emits-once and completes
@@ -174,7 +175,7 @@ describe('DataService', () => {
             httpClientSpy.get.and.returnValue(asyncData(['1', '2', '3']));
             filterService.getCupboardsForLab('Lab 1').subscribe({
                 next: () => {
-                    expect(httpClientSpy.get).toHaveBeenCalledWith('http://localhost:8080/cupboards', options);
+                    expect(httpClientSpy.get).toHaveBeenCalledWith(`${environment.backendUrl}/cupboards`, options);
                     done();
                 },
                 error: done.fail
