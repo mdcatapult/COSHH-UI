@@ -3,13 +3,11 @@
   padding: 1vh 0 2vh 0;
 }
 
-mat-label {
-  font-weight: bold;
-}
-
 
 .submit-button-container {
   display: flex;
+  padding: 18vh 0 0 0;
+  max-width: 18.5vw;
 }
 
 .column {
@@ -38,4 +36,10 @@ mat-form-field {
   font-weight: bold;
   color: red;
   margin: 1% 1% 0 0;
+}
+
+mat-dialog-content {
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
 }

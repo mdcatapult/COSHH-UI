@@ -48,7 +48,7 @@ export class AddChemicalComponent {
           };
 
           const dialogRef = this.dialog.open(ChemicalDialogComponent, {
-            width: '50vw',
+            width: '43vw',
             data: {
               labs: this.labs,
               users: this.users,
