@@ -282,7 +282,6 @@ export class ChemicalService {
     onChemicalEdited = (chemical: Chemical): void => {
         chemical.hazardList = this.hazardService.getHazardListForChemical(chemical);
         chemical.backgroundColour = this.expiryService.getExpiryColour(chemical);
-        chemical.lastUpdatedBy = this.loggedInUser;
         this.updateChemical(chemical);
         this.hazardService.updateHazards(chemical);
         this.update(chemical);
@@ -346,10 +345,7 @@ export class ChemicalService {
         // Lower case and remove trailing spaces from the cupboard name to make filtering and data integrity better
         chemical.cupboard = chemical.cupboard?.toLowerCase().trim();
         chemical.lastUpdatedBy = this.loggedInUser;
-        this.http.put(`${environment.backendUrl}/chemical`, chemical)
-            .subscribe(() => {
-                chemical.backgroundColour = this.expiryService.getExpiryColour(chemical);
-            });
+        this.http.put(`${environment.backendUrl}/chemical`, chemical);
     };
 
 }
