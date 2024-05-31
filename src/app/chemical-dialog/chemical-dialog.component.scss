@@ -1,13 +1,14 @@
 .hazard-category-container {
   display: block;
-  padding: 1vh 0 2vh 0;
 }
 
 
 .submit-button-container {
   display: flex;
-  padding: 18vh 0 0 0;
-  max-width: 18.5vw;
+  align-self: auto;
+  align-items: flex-end;
+  height: 30%;
+  max-width: 20vw;
 }
 
 .column {
@@ -38,8 +39,6 @@ mat-form-field {
   margin: 1% 1% 0 0;
 }
 
-mat-dialog-content {
-  overflow: hidden;
-  display: flex;
-  justify-content: center;
+.mat-mdc-dialog-content {
+  max-height: unset;
 }
