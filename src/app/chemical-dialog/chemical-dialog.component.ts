@@ -1,4 +1,4 @@
-import {Component, Inject, OnInit} from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { DateAdapter } from '@angular/material/core';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
@@ -13,7 +13,7 @@ import { Chemical, HazardCategory, allHazards } from '../coshh/types';
     templateUrl: './chemical-dialog.component.html',
     styleUrls: ['./chemical-dialog.component.scss']
 })  
-export class ChemicalDialogComponent {
+export class ChemicalDialogComponent implements OnInit {
 
     hazardCategoryList: HazardCategory[];
     masterCheckbox: boolean;
