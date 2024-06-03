@@ -126,7 +126,7 @@
                                matInput
                                [formControl]="convertToFormControl('owner')"
                                [matAutocomplete]="dialogOwners">
-                        <mat-autocomplete requireSelection #dialogOwners="matAutocomplete">
+                        <mat-autocomplete #dialogOwners="matAutocomplete">
                             <mat-option *ngFor="let option of ownerOptions | async | slice : 0 : 10" [value]="option">
                                 {{option}}
                             </mat-option>

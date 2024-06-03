@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import {Component, Inject, OnInit} from '@angular/core';
 import { DateAdapter } from '@angular/material/core';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
@@ -64,7 +64,7 @@ export class ChemicalDialogComponent {
             location: new FormControl(chemical.location),
             cupboard: new FormControl(chemical.cupboard),
             hazards: this.buildHazards(),
-            owner: new FormControl(chemical.owner, this.requireMatch.bind(this))
+            owner: new FormControl(chemical.owner, [this.requireMatch.bind(this), Validators.required])
         }, { updateOn: 'change' });
     }
 
