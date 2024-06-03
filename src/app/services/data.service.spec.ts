@@ -1,12 +1,12 @@
 import { defer } from 'rxjs';
 import { HttpClient, HttpParams, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
-import moment from 'moment/moment';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 
 import { Chemical } from '../coshh/types';
 import { DataService } from './data.service';
 import { environment } from '../../environments/environment';
+import {chemicalFive, chemicalFour, chemicalOne, chemicalThree, chemicalTwo} from "../../test-data/test-data";
 
 /**
  * Create async observable that emits-once and completes
@@ -15,117 +15,6 @@ import { environment } from '../../environments/environment';
 export function asyncData<T>(data: T) {
     return defer(() => Promise.resolve(data));
 }
-
-const chemicalOne: Chemical = {
-    name: 'Chemical 1',
-    chemicalNumber: '1',
-    id: 0,
-    casNumber: '',
-    matterState: 'solid',
-    quantity: '',
-    added: moment(new Date(), 'DD-MM-YYY'),
-    expiry: moment(new Date(), 'DD-MM-YYY').add(5, 'y'),
-    safetyDataSheet: '',
-    coshhLink: '',
-    storageTemp: 'Shelf',
-    location: '',
-    cupboard: '',
-    owner: 'Owner 1',
-    isArchived: false,
-    hazards: [],
-    hazardList: [],
-    backgroundColour: '',
-    lastUpdatedBy: ''
-};
-
-const chemicalTwo: Chemical = {
-    name: 'Chemical 2',
-    chemicalNumber: '2',
-    id: 1,
-    casNumber: '',
-    matterState: 'solid',
-    quantity: '',
-    added: moment(new Date(), 'DD-MM-YYY'),
-    expiry: moment(new Date(), 'DD-MM-YYY').add(5, 'y'),
-    safetyDataSheet: '',
-    coshhLink: '',
-    storageTemp: 'Shelf',
-    location: '',
-    cupboard: '',
-    owner: 'Owner 2',
-    isArchived: false,
-    hazards: [],
-    hazardList: [],
-    backgroundColour: '',
-    lastUpdatedBy: ''
-};
-
-const chemicalThree: Chemical = {
-    name: 'Chemical 3',
-    chemicalNumber: '3',
-    id: 2,
-    casNumber: '',
-    matterState: 'solid',
-    quantity: '',
-    added: moment(new Date(), 'DD-MM-YYY'),
-    expiry: moment(new Date(), 'DD-MM-YYY').add(5, 'y'),
-    safetyDataSheet: '',
-    coshhLink: '',
-    storageTemp: 'Shelf',
-    location: '',
-    cupboard: '',
-    owner: 'Owner 2',
-    isArchived: false,
-    hazards: [],
-    hazardList: [],
-    backgroundColour: '',
-    lastUpdatedBy: ''
-};
-
-const chemicalFour: Chemical = {
-    name: 'Chemical 3',
-    chemicalNumber: '2',
-    id: 3,
-    casNumber: '',
-    matterState: 'solid',
-    quantity: '',
-    added: moment(new Date(), 'DD-MM-YYY'),
-    expiry: moment(new Date(), 'DD-MM-YYY').add(5, 'y'),
-    safetyDataSheet: '',
-    coshhLink: '',
-    storageTemp: 'Shelf',
-    location: '',
-    cupboard: '',
-    owner: 'Owner 3',
-    isArchived: false,
-    hazards: [],
-    hazardList: [],
-    backgroundColour: '',
-    lastUpdatedBy: ''
-};
-
-const chemicalFive: Chemical = {
-    name: 'Chemical 5',
-    chemicalNumber: '',
-    id: 4,
-    casNumber: '',
-    matterState: 'solid',
-    quantity: '',
-    added: moment(new Date(), 'DD-MM-YYY'),
-    expiry: moment(new Date(), 'DD-MM-YYY').add(5, 'y'),
-    safetyDataSheet: '',
-    coshhLink: '',
-    storageTemp: 'Shelf',
-    location: '',
-    cupboard: '',
-    owner: '',
-    isArchived: false,
-    hazards: [],
-    hazardList: [],
-    backgroundColour: '',
-    lastUpdatedBy: ''
-};
-
 
 describe('DataService', () => {
     let service: DataService;
