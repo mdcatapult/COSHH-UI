@@ -1,16 +1,16 @@
-import { AuthService } from '@auth0/auth0-angular';
-import { BehaviorSubject, combineLatest, Observable, startWith } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { UntypedFormControl } from '@angular/forms';
+import {AuthService} from '@auth0/auth0-angular';
+import {BehaviorSubject, combineLatest, Observable, startWith} from 'rxjs';
+import {map} from 'rxjs/operators';
+import {HttpClient} from '@angular/common/http';
+import {Injectable} from '@angular/core';
+import {UntypedFormControl} from '@angular/forms';
 
-import { allHazards, Chemical, Expiry } from '../coshh/types';
-import { checkDuplicates } from '../utility/utilities';
-import { environment } from 'src/environments/environment';
-import { ExpiryService } from './expiry.service';
-import { DataService } from './data.service';
-import { HazardService } from './hazard.service';
+import {allHazards, Chemical, Expiry} from '../coshh/types';
+import {checkDuplicates} from '../utility/utilities';
+import {environment} from 'src/environments/environment';
+import {ExpiryService} from './expiry.service';
+import {DataService} from './data.service';
+import {HazardService} from './hazard.service';
 
 
 @Injectable({
@@ -270,7 +270,16 @@ export class ChemicalService {
             addedChemical.hazardList = this.hazardService.getHazardListForChemical(addedChemical);
             addedChemical.backgroundColour = this.expiryService.getExpiryColour(addedChemical);
             this.setAllChemicals(this.getAllChemicals().concat(addedChemical));
-            this.setFilteredChemicals(this.getFilteredChemicals().concat(addedChemical));
+            const filteredChemicals = this.filterChemicals(
+                this.toggleArchiveControl.value,
+                this.cupboardFilterControl.value,
+                this.hazardFilterControl.value,
+                this.labFilterControl.value,
+                this.expiryFilterControl.value,
+                this.nameOrNumberSearchControl.value ?? '',
+                this.ownerSearchControl.value ?? ''
+            );
+            this.setFilteredChemicals(filteredChemicals);
         });
 
     };
@@ -341,11 +350,12 @@ export class ChemicalService {
      * the newly added chemical in state based on the expiry date
      * @param {Chemical} chemical
      */
-    updateChemical = (chemical: Chemical): void => {
+    updateChemical = (chemical: Chemical): any => {
         // Lower case and remove trailing spaces from the cupboard name to make filtering and data integrity better
         chemical.cupboard = chemical.cupboard?.toLowerCase().trim();
         chemical.lastUpdatedBy = this.loggedInUser;
-        this.http.put(`${environment.backendUrl}/chemical`, chemical);
+
+        return this.http.put(`${environment.backendUrl}/chemical`, chemical)
     };
 
 }
