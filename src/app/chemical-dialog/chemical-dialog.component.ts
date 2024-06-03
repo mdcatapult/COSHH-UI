@@ -64,7 +64,7 @@ export class ChemicalDialogComponent implements OnInit {
             location: new FormControl(chemical.location),
             cupboard: new FormControl(chemical.cupboard),
             hazards: this.buildHazards(),
-            owner: new FormControl(chemical.owner, [this.requireMatch.bind(this), Validators.required])
+            owner: new FormControl(chemical.owner, this.requireMatch.bind(this))
         }, { updateOn: 'change' });
     }
 
