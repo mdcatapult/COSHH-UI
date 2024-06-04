@@ -1,8 +1,8 @@
 import { TestBed } from '@angular/core/testing';
-
-import { ExpiryService } from './expiry.service';
-import { Chemical } from '../coshh/types';
 import moment from 'moment';
+
+import { Chemical, red, yellow } from '../coshh/types';
+import { ExpiryService } from './expiry.service';
 
 describe('ExpiryServiceService', () => {
   let service: ExpiryService;
@@ -62,4 +62,84 @@ describe('ExpiryServiceService', () => {
     });
 
   });
+
+  describe('getExpiryColour', () => {
+
+    it('should return yellow for chemical expiring in fewer than 30 days', () => {
+      const chem: Chemical = {
+        id: 0,
+        casNumber: '',
+        name: '',
+        chemicalNumber: '',
+        matterState: 'solid',
+        quantity: '',
+        added: moment(),
+        expiry: moment().clone().add(29, 'days'),
+        safetyDataSheet: '',
+        coshhLink: '',
+        storageTemp: 'Shelf',
+        location: '',
+        cupboard: '',
+        isArchived: false,
+        owner: '',
+        hazards: [],
+        hazardList: [],
+        backgroundColour: '',
+        lastUpdatedBy: ''
+      };
+      expect(service.getExpiryColour(chem)).toBe(yellow);
+    });
+
+    it('should return red for chemical that has expired', () => {
+      const chem: Chemical = {
+        id: 0,
+        casNumber: '',
+        name: '',
+        chemicalNumber: '',
+        matterState: 'solid',
+        quantity: '',
+        added: moment(),
+        expiry: moment().clone().subtract(1, 'days'),
+        safetyDataSheet: '',
+        coshhLink: '',
+        storageTemp: 'Shelf',
+        location: '',
+        cupboard: '',
+        isArchived: false,
+        owner: '',
+        hazards: [],
+        hazardList: [],
+        backgroundColour: '',
+        lastUpdatedBy: ''
+      };
+      expect(service.getExpiryColour(chem)).toBe(red);
+    });
+
+    it('should return empty string for chemical with expiry date 30 or more days oin the future', () => {
+        const chem: Chemical = {
+            id: 0,
+            casNumber: '',
+            name: '',
+            chemicalNumber: '',
+            matterState: 'solid',
+            quantity: '',
+            added: moment(),
+            expiry: moment().clone().add(30, 'days'),
+            safetyDataSheet: '',
+            coshhLink: '',
+            storageTemp: 'Shelf',
+            location: '',
+            cupboard: '',
+            isArchived: false,
+            owner: '',
+            hazards: [],
+            hazardList: [],
+            backgroundColour: '',
+            lastUpdatedBy: ''
+        };
+        expect(service.getExpiryColour(chem)).toBe('');
+    });
+
+  });
+
 });
