@@ -18,7 +18,7 @@
       "prefix": "app",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:browser",
+          "builder": "@angular-devkit/build-angular:application",
           "options": {
             "allowedCommonJsDependencies": [
               "jspdf-autotable",
@@ -38,10 +38,13 @@
               "core-js/modules/es.array.iterator.js",
               "core-js/modules/es.array.index-of.js"
             ],
-            "outputPath": "dist/coshh",
+            "outputPath": {
+              "base": "dist/coshh"
+            },
             "index": "src/index.html",
-            "main": "src/main.ts",
-            "polyfills": "src/polyfills.ts",
+            "polyfills": [
+              "src/polyfills.ts"
+            ],
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "sass",
             "assets": [
@@ -51,7 +54,8 @@
               "./node_modules/@angular/material/prebuilt-themes/deeppurple-amber.css",
               "src/styles.sass"
             ],
-            "scripts": []
+            "scripts": [],
+            "browser": "src/main.ts"
           },
           "configurations": {
             "production": {
@@ -70,9 +74,7 @@
               "outputHashing": "all"
             },
             "development": {
-              "buildOptimizer": false,
               "optimization": false,
-              "vendorChunk": true,
               "extractLicenses": false,
               "sourceMap": true,
               "namedChunks": true
@@ -84,10 +86,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "coshh:build:production"
+              "buildTarget": "coshh:build:production"
             },
             "development": {
-              "browserTarget": "coshh:build:development"
+              "buildTarget": "coshh:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -95,7 +97,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "coshh:build"
+            "buildTarget": "coshh:build"
           }
         },
         "test": {

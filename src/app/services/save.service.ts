@@ -1,4 +1,4 @@
-import * as moment from 'moment';
+import moment from 'moment';
 import autoTable from 'jspdf-autotable';
 import { Injectable } from '@angular/core';
 import jsPDF from 'jspdf';

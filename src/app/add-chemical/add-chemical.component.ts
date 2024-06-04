@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 
-import * as moment from 'moment';
+import moment from 'moment';
 import { Chemical } from '../coshh/types';
 import { ChemicalDialogComponent } from '../chemical-dialog/chemical-dialog.component';
 import { environment } from '../../environments/environment';
@@ -48,7 +48,6 @@ export class AddChemicalComponent {
           };
 
           const dialogRef = this.dialog.open(ChemicalDialogComponent, {
-            width: '50vw',
             data: {
               labs: this.labs,
               users: this.users,

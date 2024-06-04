@@ -4,7 +4,7 @@ import { Chemical } from '../coshh/types';
 import { ChemicalDialogComponent } from '../chemical-dialog/chemical-dialog.component';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
-import * as moment from 'moment';
+import moment from 'moment';
 
 @Component({
     selector: 'app-clone-chemical',

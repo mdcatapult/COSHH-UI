@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { ExpiryService } from './expiry.service';
 import { Chemical } from '../coshh/types';
-import * as moment from 'moment';
+import moment from 'moment';
 
 describe('ExpiryServiceService', () => {
   let service: ExpiryService;

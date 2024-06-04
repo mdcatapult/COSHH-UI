@@ -2,7 +2,7 @@ import { AuthHttpInterceptor, AuthModule } from '@auth0/auth0-angular';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatButtonModule } from '@angular/material/button';
@@ -14,7 +14,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatMomentDateModule, MAT_MOMENT_DATE_ADAPTER_OPTIONS } from '@angular/material-moment-adapter';
-import { MatNativeDateModule, MatOptionModule, MAT_DATE_LOCALE } from '@angular/material/core';
+import { MatNativeDateModule, MAT_DATE_LOCALE } from '@angular/material/core';
+import { MatOptionModule } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
@@ -35,8 +36,7 @@ import { ScanChemicalComponent } from './scan-chemical/scan-chemical.component';
 import { SharedModule } from './shared';
 
 
-@NgModule({
-    declarations: [
+@NgModule({ declarations: [
         AddChemicalComponent,
         AppComponent,
         CloneChemicalComponent,
@@ -47,9 +47,7 @@ import { SharedModule } from './shared';
         NAPipe,
         ScanChemicalComponent
     ],
-    imports: [
-        BrowserModule,
-        HttpClientModule,
+    bootstrap: [AppComponent], imports: [BrowserModule,
         BrowserAnimationsModule,
         MatBadgeModule,
         MatTableModule,
@@ -77,18 +75,15 @@ import { SharedModule } from './shared';
                 allowedList: [`${env.backendUrl}/chemical`, `${env.backendUrl}/hazards`]
             }
         }),
-        SharedModule
-    ],
-    providers: [
+        SharedModule], providers: [
         { provide: MAT_DATE_LOCALE, useValue: 'en-GB' },
         { provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: { useUtc: true } },
         {
             provide: HTTP_INTERCEPTORS,
             useClass: AuthHttpInterceptor,
             multi: true
-        }
-    ],
-    bootstrap: [AppComponent]
-})
+        },
+        provideHttpClient(withInterceptorsFromDi())
+    ] })
 export class AppModule {
 }

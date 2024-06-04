@@ -20,6 +20,8 @@ import { ScanningService } from '../services/scanning.service';
 })
 export class CoshhComponent implements OnInit {
 
+    declare isAuthenticated$: Observable<boolean>;
+
     constructor(private authService: AuthService,
                 public chemicalService: ChemicalService,
                 private filterService: DataService,
@@ -27,13 +29,14 @@ export class CoshhComponent implements OnInit {
                 public saveService: SaveService,
                 public scanningService: ScanningService) {
 
+        this.isAuthenticated$ = this.authService.isAuthenticated$;
+
     }
 
     // N.B. the order of the columns in the displayedColumns array determines the order of the columns in the table
     displayedColumns = ['buttons', 'casNumber', 'name', 'hazards', 'location', 'cupboard', 'chemicalNumber', 'matterState',
         'quantity', 'added', 'expiry', 'safetyDataSheet', 'coshhLink', 'storageTemp', 'owner'];
     freezeColumns = false;
-    isAuthenticated$ = this.authService.isAuthenticated$;
     loggedInUser: string = '';
     nameOrNumberSearchOptions: Observable<string[]> = new Observable<string[]>();
     ownerSearchOptions: Observable<string[]> = new Observable<string[]>();

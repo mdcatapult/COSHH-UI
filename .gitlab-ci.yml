@@ -9,7 +9,7 @@ stages:
   - deploy
 
 default:
-  image: registry.gitlab.com/medicines-discovery-catapult/informatics/docker-images/ci/node
+  image: registry.gitlab.com/medicines-discovery-catapult/informatics/docker-images/ci/node:lts-20
 
 variables:
   FF_NETWORK_PER_BUILD: "true" # enable network per build so all services can communicate on the same network
