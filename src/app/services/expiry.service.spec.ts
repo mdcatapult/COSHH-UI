@@ -87,6 +87,7 @@ describe('ExpiryServiceService', () => {
         backgroundColour: '',
         lastUpdatedBy: ''
       };
+
       expect(service.getExpiryColour(chem)).toBe(yellow);
     });
 
@@ -112,6 +113,7 @@ describe('ExpiryServiceService', () => {
         backgroundColour: '',
         lastUpdatedBy: ''
       };
+
       expect(service.getExpiryColour(chem)).toBe(red);
     });
 
@@ -137,6 +139,7 @@ describe('ExpiryServiceService', () => {
             backgroundColour: '',
             lastUpdatedBy: ''
         };
+
         expect(service.getExpiryColour(chem)).toBe('');
     });
 
@@ -166,6 +169,7 @@ describe('ExpiryServiceService', () => {
         backgroundColour: '',
         lastUpdatedBy: ''
       };
+
       expect(service.filterExpiryDate(chem, 'Any')).toBe(true);
     });
 
@@ -191,6 +195,7 @@ describe('ExpiryServiceService', () => {
             backgroundColour: '',
             lastUpdatedBy: ''
         };
+
         expect(service.filterExpiryDate(chem, '< 30 Days')).toBe(true);
     });
 
@@ -216,6 +221,7 @@ describe('ExpiryServiceService', () => {
             backgroundColour: '',
             lastUpdatedBy: ''
         };
+
         expect(service.filterExpiryDate(chem, 'Expired')).toBe(true);
     });
   });
