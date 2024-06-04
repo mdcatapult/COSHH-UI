@@ -142,4 +142,82 @@ describe('ExpiryServiceService', () => {
 
   });
 
+  describe('filterExpiryDate', () => {
+
+    it('should return true for \'Any\' expiry date', () => {
+      const chem: Chemical = {
+        id: 0,
+        casNumber: '',
+        name: '',
+        chemicalNumber: '',
+        matterState: 'solid',
+        quantity: '',
+        added: moment(),
+        expiry: moment().clone().add(30, 'days'),
+        safetyDataSheet: '',
+        coshhLink: '',
+        storageTemp: 'Shelf',
+        location: '',
+        cupboard: '',
+        isArchived: false,
+        owner: '',
+        hazards: [],
+        hazardList: [],
+        backgroundColour: '',
+        lastUpdatedBy: ''
+      };
+      expect(service.filterExpiryDate(chem, 'Any')).toBe(true);
+    });
+
+    it('should return true when passed \'< 30 Days\' and expiry date is greater than 0 and less than 30 days in the future', () => {
+        const chem: Chemical = {
+            id: 0,
+            casNumber: '',
+            name: '',
+            chemicalNumber: '',
+            matterState: 'solid',
+            quantity: '',
+            added: moment(),
+            expiry: moment().clone().add(29, 'days'),
+            safetyDataSheet: '',
+            coshhLink: '',
+            storageTemp: 'Shelf',
+            location: '',
+            cupboard: '',
+            isArchived: false,
+            owner: '',
+            hazards: [],
+            hazardList: [],
+            backgroundColour: '',
+            lastUpdatedBy: ''
+        };
+        expect(service.filterExpiryDate(chem, '< 30 Days')).toBe(true);
+    });
+
+    it('should return true when passed \'Expired\' and expiry date is in the past', () => {
+        const chem: Chemical = {
+            id: 0,
+            casNumber: '',
+            name: '',
+            chemicalNumber: '',
+            matterState: 'solid',
+            quantity: '',
+            added: moment(),
+            expiry: moment().clone().subtract(1, 'days'),
+            safetyDataSheet: '',
+            coshhLink: '',
+            storageTemp: 'Shelf',
+            location: '',
+            cupboard: '',
+            isArchived: false,
+            owner: '',
+            hazards: [],
+            hazardList: [],
+            backgroundColour: '',
+            lastUpdatedBy: ''
+        };
+        expect(service.filterExpiryDate(chem, 'Expired')).toBe(true);
+    });
+  });
+
 });
