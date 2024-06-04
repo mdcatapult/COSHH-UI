@@ -26,7 +26,7 @@ RUN npm run build-prod
 
 USER $SERVICE_NAME
 
-FROM nginx:1.26-alpine
+FROM nginx:1.27-alpine
 
 USER $SERVICE_NAME
 
