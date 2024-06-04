@@ -279,6 +279,7 @@ export class ChemicalService {
                 this.nameOrNumberSearchControl.value ?? '',
                 this.ownerSearchControl.value ?? ''
             );
+
             this.setFilteredChemicals(filteredChemicals);
         });
 
