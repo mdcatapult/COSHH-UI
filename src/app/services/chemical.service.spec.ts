@@ -22,6 +22,8 @@ import { Chemical } from '../coshh/types';
 import { HazardService } from './hazard.service';
 import { ExpiryService } from './expiry.service';
 
+jasmine.getEnv().configure({random: false});
+
 describe('ChemicalService', () => {
 
     let chemicalService: ChemicalService;
