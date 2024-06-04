@@ -4,7 +4,7 @@ import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 
 import { Chemical } from '../coshh/types';
-import { chemicalFive, chemicalFour, chemicalOne, chemicalThree, chemicalTwo } from "../../test-data/test-data";
+import { chemicalFive, chemicalFour, chemicalOne, chemicalThree, chemicalTwo } from '../../test-data/test-data';
 import { DataService } from './data.service';
 import { environment } from '../../environments/environment';
 

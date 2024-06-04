@@ -1,8 +1,8 @@
-import { asyncData } from "./data.service.spec";
+import { asyncData } from './data.service.spec';
 import { AuthModule } from '@auth0/auth0-angular';
 import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
-import { MockProvider } from "ng-mocks";
-import { of } from "rxjs";
+import { MockProvider } from 'ng-mocks';
+import { of } from 'rxjs';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 
@@ -14,24 +14,28 @@ import {
     chemicalTwo,
     newChemical,
     updatedChemical
-} from "../../test-data/test-data";
+} from '../../test-data/test-data';
 import { ChemicalService } from './chemical.service';
-import { DataService } from "./data.service";
-import { environment } from "../../environments/environment";
-import { Chemical } from "../coshh/types";
-import { HazardService } from "./hazard.service";
-import { ExpiryService } from "./expiry.service";
+import { DataService } from './data.service';
+import { environment } from '../../environments/environment';
+import { Chemical } from '../coshh/types';
+import { HazardService } from './hazard.service';
+import { ExpiryService } from './expiry.service';
 
 describe('ChemicalService', () => {
 
     let chemicalService: ChemicalService;
+
     let dataService: jasmine.SpyObj<DataService>;
+
     let expiryService: jasmine.SpyObj<ExpiryService>;
+
     let hazardService: jasmine.SpyObj<HazardService>;
+
     let httpClientSpy: jasmine.SpyObj<HttpClient>;
 
     beforeEach(() => {
-        let httpClientSpyObj = jasmine.createSpyObj('HttpClient', ['post', 'put']);
+        const httpClientSpyObj = jasmine.createSpyObj('HttpClient', ['post', 'put']);
         TestBed.configureTestingModule({
             imports: [
                 // Fake Auth0 details for testing purposes
@@ -45,7 +49,7 @@ describe('ChemicalService', () => {
                     getChemicals: jasmine.createSpy('getChemicals').and.returnValue(of(allChemicals)),
                     getLabs: jasmine.createSpy('getLabs').and.returnValue(of(['Lab 1', 'Lab 2', 'Lab 3'])),
                     getCupboards: jasmine.createSpy('getCupboards').and.returnValue(of(['Cupboard 1', 'cupboard 1', 'Cupboard 2', 'Cupboard 3'])),
-                    getCupboardsForLab: jasmine.createSpy('getCupboardsForLab').and.returnValue(of(['Cupboard 2'])),
+                    getCupboardsForLab: jasmine.createSpy('getCupboardsForLab').and.returnValue(of(['Cupboard 2']))
                 }),
                 provideHttpClient(withInterceptorsFromDi()),
                 provideHttpClientTesting(),
@@ -114,7 +118,7 @@ describe('ChemicalService', () => {
     });
 
     it('should set labs in state on initialisation and add \'All\' to the array', () => {
-        expect(chemicalService.labFilterValues.sort()).toEqual(['All', 'Lab 1', 'Lab 2', 'Lab 3'].sort())
+        expect(chemicalService.labFilterValues.sort()).toEqual(['All', 'Lab 1', 'Lab 2', 'Lab 3'].sort());
     });
 
     it('should get cupboards from the data service on initialisation', () => {
@@ -122,7 +126,7 @@ describe('ChemicalService', () => {
     });
 
     it('should lowercase and set cupboards in state on initialisation and add \'All\' to the array', () => {
-        expect(chemicalService.cupboardFilterValues.sort()).toEqual(['All', 'cupboard 1', 'cupboard 2', 'cupboard 3'].sort())
+        expect(chemicalService.cupboardFilterValues.sort()).toEqual(['All', 'cupboard 1', 'cupboard 2', 'cupboard 3'].sort());
     });
 
     it('should call getCupboardsForLab when a lab is selected', () => {

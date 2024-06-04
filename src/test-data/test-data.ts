@@ -1,5 +1,5 @@
-import {Chemical} from "../app/coshh/types";
-import moment from "moment";
+import { Chemical } from '../app/coshh/types';
+import moment from 'moment';
 
 
 export const chemicalOne: Chemical = {
