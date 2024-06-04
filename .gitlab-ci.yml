@@ -141,6 +141,19 @@ deploy:
   inherit:
     default: false
 
+deploy-dev:
+  stage: deploy
+  image:
+    name: bitnami/kubectl:latest
+    entrypoint: ['']
+  script:
+    - kubectl config use-context medicines-discovery-catapult/informatics/coshh/coshh-api:coshh-gitlab-agent
+    - kubectl rollout restart deployment -n coshh-dev coshh-dev-ui
+  only:
+    - develop
+  inherit:
+    default: false
+
 container_scanning:
   stage: container-scanning
   allow_failure: false
