@@ -55,7 +55,7 @@ export class DataService {
      * @param {string} search the string to search for
      * @returns {string[]} a sorted array of unique chemical names
      */
-    getNames = (chemicals: Chemical[], search: string): string[] => {
+    getNamesAndNumbers = (chemicals: Chemical[], search: string): string[] => {
         const searchLower = search.toLowerCase();
 
         return chemicals

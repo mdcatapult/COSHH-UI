@@ -239,7 +239,7 @@ export class ChemicalService {
     getNameOrNumberSearchObservable = (): Observable<string[]> => {
 
         return this.nameOrNumberSearchControl.valueChanges.pipe(
-            map((search) => this.dataService.getNames(
+            map((search) => this.dataService.getNamesAndNumbers(
                 this.getFilteredChemicals(),
                 search)
             )
