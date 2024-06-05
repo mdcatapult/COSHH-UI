@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
-import { allHazards } from '../coshh/types';
+import { allHazards, HazardListItem } from '../coshh/types';
 import { Chemical } from '../coshh/types';
 import { environment } from 'src/environments/environment';
 import { Hazard } from '../coshh/types';
@@ -49,9 +49,9 @@ export class HazardService {
     };
 
 
-    getHazardListForChemical = (chemical: Chemical) => {
+    getHazardListForChemical = (chemical: Chemical): HazardListItem[] => {
 
-        return allHazards().map((hazard: Hazard) => {
+        return allHazards().map((hazard: Hazard): HazardListItem => {
             return {
                 title: hazard,
                 activated: chemical.hazards ? chemical.hazards.includes(hazard) : false,

@@ -1,17 +1,31 @@
-import { environment } from "../../environments/environment";
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
-import moment from 'moment';
-
-import { asyncData } from "./data.service.spec";
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import {Chemical, HazardListItem} from '../coshh/types';
+
+import { asyncData } from './data.service.spec';
+import { chemicalOne } from '../../test-data/test-data';
+import { environment } from "../../environments/environment";
+import { HazardListItem } from '../coshh/types';
 import { HazardService } from './hazard.service';
 
 describe('HazardService', () => {
     let service: HazardService;
 
     let httpClientSpy: jasmine.SpyObj<HttpClient>;
+
+    const expectedHazardItemList: HazardListItem[] = [
+        { title: 'None', activated: false, value: 'None' },
+        { title: 'Unknown', activated: false, value: 'Unknown'},
+        { title: 'Explosive', activated: true, value: 'Explosive' },
+        { title: 'Flammable', activated: false, value: 'Flammable' },
+        { title: 'Oxidising', activated: false, value: 'Oxidising' },
+        { title: 'Corrosive', activated: false, value: 'Corrosive' },
+        { title: 'Acute toxicity', activated: false, value: 'Acute toxicity' },
+        { title: 'Hazardous to the environment', activated: false, value: 'Hazardous to the environment' },
+        { title: 'Health hazard/Hazardous to the ozone layer', activated: false, value: 'Health hazard/Hazardous to the ozone layer' },
+        { title: 'Serious health hazard', activated: false, value: 'Serious health hazard' },
+        { title: 'Gas under pressure', activated: false, value: 'Gas under pressure' }
+    ];
 
     beforeEach(() => {
         const httpClientSpyObj = jasmine.createSpyObj('HttpClient', ['put']);
@@ -99,79 +113,29 @@ describe('HazardService', () => {
 
         it('should call the http client put method with the correct url and chemical', () => {
 
-            const chemical: Chemical = {
-                    id: 0,
-                    casNumber: '',
-                    name: '',
-                    chemicalNumber: '',
-                    matterState: 'solid',
-                    quantity: '',
-                    added: moment(),
-                    expiry: moment(),
-                    safetyDataSheet: '',
-                    coshhLink: '',
-                    storageTemp: 'Shelf',
-                    location: '',
-                    cupboard: '',
-                    isArchived: false,
-                    owner: '',
-                    hazards: [],
-                    hazardList: [],
-                    backgroundColour: '',
-                    lastUpdatedBy: ''
-                };
-
             httpClientSpy.put.and.returnValue(asyncData([]));
-            service.updateHazards(chemical);
+            service.updateHazards(chemicalOne);
 
-            expect(httpClientSpy.put).toHaveBeenCalledWith(`${environment.backendUrl}/hazards`, chemical);
+            expect(httpClientSpy.put).toHaveBeenCalledWith(`${environment.backendUrl}/hazards`, chemicalOne);
         });
 
         it('should call getHazardListForChemical with the correct chemical', fakeAsync(() => {
 
-            const chemical: Chemical = {
-                id: 0,
-                casNumber: '',
-                name: '',
-                chemicalNumber: '',
-                matterState: 'solid',
-                quantity: '',
-                added: moment(),
-                expiry: moment(),
-                safetyDataSheet: '',
-                coshhLink: '',
-                storageTemp: 'Shelf',
-                location: '',
-                cupboard: '',
-                isArchived: false,
-                owner: '',
-                hazards: ['Explosive'],
-                hazardList: [],
-                backgroundColour: '',
-                lastUpdatedBy: ''
-            };
-
             httpClientSpy.put.and.returnValue(asyncData([]));
-            service.updateHazards(chemical);
+            service.updateHazards(chemicalOne);
             tick();
             spyOn(service, 'getHazardListForChemical').and.callThrough();
 
-            const expected: HazardListItem[] = [
-                { title: 'None', activated: false, value: 'None' },
-                { title: 'Unknown', activated: false, value: 'Unknown'},
-                { title: 'Explosive', activated: true, value: 'Explosive' },
-                { title: 'Flammable', activated: false, value: 'Flammable' },
-                { title: 'Oxidising', activated: false, value: 'Oxidising' },
-                { title: 'Corrosive', activated: false, value: 'Corrosive' },
-                { title: 'Acute toxicity', activated: false, value: 'Acute toxicity' },
-                { title: 'Hazardous to the environment', activated: false, value: 'Hazardous to the environment' },
-                { title: 'Health hazard/Hazardous to the ozone layer', activated: false, value: 'Health hazard/Hazardous to the ozone layer' },
-                { title: 'Serious health hazard', activated: false, value: 'Serious health hazard' },
-                { title: 'Gas under pressure', activated: false, value: 'Gas under pressure' }
-            ];
-
-            expect(chemical.hazardList.sort()).toEqual(expected.sort());
+            expect(chemicalOne.hazardList.sort()).toEqual(expectedHazardItemList.sort());
         }));
 
+    });
+
+    describe('getHazardListForChemical', () => {
+
+        it('should return a list of hazard list items for a given chemical', () => {
+
+            expect(service.getHazardListForChemical(chemicalOne).sort()).toEqual(expectedHazardItemList.sort());
+        });
     });
 });
