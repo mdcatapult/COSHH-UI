@@ -4,7 +4,7 @@ import { provideHttpClientTesting } from '@angular/common/http/testing';
 
 import { asyncData } from './data.service.spec';
 import { chemicalOne } from '../../test-data/test-data';
-import { environment } from "../../environments/environment";
+import { environment } from '../../environments/environment';
 import { HazardListItem } from '../coshh/types';
 import { HazardService } from './hazard.service';
 
@@ -15,7 +15,7 @@ describe('HazardService', () => {
 
     const expectedHazardItemList: HazardListItem[] = [
         { title: 'None', activated: false, value: 'None' },
-        { title: 'Unknown', activated: false, value: 'Unknown'},
+        { title: 'Unknown', activated: false, value: 'Unknown' },
         { title: 'Explosive', activated: true, value: 'Explosive' },
         { title: 'Flammable', activated: false, value: 'Flammable' },
         { title: 'Oxidising', activated: false, value: 'Oxidising' },
