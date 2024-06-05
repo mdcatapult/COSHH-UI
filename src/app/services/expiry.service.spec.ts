@@ -7,6 +7,7 @@ import { chemicalOne } from '../../test-data/test-data';
 
 describe('ExpiryServiceService', () => {
     const chem = chemicalOne;
+
     let service: ExpiryService;
 
     beforeEach(() => {
@@ -73,12 +74,15 @@ describe('ExpiryServiceService', () => {
 
         it('should return true for \'Any\' expiry date', () => {
             const chemOne: Chemical = chemicalOne;
+
             chemOne.expiry = moment().clone().add(29, 'days');
 
             const chemTwo: Chemical = chemicalOne;
+
             chemTwo.expiry = moment().clone().subtract(1, 'days');
 
             const chemThree: Chemical = chemicalOne;
+
             chemThree.expiry = moment().clone().add(30, 'days');
 
             expect(service.filterExpiryDate(chemOne, 'Any')).toBe(true);
