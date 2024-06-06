@@ -36,7 +36,7 @@ export class SaveService {
     };
 
     createJsPDF() {
-        return new jsPDF('landscape')
+        return new jsPDF('landscape');
     };
 
     callSaveJsPDF(doc: jsPDF, filename: string) {
@@ -46,7 +46,7 @@ export class SaveService {
     savePDF() {
         const chemicalsToPrint = this.createPDFData(this.chemicalService.getFilteredChemicals());
 
-        const doc = this.createJsPDF()
+        const doc = this.createJsPDF();
 
         const now = moment().format('DD-MM-YYYY');
 
@@ -60,7 +60,7 @@ export class SaveService {
                 minCellWidth: 30
             }
         });
-        this.callSaveJsPDF(doc, 'mdc-coshh-inventory.pdf')
+        this.callSaveJsPDF(doc, 'mdc-coshh-inventory.pdf');
     };
 
     createPDFData(chemicals: Chemical[]) {
