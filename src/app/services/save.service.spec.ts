@@ -99,7 +99,7 @@ describe('SaveService', () => {
                     theme: 'striped',
                     styles: {
                         minCellWidth: 30
-                    },
+                    }
                 });
         });
     });
@@ -120,7 +120,7 @@ describe('SaveService', () => {
                     'Safety data sheet': '',
                     'Added': jasmine.any(String),
                     'Expiry': jasmine.any(String)
-                }),
+                })
             ]));
         });
     });
