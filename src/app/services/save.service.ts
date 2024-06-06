@@ -1,4 +1,4 @@
-import autoTable, {UserOptions} from 'jspdf-autotable';
+import autoTable, { UserOptions } from 'jspdf-autotable';
 import { Injectable } from '@angular/core';
 import jsPDF from 'jspdf';
 import moment from 'moment';
@@ -22,12 +22,16 @@ export class SaveService {
         window.print();
     }
 
-    async writeExcelFileWrapper(data: SheetData, options: { columns: Columns, fileName: string, orientation: 'landscape' }) {
+    async writeExcelFileWrapper(data: SheetData, options: {
+        columns: Columns,
+        fileName: string,
+        orientation: 'landscape'
+    }) {
         return writeXlsxFile(data, options);
     }
 
     async saveExcel() {
-        const { data, columnOptions } = this.createExcelData(columnsForExport,
+        const {data, columnOptions} = this.createExcelData(columnsForExport,
             this.chemicalService.getFilteredChemicals());
 
         if (data) {
@@ -90,21 +94,29 @@ export class SaveService {
     createExcelData(columnNames: string[], chemicals: Chemical[]) {
         const HEADER_ROW: SheetData = [columnNames.map((columnName) => {
 
-            return { value: columnName, fontSize: 15, fontWeight: 'bold', align: 'center' };
+            return {value: columnName, fontSize: 15, fontWeight: 'bold', align: 'center'};
         })];
 
         const chemicalsToSave: SheetData = chemicals.map((chemical) => {
             const row: SheetData = [[
-                { type: String, value: chemical.name || '', wrap: true },
-                { type: String, value: chemical.quantity || '' },
-                { type: String, value: chemical.casNumber || '' },
-                { type: String, value: chemical.matterState || '' },
-                { type: String, value: chemical.location || '' },
-                { type: String, value: chemical.cupboard || '' },
-                { type: String, value: chemical.safetyDataSheet || '', wrap: true },
-                chemical.added ? { type: Date, value: new Date(chemical.added.toString()), format: 'dd/mm/yyyy' } : { type: String, value: '' },
-                chemical.expiry ? { type: Date, value: new Date(chemical.expiry.toString()), format: 'dd/mm/yyyy' } : { type: String, value: '' },
-                { type: String, wrap: true }
+                {type: String, value: chemical.name || '', wrap: true},
+                {type: String, value: chemical.quantity || ''},
+                {type: String, value: chemical.casNumber || ''},
+                {type: String, value: chemical.matterState || ''},
+                {type: String, value: chemical.location || ''},
+                {type: String, value: chemical.cupboard || ''},
+                {type: String, value: chemical.safetyDataSheet || '', wrap: true},
+                chemical.added ? {
+                    type: Date,
+                    value: new Date(chemical.added.toString()),
+                    format: 'dd/mm/yyyy'
+                } : {type: String, value: ''},
+                chemical.expiry ? {
+                    type: Date,
+                    value: new Date(chemical.expiry.toString()),
+                    format: 'dd/mm/yyyy'
+                } : {type: String, value: ''},
+                {type: String, wrap: true}
             ]];
 
             // this looks weird but it's the only way to get the types to play ball
@@ -113,9 +125,9 @@ export class SaveService {
 
         const data: SheetData = [...HEADER_ROW, ...chemicalsToSave];
 
-        const columnOptions: Columns = [{ width: 30 }, {}, { width: 15 }, { width: 15 }, { width: 15 }, { width: 15 }, { width: 50 }, { width: 12 }, { width: 12 }, { width: 50 }];
+        const columnOptions: Columns = [{width: 30}, {}, {width: 15}, {width: 15}, {width: 15}, {width: 15}, {width: 50}, {width: 12}, {width: 12}, {width: 50}];
 
-        return { data, columnOptions };
+        return {data, columnOptions};
     }
 
 }

@@ -19,9 +19,9 @@ describe('SaveService', () => {
                 // Fake Auth0 details for testing purposes
                 AuthModule.forRoot({
                     domain: 'a.domain.id',
-                    clientId: '12345',
+                    clientId: '12345'
                 })],
-            providers: [ChemicalService, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()],
+            providers: [ChemicalService, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
         });
         service = TestBed.inject(SaveService);
     });
@@ -98,7 +98,7 @@ describe('SaveService', () => {
                     body: jasmine.any(Array),
                     theme: 'striped',
                     styles: {
-                        minCellWidth: 30,
+                        minCellWidth: 30
                     },
                 });
         });
@@ -119,7 +119,7 @@ describe('SaveService', () => {
                     'Cupboard': 'Cupboard 2',
                     'Safety data sheet': '',
                     'Added': jasmine.any(String),
-                    'Expiry': jasmine.any(String),
+                    'Expiry': jasmine.any(String)
                 }),
             ]));
         });
@@ -132,7 +132,7 @@ describe('SaveService', () => {
 
             expect(result).toEqual(jasmine.objectContaining({
                 data: jasmine.any(Array),
-                columnOptions: jasmine.any(Array),
+                columnOptions: jasmine.any(Array)
             }));
         });
 
@@ -141,7 +141,7 @@ describe('SaveService', () => {
 
             expect(result).toEqual(jasmine.objectContaining({
                 data: jasmine.any(Array),
-                columnOptions: jasmine.any(Array),
+                columnOptions: jasmine.any(Array)
             }));
         });
 
