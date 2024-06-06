@@ -22,12 +22,16 @@ export class SaveService {
         window.print();
     }
 
+    async writeExcelFileWrapper(data: SheetData, options: { columns: Columns, fileName: string, orientation: 'landscape' }) {
+        return writeXlsxFile(data, options);
+    }
+
     async saveExcel() {
         const { data, columnOptions } = this.createExcelData(columnsForExport,
             this.chemicalService.getFilteredChemicals());
 
         if (data) {
-            await writeXlsxFile(data, {
+            await this.writeExcelFileWrapper(data, {
                 columns: columnOptions,
                 fileName: 'mdc-coshh-inventory.xlsx',
                 orientation: 'landscape'
