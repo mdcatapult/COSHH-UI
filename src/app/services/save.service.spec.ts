@@ -6,8 +6,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { allChemicals } from '../../test-data/test-data';
 import { ChemicalService } from './chemical.service';
-import * as jspdf from "jspdf";
-import autoTable from "jspdf-autotable";
+
 
 
 describe('SaveService', () => {
@@ -66,15 +65,12 @@ describe('SaveService', () => {
             const spy = spyOn(service.chemicalService, 'getFilteredChemicals')
                 .and.returnValue(allChemicals);
 
-            // TODO this works, BUT tries to save a pdf when the test is run.  All atempts to use mocks and spies
-            //  to prevent this behaviour have been unsuccessful.  Tried extracting the save method on jspdf to a
-            //  separate function and mocking that but it still tries to save the pdf.
-
             const mockJsPDF = jasmine.createSpyObj('jsPDF', ['save']);
 
             // Mock the save method to do nothing
             mockJsPDF.save.and.callFake(() => {});
 
+            // TODO this doesn't actually prevent the save method from being called...
             // Mock the callSaveJsPDF method to prevent actual save
             spyOn(service, 'callSaveJsPDF').and.callFake(() => {});
 

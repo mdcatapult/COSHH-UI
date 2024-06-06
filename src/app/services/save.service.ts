@@ -35,22 +35,19 @@ export class SaveService {
         }
     };
 
-    autoTableWrapper = {
-        autoTable: autoTable
-    };
-
     createJsPDF() {
         return new jsPDF('landscape')
-    }
+    };
 
     callSaveJsPDF(doc: jsPDF, filename: string) {
         doc.save(filename);
-    }
+    };
 
     savePDF() {
         const chemicalsToPrint = this.createPDFData(this.chemicalService.getFilteredChemicals());
 
         const doc = this.createJsPDF()
+
         const now = moment().format('DD-MM-YYYY');
 
         doc.text(`MDC COSHH Inventory (${now})`, 100, 15);
@@ -64,8 +61,7 @@ export class SaveService {
             }
         });
         this.callSaveJsPDF(doc, 'mdc-coshh-inventory.pdf')
-        // doc.save('mdc-coshh-inventory.pdf');
-    }
+    };
 
     createPDFData(chemicals: Chemical[]) {
         const dateTimePipe = new DateTimeFormatPipe();
