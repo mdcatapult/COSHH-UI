@@ -1,15 +1,15 @@
 import { AuthService } from '@auth0/auth0-angular';
 import { BehaviorSubject, combineLatest, Observable, startWith } from 'rxjs';
-import { map } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { map } from 'rxjs/operators';
 import { UntypedFormControl } from '@angular/forms';
 
 import { allHazards, Chemical, Expiry } from '../coshh/types';
 import { checkDuplicates } from '../utility/utilities';
+import { DataService } from './data.service';
 import { environment } from 'src/environments/environment';
 import { ExpiryService } from './expiry.service';
-import { DataService } from './data.service';
 import { HazardService } from './hazard.service';
 
 
@@ -270,7 +270,17 @@ export class ChemicalService {
             addedChemical.hazardList = this.hazardService.getHazardListForChemical(addedChemical);
             addedChemical.backgroundColour = this.expiryService.getExpiryColour(addedChemical);
             this.setAllChemicals(this.getAllChemicals().concat(addedChemical));
-            this.setFilteredChemicals(this.getFilteredChemicals().concat(addedChemical));
+            const filteredChemicals = this.filterChemicals(
+                this.toggleArchiveControl.value,
+                this.cupboardFilterControl.value,
+                this.hazardFilterControl.value,
+                this.labFilterControl.value,
+                this.expiryFilterControl.value,
+                this.nameOrNumberSearchControl.value ?? '',
+                this.ownerSearchControl.value ?? ''
+            );
+
+            this.setFilteredChemicals(filteredChemicals);
         });
 
     };
@@ -282,7 +292,6 @@ export class ChemicalService {
     onChemicalEdited = (chemical: Chemical): void => {
         chemical.hazardList = this.hazardService.getHazardListForChemical(chemical);
         chemical.backgroundColour = this.expiryService.getExpiryColour(chemical);
-        chemical.lastUpdatedBy = this.loggedInUser;
         this.updateChemical(chemical);
         this.hazardService.updateHazards(chemical);
         this.update(chemical);
@@ -342,14 +351,12 @@ export class ChemicalService {
      * the newly added chemical in state based on the expiry date
      * @param {Chemical} chemical
      */
-    updateChemical = (chemical: Chemical): void => {
+    updateChemical = (chemical: Chemical): Observable<Chemical> => {
         // Lower case and remove trailing spaces from the cupboard name to make filtering and data integrity better
         chemical.cupboard = chemical.cupboard?.toLowerCase().trim();
         chemical.lastUpdatedBy = this.loggedInUser;
-        this.http.put(`${environment.backendUrl}/chemical`, chemical)
-            .subscribe(() => {
-                chemical.backgroundColour = this.expiryService.getExpiryColour(chemical);
-            });
+
+        return this.http.put(`${environment.backendUrl}/chemical`, chemical) as Observable<Chemical>;
     };
 
 }
