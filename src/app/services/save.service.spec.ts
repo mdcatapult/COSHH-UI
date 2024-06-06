@@ -70,7 +70,7 @@ describe('SaveService', () => {
                 .and.returnValue(allChemicals);
 
             // Mock the callSaveJsPDF method to prevent actual save
-            spyOn(service, 'callSaveJsPDF').and.callFake((doc, filename) => {});
+            spyOn(service, 'callSaveJsPDF').and.callFake(() => {});
 
             service.savePDF();
 
