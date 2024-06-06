@@ -71,7 +71,6 @@ describe('SaveService', () => {
 
             // Mock the callSaveJsPDF method to prevent actual save
             spyOn(service, 'callSaveJsPDF').and.callFake(() => {});
-
             service.savePDF();
 
             expect(spy).toHaveBeenCalled();
