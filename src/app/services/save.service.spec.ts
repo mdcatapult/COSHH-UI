@@ -46,9 +46,7 @@ describe('SaveService', () => {
             const spy = spyOn(service.chemicalService, 'getFilteredChemicals').and.callThrough();
 
             // Mock the writeExcelFileWrapper function to do nothing
-            spyOn(service, 'writeExcelFileWrapper').and.callFake((data, options) => {
-                return Promise.resolve(new Blob())});
-
+            spyOn(service, 'writeExcelFileWrapper').and.callFake(() => Promise.resolve(new Blob()));
             service.saveExcel();
 
             expect(spy).toHaveBeenCalled();
@@ -58,9 +56,7 @@ describe('SaveService', () => {
             const spy = spyOn(service, 'createExcelData').and.callThrough();
 
             // Mock the writeExcelFileWrapper function to do nothing
-            spyOn(service, 'writeExcelFileWrapper').and.callFake((data, options) => {
-                return Promise.resolve(new Blob())});
-
+            spyOn(service, 'writeExcelFileWrapper').and.callFake(() => Promise.resolve(new Blob()));
             service.saveExcel();
 
             expect(spy).toHaveBeenCalled();
