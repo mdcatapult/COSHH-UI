@@ -1,7 +1,7 @@
-import moment from 'moment';
-import autoTable from 'jspdf-autotable';
+import autoTable, {UserOptions} from 'jspdf-autotable';
 import { Injectable } from '@angular/core';
 import jsPDF from 'jspdf';
+import moment from 'moment';
 import writeXlsxFile, { Columns, SheetData } from 'write-excel-file';
 
 import { Chemical, columnsForExport } from '../coshh/types';
@@ -39,6 +39,10 @@ export class SaveService {
         }
     };
 
+    callAutoTable(doc: jsPDF, options: UserOptions) {
+        return autoTable(doc, options);
+    }
+
     callSaveJsPDF(doc: jsPDF, filename: string) {
         doc.save(filename);
     };
@@ -51,7 +55,7 @@ export class SaveService {
         const now = moment().format('DD-MM-YYYY');
 
         doc.text(`MDC COSHH Inventory (${now})`, 100, 15);
-        autoTable(doc, {
+        this.callAutoTable(doc, {
             startY: 25,
             head: [Object.keys(chemicalsToPrint[0])],
             body: chemicalsToPrint.map((column) => Object.values(column)),
@@ -60,6 +64,7 @@ export class SaveService {
                 minCellWidth: 30
             }
         });
+
         this.callSaveJsPDF(doc, 'mdc-coshh-inventory.pdf');
     };
 
