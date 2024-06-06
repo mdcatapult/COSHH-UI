@@ -26,18 +26,31 @@ export class SaveService {
         const { data, columnOptions } = this.createExcelData(columnsForExport,
             this.chemicalService.getFilteredChemicals());
 
-        await writeXlsxFile(data, {
-            columns: columnOptions,
-            fileName: 'mdc-coshh-inventory.xlsx',
-            orientation: 'landscape'
-        });
+        if (data) {
+            await writeXlsxFile(data, {
+                columns: columnOptions,
+                fileName: 'mdc-coshh-inventory.xlsx',
+                orientation: 'landscape'
+            });
+        }
+    };
+
+    autoTableWrapper = {
+        autoTable: autoTable
+    };
+
+    createJsPDF() {
+        return new jsPDF('landscape')
+    }
+
+    callSaveJsPDF(doc: jsPDF, filename: string) {
+        doc.save(filename);
     }
 
     savePDF() {
         const chemicalsToPrint = this.createPDFData(this.chemicalService.getFilteredChemicals());
 
-        const doc = new jsPDF('landscape');
-
+        const doc = this.createJsPDF()
         const now = moment().format('DD-MM-YYYY');
 
         doc.text(`MDC COSHH Inventory (${now})`, 100, 15);
@@ -50,7 +63,8 @@ export class SaveService {
                 minCellWidth: 30
             }
         });
-        doc.save('mdc-coshh-inventory.pdf');
+        this.callSaveJsPDF(doc, 'mdc-coshh-inventory.pdf')
+        // doc.save('mdc-coshh-inventory.pdf');
     }
 
     createPDFData(chemicals: Chemical[]) {
