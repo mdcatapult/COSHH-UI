@@ -3,8 +3,8 @@ import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { SaveService } from './save.service';
 import { TestBed } from '@angular/core/testing';
-import * as writeExcelFile from 'write-excel-file';
 
+import { allChemicals } from '../../test-data/test-data';
 import { ChemicalService } from './chemical.service';
 
 
@@ -67,25 +67,19 @@ describe('SaveService', () => {
         });
     });
 
-    // describe('savePDF', () => {
-    //
-    //     it('should call chemical service getFilteredChemicals', () => {
-    //         const spy = spyOn(service.chemicalService, 'getFilteredChemicals')
-    //             .and.returnValue(allChemicals);
-    //
-    //         const mockJsPDF = jasmine.createSpyObj('jsPDF', ['save']);
-    //
-    //         // Mock the save method to do nothing
-    //         mockJsPDF.save.and.callFake(() => {});
-    //
-    //         // TODO this doesn't actually prevent the save method from being called...
-    //         // Mock the callSaveJsPDF method to prevent actual save
-    //         spyOn(service, 'callSaveJsPDF').and.callFake(() => {});
-    //
-    //         service.savePDF();
-    //
-    //         expect(spy).toHaveBeenCalled();
-    //     });
-    // });
+    describe('savePDF', () => {
+
+        it('should call chemical service getFilteredChemicals', () => {
+            const spy = spyOn(service.chemicalService, 'getFilteredChemicals')
+                .and.returnValue(allChemicals);
+
+            // Mock the callSaveJsPDF method to prevent actual save
+            spyOn(service, 'callSaveJsPDF').and.callFake((doc, filename) => {});
+
+            service.savePDF();
+
+            expect(spy).toHaveBeenCalled();
+        });
+    });
 
 });

@@ -39,10 +39,6 @@ export class SaveService {
         }
     };
 
-    createJsPDF() {
-        return new jsPDF('landscape');
-    };
-
     callSaveJsPDF(doc: jsPDF, filename: string) {
         doc.save(filename);
     };
@@ -50,7 +46,7 @@ export class SaveService {
     savePDF() {
         const chemicalsToPrint = this.createPDFData(this.chemicalService.getFilteredChemicals());
 
-        const doc = this.createJsPDF();
+        const doc = new jsPDF('landscape');
 
         const now = moment().format('DD-MM-YYYY');
 
