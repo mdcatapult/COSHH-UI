@@ -1,7 +1,7 @@
-import moment from 'moment';
-import autoTable from 'jspdf-autotable';
+import autoTable, { UserOptions } from 'jspdf-autotable';
 import { Injectable } from '@angular/core';
 import jsPDF from 'jspdf';
+import moment from 'moment';
 import writeXlsxFile, { Columns, SheetData } from 'write-excel-file';
 
 import { Chemical, columnsForExport } from '../coshh/types';
@@ -22,16 +22,34 @@ export class SaveService {
         window.print();
     }
 
+    async writeExcelFileWrapper(data: SheetData, options: {
+        columns: Columns,
+        fileName: string,
+        orientation: 'landscape'
+    }) {
+        return writeXlsxFile(data, options);
+    }
+
     async saveExcel() {
         const { data, columnOptions } = this.createExcelData(columnsForExport,
             this.chemicalService.getFilteredChemicals());
 
-        await writeXlsxFile(data, {
-            columns: columnOptions,
-            fileName: 'mdc-coshh-inventory.xlsx',
-            orientation: 'landscape'
-        });
+        if (data) {
+            await this.writeExcelFileWrapper(data, {
+                columns: columnOptions,
+                fileName: 'mdc-coshh-inventory.xlsx',
+                orientation: 'landscape'
+            });
+        }
+    };
+
+    callAutoTable(doc: jsPDF, options: UserOptions) {
+        return autoTable(doc, options);
     }
+
+    callSaveJsPDF(doc: jsPDF, filename: string) {
+        doc.save(filename);
+    };
 
     savePDF() {
         const chemicalsToPrint = this.createPDFData(this.chemicalService.getFilteredChemicals());
@@ -41,7 +59,7 @@ export class SaveService {
         const now = moment().format('DD-MM-YYYY');
 
         doc.text(`MDC COSHH Inventory (${now})`, 100, 15);
-        autoTable(doc, {
+        this.callAutoTable(doc, {
             startY: 25,
             head: [Object.keys(chemicalsToPrint[0])],
             body: chemicalsToPrint.map((column) => Object.values(column)),
@@ -50,8 +68,9 @@ export class SaveService {
                 minCellWidth: 30
             }
         });
-        doc.save('mdc-coshh-inventory.pdf');
-    }
+
+        this.callSaveJsPDF(doc, 'mdc-coshh-inventory.pdf');
+    };
 
     createPDFData(chemicals: Chemical[]) {
         const dateTimePipe = new DateTimeFormatPipe();
@@ -87,8 +106,16 @@ export class SaveService {
                 { type: String, value: chemical.location || '' },
                 { type: String, value: chemical.cupboard || '' },
                 { type: String, value: chemical.safetyDataSheet || '', wrap: true },
-                chemical.added ? { type: Date, value: new Date(chemical.added.toString()), format: 'dd/mm/yyyy' } : { type: String, value: '' },
-                chemical.expiry ? { type: Date, value: new Date(chemical.expiry.toString()), format: 'dd/mm/yyyy' } : { type: String, value: '' },
+                chemical.added ? {
+                    type: Date,
+                    value: new Date(chemical.added.toString()),
+                    format: 'dd/mm/yyyy'
+                } : { type: String, value: '' },
+                chemical.expiry ? {
+                    type: Date,
+                    value: new Date(chemical.expiry.toString()),
+                    format: 'dd/mm/yyyy'
+                } : { type: String, value: '' },
                 { type: String, wrap: true }
             ]];
 
