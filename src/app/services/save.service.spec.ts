@@ -1,12 +1,12 @@
-import {AuthModule} from '@auth0/auth0-angular';
+import { AuthModule } from '@auth0/auth0-angular';
 import 'jspdf-autotable';
-import {provideHttpClientTesting} from '@angular/common/http/testing';
-import {provideHttpClient, withInterceptorsFromDi} from '@angular/common/http';
-import {TestBed} from '@angular/core/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { TestBed } from '@angular/core/testing';
 
-import {allChemicals, chemicalOne} from '../../test-data/test-data';
-import {ChemicalService} from './chemical.service';
-import {SaveService} from './save.service';
+import { allChemicals, chemicalOne } from '../../test-data/test-data';
+import { ChemicalService } from './chemical.service';
+import { SaveService } from './save.service';
 
 
 describe('SaveService', () => {
@@ -19,9 +19,9 @@ describe('SaveService', () => {
                 // Fake Auth0 details for testing purposes
                 AuthModule.forRoot({
                     domain: 'a.domain.id',
-                    clientId: '12345'
+                    clientId: '12345',
                 })],
-            providers: [ChemicalService, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+            providers: [ChemicalService, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()],
         });
         service = TestBed.inject(SaveService);
     });
@@ -70,7 +70,8 @@ describe('SaveService', () => {
                 .and.returnValue(allChemicals);
 
             // Mock the callSaveJsPDF method to prevent actual save
-            spyOn(service, 'callSaveJsPDF').and.callFake(() => {});
+            spyOn(service, 'callSaveJsPDF').and.callFake(() => {
+            });
             service.savePDF();
 
             expect(spy).toHaveBeenCalled();
@@ -84,21 +85,22 @@ describe('SaveService', () => {
             const spy = spyOn(service, 'callAutoTable').and.callThrough();
 
             // Mock the callSaveJsPDF method to prevent actual save
-            spyOn(service, 'callSaveJsPDF').and.callFake(() => {});
+            spyOn(service, 'callSaveJsPDF').and.callFake(() => {
+            });
 
             service.savePDF();
 
             // Assert that autoTable was called with the correct parameters
             expect(spy).toHaveBeenCalledWith(jasmine.any(Object),
                 {
-                startY: 25,
-                head: [['Name', 'Quantity', 'CAS No.', 'State', 'Location', 'Cupboard', 'Safety data sheet', 'Added', 'Expiry']],
-                body: jasmine.any(Array),
-                theme: 'striped',
-                styles: {
-                    minCellWidth: 30
-                }
-            });
+                    startY: 25,
+                    head: [['Name', 'Quantity', 'CAS No.', 'State', 'Location', 'Cupboard', 'Safety data sheet', 'Added', 'Expiry']],
+                    body: jasmine.any(Array),
+                    theme: 'striped',
+                    styles: {
+                        minCellWidth: 30,
+                    },
+                });
         });
     });
 
@@ -117,8 +119,8 @@ describe('SaveService', () => {
                     'Cupboard': 'Cupboard 2',
                     'Safety data sheet': '',
                     'Added': jasmine.any(String),
-                    'Expiry': jasmine.any(String)
-                })
+                    'Expiry': jasmine.any(String),
+                }),
             ]));
         });
     });
@@ -130,7 +132,7 @@ describe('SaveService', () => {
 
             expect(result).toEqual(jasmine.objectContaining({
                 data: jasmine.any(Array),
-                columnOptions: jasmine.any(Array)
+                columnOptions: jasmine.any(Array),
             }));
         });
 
@@ -139,7 +141,7 @@ describe('SaveService', () => {
 
             expect(result).toEqual(jasmine.objectContaining({
                 data: jasmine.any(Array),
-                columnOptions: jasmine.any(Array)
+                columnOptions: jasmine.any(Array),
             }));
         });
 
