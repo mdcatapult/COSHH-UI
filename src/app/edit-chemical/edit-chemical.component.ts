@@ -25,7 +25,7 @@ export class EditChemicalComponent implements OnInit {
 
     editChemical(): void {
         const dialogRef = this.dialog.open(ChemicalDialogComponent, {
-            width: '50vw',
+            width: '43vw',
             data: {
                 labs: this.labs,
                 users: this.users,

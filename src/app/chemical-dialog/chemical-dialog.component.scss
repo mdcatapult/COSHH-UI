@@ -1,15 +1,14 @@
 .hazard-category-container {
   display: block;
-  padding: 1vh 0 2vh 0;
-}
-
-mat-label {
-  font-weight: bold;
 }
 
 
 .submit-button-container {
   display: flex;
+  align-self: auto;
+  align-items: flex-end;
+  height: 30%;
+  max-width: 20vw;
 }
 
 .column {
@@ -38,4 +37,8 @@ mat-form-field {
   font-weight: bold;
   color: red;
   margin: 1% 1% 0 0;
+}
+
+.mat-mdc-dialog-content {
+  max-height: unset;
 }
