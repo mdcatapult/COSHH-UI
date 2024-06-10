@@ -26,7 +26,7 @@ test-lint-build-ui:
   before_script:
     - apt-get -yqq update && apt-get upgrade -yqq chromium libxss1 xvfb
     - export CHROME_BIN=/usr/bin/chromium
-    - npm install
+    - npm ci
   script:
     - npx eslint .
     - npm run test:ci
