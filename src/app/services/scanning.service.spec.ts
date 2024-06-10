@@ -10,7 +10,9 @@ import { ScanningService } from './scanning.service';
 
 describe('ScanningService', () => {
     let chemicalService: ChemicalService;
+
     let dialog: MatDialog;
+
     let service: ScanningService;
 
     beforeEach(() => {
@@ -61,6 +63,7 @@ describe('ScanningService', () => {
 
         it('should open the dialog with correct parameters when dialogOpen is false', () => {
             const dialogSpy = spyOn(dialog, 'open').and.callThrough();
+
             service.dialogOpen = false;
             service.scannedBarcode = '1';
             service.barcodeScanned();
@@ -69,6 +72,7 @@ describe('ScanningService', () => {
 
         it('should not open the dialog when dialogOpen is true', () => {
             const dialogSpy = spyOn(dialog, 'open').and.callThrough();
+
             service.dialogOpen = true;
             service.barcodeScanned();
             expect(dialogSpy).not.toHaveBeenCalled();
