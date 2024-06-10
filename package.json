@@ -18,12 +18,12 @@
     "@angular/common": "^18.0.0",
     "@angular/compiler": "^18.0.0",
     "@angular/core": "^18.0.0",
-    "@angular/forms": "^18.0.0",
+    "@angular/forms": "^18.0.2",
     "@angular/material": "^18.0.0",
-    "@angular/material-moment-adapter": "^18.0.0",
+    "@angular/material-moment-adapter": "^18.0.2",
     "@angular/platform-browser": "^18.0.0",
-    "@angular/platform-browser-dynamic": "^18.0.0",
-    "@angular/router": "^18.0.0",
+    "@angular/platform-browser-dynamic": "^18.0.2",
+    "@angular/router": "^18.0.2",
     "@auth0/auth0-angular": "^2.2.3",
     "dotenv": "~16.0.3",
     "jspdf": "^2.5.1",
@@ -32,9 +32,9 @@
     "ng-mocks": "^14.13.0",
     "rxjs": "~7.5.0",
     "ts-transformer-keys": "^0.4.4",
-    "tslib": "^2.3.0",
+    "tslib": "^2.6.3",
     "write-excel-file": "^1.4.30",
-    "zone.js": "^0.14.6"
+    "zone.js": "^0.14.7"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^18.0.3",
