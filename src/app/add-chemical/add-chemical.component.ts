@@ -1,11 +1,14 @@
+import { catchError } from 'rxjs';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+
 
 import moment from 'moment';
 import { Chemical } from '../coshh/types';
 import { ChemicalDialogComponent } from '../chemical-dialog/chemical-dialog.component';
 import { environment } from '../../environments/environment';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { handleError } from '../utility/utilities';
 
 
 @Component({
@@ -27,7 +30,9 @@ export class AddChemicalComponent {
   addChemical(): void {
     this.onDialogOpen.emit(true);
     this.http.get<string>(`${environment.backendUrl}/chemical/maxchemicalnumber`)
-        .subscribe((maxChemNo) => {
+    .pipe(catchError((error: HttpErrorResponse) => handleError(error)))
+    .subscribe({
+        next: (maxChemNo) => {
           const formattedChemicalNumber = (parseInt(maxChemNo) + 1).toString().padStart(5, '0');
 
           const chemical = {
@@ -60,6 +65,12 @@ export class AddChemicalComponent {
               this.onChemicalAdded.emit(chemical);
             }
           });
-        });
+        },
+        error: (error) => {
+          // use console.error to notify the user of the error
+          console.error('Error fetching max chemical number from add-chemical-component', error.message);
+        }
+      }
+    );
   }
 }

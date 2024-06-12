@@ -1,12 +1,12 @@
 import { AuthService } from '@auth0/auth0-angular';
-import { BehaviorSubject, combineLatest, Observable, startWith } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
+import { BehaviorSubject, combineLatest, Observable, startWith  } from 'rxjs';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { map } from 'rxjs/operators';
+import { map, catchError } from 'rxjs/operators';
 import { UntypedFormControl } from '@angular/forms';
 
 import { allHazards, Chemical, Expiry } from '../coshh/types';
-import { checkDuplicates } from '../utility/utilities';
+import { checkDuplicates, handleError } from '../utility/utilities';
 import { DataService } from './data.service';
 import { environment } from 'src/environments/environment';
 import { ExpiryService } from './expiry.service';
@@ -260,28 +260,38 @@ export class ChemicalService {
         );
     };
 
+
     /**
      * Called when a new chemical is added.  Updates the database via an API call and updates the chemicals in state
      * @param {Chemical} chemical
      */
     onChemicalAdded = (chemical: Chemical): void => {
         chemical.cupboard = chemical.cupboard?.toLowerCase().trim();
-        this.http.post<Chemical>(`${environment.backendUrl}/chemical`, chemical).subscribe((addedChemical: Chemical) => {
-            addedChemical.hazardList = this.hazardService.getHazardListForChemical(addedChemical);
-            addedChemical.backgroundColour = this.expiryService.getExpiryColour(addedChemical);
-            this.setAllChemicals(this.getAllChemicals().concat(addedChemical));
-            const filteredChemicals = this.filterChemicals(
-                this.toggleArchiveControl.value,
-                this.cupboardFilterControl.value,
-                this.hazardFilterControl.value,
-                this.labFilterControl.value,
-                this.expiryFilterControl.value,
-                this.nameOrNumberSearchControl.value ?? '',
-                this.ownerSearchControl.value ?? ''
-            );
-
-            this.setFilteredChemicals(filteredChemicals);
-        });
+        this.http.post<Chemical>(`${environment.backendUrl}/chemical`, chemical)
+        .pipe(catchError((error: HttpErrorResponse) => handleError(error)))
+        .subscribe({
+                next: (addedChemical: Chemical) => {
+                    addedChemical.hazardList = this.hazardService.getHazardListForChemical(addedChemical);
+                    addedChemical.backgroundColour = this.expiryService.getExpiryColour(addedChemical);
+                    this.setAllChemicals(this.getAllChemicals().concat(addedChemical));
+    
+                    const filteredChemicals = this.filterChemicals(
+                        this.toggleArchiveControl.value,
+                        this.cupboardFilterControl.value,
+                        this.hazardFilterControl.value,
+                        this.labFilterControl.value,
+                        this.expiryFilterControl.value,
+                        this.nameOrNumberSearchControl.value ?? '',
+                        this.ownerSearchControl.value ?? ''
+                    );
+    
+                    this.setFilteredChemicals(filteredChemicals);
+                },
+                error: (err: HttpErrorResponse) => {
+                    // use console.error to notify the user of the error
+                    console.error(`'Failed to insert ${chemical.name}:' due to`, err.message);
+                }
+            });
 
     };
 

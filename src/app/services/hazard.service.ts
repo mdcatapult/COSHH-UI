@@ -1,10 +1,11 @@
-import { HttpClient } from '@angular/common/http';
+import { catchError  } from 'rxjs';
+import { HttpClient , HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
-import { allHazards, HazardListItem } from '../coshh/types';
-import { Chemical } from '../coshh/types';
+import { allHazards, Chemical, Hazard , HazardListItem } from '../coshh/types';
 import { environment } from 'src/environments/environment';
-import { Hazard } from '../coshh/types';
+import { handleError } from '../utility/utilities';
+
 
 // This service is used to get the hazard picture for a given hazard and to update the hazards for a given chemical
 @Injectable({
@@ -42,8 +43,16 @@ export class HazardService {
     
 
     updateHazards = (chemical: Chemical): void => {
-        this.http.put(`${environment.backendUrl}/hazards`, chemical).subscribe(() => {
-            chemical.hazardList = this.getHazardListForChemical(chemical);
+        this.http.put(`${environment.backendUrl}/hazards`, chemical)
+        .pipe(catchError((error) => handleError(error)))
+        .subscribe({
+            next: () => {
+                chemical.hazardList = this.getHazardListForChemical(chemical);
+            },
+            error: (err: HttpErrorResponse) => {
+                // use console.error to notify the user of the error
+                console.error(`'Failed to insert hazard ${chemical.name}:' due to`, err.message);
+            }
         });
        
     };

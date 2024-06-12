@@ -1,9 +1,11 @@
+import { catchError } from 'rxjs/operators';
 import { Component, Inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 import { Chemical } from '../coshh/types';
 import { environment } from '../../environments/environment';
+import { handleError } from '../utility/utilities';
 
 @Component({
     selector: 'app-scan-chemical',
@@ -30,7 +32,14 @@ export class ScanChemicalComponent {
     archiveChemical(chemical: Chemical): void {
         chemical.isArchived = !chemical.isArchived;
         this.http.put(`${environment.backendUrl}/chemical`, chemical)
-            .subscribe((chem) => console.info(`${chemical.name} archived`, chem));
+        .pipe(catchError((error: HttpErrorResponse) => handleError(error)))
+        .subscribe(
+            {
+                next: (chem) => console.info(`${chemical.name} archived`, chem),
+                error: (err: HttpErrorResponse) => {
+                    console.error(`Failed to archive ${chemical.name} due to ${err.message}`);
+            }
+        });
     }
 
 }

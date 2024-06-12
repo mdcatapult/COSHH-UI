@@ -1,3 +1,4 @@
+import { catchError } from 'rxjs/operators';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Chemical } from '../coshh/types';
@@ -5,6 +6,7 @@ import { ChemicalDialogComponent } from '../chemical-dialog/chemical-dialog.comp
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import moment from 'moment';
+import { of } from 'rxjs';
 
 @Component({
     selector: 'app-clone-chemical',
@@ -22,7 +24,13 @@ export class CloneChemicalComponent {
     @Output() onChemicalCloned = new EventEmitter<Chemical>();
 
     cloneChemical(): void {
-        this.http.get<string>(`${environment.backendUrl}/chemical/maxchemicalnumber`)
+        this.http.get<string>(`${environment.backendUrl}/chemical/maxchemicalnumber`).pipe(
+            catchError((error: Error) => {
+                console.error('Error fetching max chemical number from clone-chemical-component', error.message);
+
+                return of('Error fetching max chemical number from clone-chemical-component' + error.message);
+            }
+        ))
             .subscribe((maxChemNo) => {
                 // clone chemical
                 const newChemical = JSON.parse(JSON.stringify(this.chemical));

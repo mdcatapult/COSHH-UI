@@ -1,3 +1,4 @@
+import { catchError } from 'rxjs/operators';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -5,6 +6,7 @@ import { Observable } from 'rxjs';
 import { Chemical } from '../coshh/types';
 // environment.ts is added at compile time by npm run start command
 import { environment } from '../../environments/environment';
+import { handleError } from '../utility/utilities';
 
 @Injectable({
     providedIn: 'root'
@@ -20,14 +22,14 @@ export class DataService {
      * Get all the chemicals from the database
      * @returns {Observable<Chemical[]>}
      */
-    getChemicals = (): Observable<Chemical[]> => this.http.get<Chemical[]>(`${this.API_URL}/chemicals`);
+    getChemicals = (): Observable<Chemical[]> => this.http.get<Chemical[]>(`${this.API_URL}/chemicals`).pipe(catchError((error) => handleError(error))); 
 
 
     /**
      * Get all the cupboards for all the labs
      * @returns {Observable<string[]>}
      */
-    getCupboards = (): Observable<string[]> => this.http.get<[string]>(`${this.API_URL}/cupboards`);
+    getCupboards = (): Observable<string[]> => this.http.get<[string]>(`${this.API_URL}/cupboards`).pipe(catchError((error) => handleError(error))); 
 
 
     /**
@@ -39,7 +41,7 @@ export class DataService {
         const options = lab ?
             { params: new HttpParams().set('lab', lab) } : {};
 
-        return this.http.get<[string]>(`${this.API_URL}/cupboards`, options);
+        return this.http.get<[string]>(`${this.API_URL}/cupboards`, options).pipe(catchError((error) => handleError(error))); 
     };
 
 
@@ -47,7 +49,7 @@ export class DataService {
      * Get all the labs
      * @returns {Observable<string[]>}
      */
-    getLabs = (): Observable<string[]> => this.http.get<string[]>(`${this.API_URL}/labs`);
+    getLabs = (): Observable<string[]> => this.http.get<string[]>(`${this.API_URL}/labs`).pipe(catchError((error) => handleError(error))); 
 
     /**
      * Search the passed array of chemicals for chemical names or numbers containing the search string (case-insensitive)
@@ -86,6 +88,6 @@ export class DataService {
      * Get all users from the database
      * @returns {Observable<string[]>}
      */
-    getUsers = (): Observable<string[]> =>  this.http.get<string[]>(`${this.API_URL}/users`);
+    getUsers = (): Observable<string[]> =>  this.http.get<string[]>(`${this.API_URL}/users`).pipe(catchError((error) => handleError(error))); 
 
 }

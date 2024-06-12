@@ -1,5 +1,9 @@
 import { AbstractControl, UntypedFormControl, ValidationErrors, ValidatorFn } from '@angular/forms';
+import { EMPTY } from 'rxjs';
+import { HttpErrorResponse } from '@angular/common/http';
 import { map, Observable } from 'rxjs';
+
+
 
 
 export function getAutocompleteObservable(formControl: UntypedFormControl, data: string[]): Observable<string[]> {
@@ -51,3 +55,11 @@ export function checkDuplicates(things: string[]): string[] {
 
     return duplicatesRemoved;
 }
+
+ // Error handling function for HTTP requests
+export const handleError = (error: HttpErrorResponse) => {
+    console.error('An error occurred at this url: ', error.message); // Log the error to the console
+
+    // Additional error handling logic can be added here, such as showing a notification to the user
+    return EMPTY; // Return an EMPTY observable to terminate the stream
+};
