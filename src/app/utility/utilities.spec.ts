@@ -1,6 +1,6 @@
-import { isValidHttpUrl, checkDuplicates } from './utilities';
+import { isValidHttpUrl, checkDuplicates, formatString } from './utilities';
 
-describe('isValidHttpUrl function', () => {
+describe('isValidHttpUrl', () => {
 
     it('can check for valid http URLs', () => {
         const url = 'http://www.a.url.com';
@@ -36,7 +36,7 @@ describe('isValidHttpUrl function', () => {
 
 });
 
-describe('checkDuplicates function', () => {
+describe('checkDuplicates', () => {
 
     it('will lower case and trim duplicate strings', () => {
         const strings = ['A', 'a', 'A ', ' a', 'a '];
@@ -45,5 +45,17 @@ describe('checkDuplicates function', () => {
 
         expect(value).toEqual(['a']);
     });
-    
+
+});
+
+
+describe('formatString', () => {
+
+    it('will replace multiple consecutive whitespace characters with a single space', () => {
+        const stringToFormat = 'This is    a        string.';
+        const actual = formatString(stringToFormat);
+        const expected = 'this is a string.';
+        expect(actual).toEqual(expected);
+    });
+
 });

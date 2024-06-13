@@ -47,7 +47,15 @@ export function urlValidator(): ValidatorFn {
  * @param things
  */
 export function checkDuplicates(things: string[]): string[] {
-    const duplicatesRemoved: string[] = Array.from(new Set(things.map((e) => e.toLowerCase().trim())));
 
-    return duplicatesRemoved;
+    return Array.from(new Set(things.map((e) => e.toLowerCase().trim())));
+}
+
+/**
+ * Format a string to lowercase, trim whitespace and replace multiple consecutive whitespace characters with a single space
+ * @param text
+ */
+export function formatString(text: string): string {
+
+    return text ? text.toLowerCase().trim().replace(/\s\s+/g, ' ') : '';
 }
