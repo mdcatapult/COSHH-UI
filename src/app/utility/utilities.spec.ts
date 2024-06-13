@@ -53,8 +53,11 @@ describe('formatString', () => {
 
     it('will replace multiple consecutive whitespace characters with a single space', () => {
         const stringToFormat = 'This is    a        string.';
+
         const actual = formatString(stringToFormat);
+
         const expected = 'this is a string.';
+
         expect(actual).toEqual(expected);
     });
 
