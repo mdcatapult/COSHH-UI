@@ -105,6 +105,10 @@ alpha-numeric characters that the barcode represents, ending with 'Enter'.  The 
 the 'Enter' key.  The scan button is automatically disabled when the user clicks on any filters or checkboxes, to avoid
 any scanned numbers appearing in those inputs should focus be on those elements.
 
+### Known Issues
+- On Safari the chemical count is truncated to 2 characters.  This appears to be an incompatibility between Angular Material
+and Safari and is not an issue in Chrome or Firefox.
+
 ### Attributions
 
 <a href="https://www.flaticon.com/free-icons/flammable" title="flammable icons">Flammable icons created by Freepik - Flaticon</a>
