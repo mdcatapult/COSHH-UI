@@ -177,9 +177,13 @@ export class ChemicalService {
     archive = (chemical: Chemical): void => {
         chemical.isArchived = !chemical.isArchived;
         // update the chemical in the database
-        this.updateChemical(chemical);
-        // update the chemicals in state
-        this.update(chemical);
+        this.updateChemical(chemical).subscribe({
+            next: (chemical) => {
+               // update the chemicals in state
+               this.update(chemical);
+            }
+        });
+        
     };
 
 
@@ -246,6 +250,7 @@ export class ChemicalService {
         );
     };
 
+
     /**
      * Returns an observable of owners for the owner search box
      * @returns {Observable<string[]>}
@@ -295,26 +300,31 @@ export class ChemicalService {
 
     };
 
+
     /**
      * Called when a chemical is edited. Updates the database via an API call and updates the chemicals in state
      * @param {Chemical} chemical
      */
     onChemicalEdited = (chemical: Chemical): void => {
+            // Update the chemical properties
             chemical.hazardList = this.hazardService.getHazardListForChemical(chemical);
             chemical.backgroundColour = this.expiryService.getExpiryColour(chemical);
 
-            this.updateChemical(chemical).subscribe({
+            // Perform the API call to update the chemical
+            this.updateChemical(chemical).pipe(catchError((error: HttpErrorResponse) => handleError(error))).subscribe({
                 next: (chemical) => {
-                    // If the API call is successful, update the hazards and the chemical in the state
-                    this.hazardService.updateHazards(chemical);
                     this.update(chemical);
                 },
                 error: (error) => {
-                    // show users the error
-                    console.error('Failed to update chemical:', error);
+                    // Handle the error appropriately
+                    console.error('Failed to update chemical:', error.message);
                 }
             });
+
+            // If the API call is successful, update the hazards and the chemical in the state
+            this.hazardService.updateHazards(chemical);
     };
+
 
     /**
      * Show only cupboards for currently selected lab. If 'All' labs it will show cupboards currently used over all the chemicals.
@@ -336,6 +346,7 @@ export class ChemicalService {
         }
     };
 
+    
     /**
      * Updates a passed chemical in state and then re-filters the chemicals
      * @param {Chemical} chemical
@@ -373,11 +384,11 @@ export class ChemicalService {
         // Lower case and remove trailing spaces from the cupboard name to make filtering and data integrity better
         chemical.cupboard = chemical.cupboard?.toLowerCase().trim();
         chemical.lastUpdatedBy = this.loggedInUser;
+        const updatedChemicalUrl = this.http.put(`${environment.backendUrl}/chemical`, chemical)
+            .pipe(catchError((error: HttpErrorResponse) => handleError(error)));
 
-        const updateChemicalUrl = this.http.put(`${environment.backendUrl}/chemical`, chemical) as Observable<Chemical>;
+        return updatedChemicalUrl as Observable<Chemical>;
 
-        return updateChemicalUrl.pipe(catchError((error: HttpErrorResponse) => handleError(error)));
-        
     };
 
 }

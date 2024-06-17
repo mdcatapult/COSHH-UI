@@ -274,11 +274,21 @@ describe('ChemicalService', () => {
         }));
 
         it('should call update', () => {
+            spyOn(chemicalService, 'updateChemical').and.returnValue(of(chemicalTwo));
+
             spyOn(chemicalService, 'update').and.callThrough();
+            
             httpClientSpy.put.and.returnValue(asyncData(updatedChemical));
             chemicalService.onChemicalEdited(updatedChemical);
 
-            expect(chemicalService.update).toHaveBeenCalled();
+            chemicalService.updateChemical(chemicalTwo).subscribe({
+                next: (chemical) => {
+                    expect(chemical).toEqual(chemicalTwo);
+                    expect(chemicalService.update).toHaveBeenCalledWith(chemicalTwo);
+                }
+            });
+
+           
         });
     });
 
@@ -315,29 +325,40 @@ describe('ChemicalService', () => {
     describe('archive', () => {
 
         it('should archive a chemical which is not already archived', () => {
+            spyOn(chemicalService, 'updateChemical').and.returnValue(of(chemicalTwo));
             chemicalService.archive(chemicalTwo);
 
             expect(chemicalTwo.isArchived).toEqual(true);
         });
 
         it('should unarchive a chemical which is already archived', () => {
+            spyOn(chemicalService, 'updateChemical').and.returnValue(of(chemicalTwo));
             chemicalService.archive(chemicalTwo);
 
             expect(chemicalTwo.isArchived).toEqual(false);
         });
 
         it('should call updateChemical', () => {
-            spyOn(chemicalService, 'updateChemical').and.callThrough();
+            spyOn(chemicalService, 'updateChemical').and.returnValue(of(chemicalThree));
+
             chemicalService.archive(chemicalThree);
 
             expect(chemicalService.updateChemical).toHaveBeenCalled();
         });
 
         it('should call update', () => {
+            spyOn(chemicalService, 'updateChemical').and.returnValue(of(chemicalFour));
+            
             spyOn(chemicalService, 'update').and.callThrough();
+            
             chemicalService.archive(chemicalFour);
 
-            expect(chemicalService.update).toHaveBeenCalled();
+            chemicalService.updateChemical(chemicalFour).subscribe({
+                next: (chemical) => {
+                    expect(chemical).toEqual(chemicalFour);
+                    expect(chemicalService.update).toHaveBeenCalledWith(chemicalFour);
+                }
+            });
         });
     });
 
