@@ -55,7 +55,7 @@ export function checkDuplicates(things: string[]): string[] {
 
  // Error handling function for HTTP requests
 export const handleError = (error: HttpErrorResponse) => {
-    console.error('An error occurred at this url: ', error.message);
+    console.error('An error occurred: ', error.message);
  
     return EMPTY;
 };

@@ -296,17 +296,25 @@ export class ChemicalService {
     };
 
     /**
-     * Called when a chemical is edited.  Updates the database via an API call and updates the chemicals in state
+     * Called when a chemical is edited. Updates the database via an API call and updates the chemicals in state
      * @param {Chemical} chemical
      */
     onChemicalEdited = (chemical: Chemical): void => {
-        chemical.hazardList = this.hazardService.getHazardListForChemical(chemical);
-        chemical.backgroundColour = this.expiryService.getExpiryColour(chemical);
-        this.updateChemical(chemical);
-        this.hazardService.updateHazards(chemical);
-        this.update(chemical);
-    };
+            chemical.hazardList = this.hazardService.getHazardListForChemical(chemical);
+            chemical.backgroundColour = this.expiryService.getExpiryColour(chemical);
 
+            this.updateChemical(chemical).subscribe({
+                next: (chemical) => {
+                    // If the API call is successful, update the hazards and the chemical in the state
+                    this.hazardService.updateHazards(chemical);
+                    this.update(chemical);
+                },
+                error: (error) => {
+                    // show users the error
+                    console.error('Failed to update chemical:', error);
+                }
+            });
+    };
 
     /**
      * Show only cupboards for currently selected lab. If 'All' labs it will show cupboards currently used over all the chemicals.
@@ -366,7 +374,10 @@ export class ChemicalService {
         chemical.cupboard = chemical.cupboard?.toLowerCase().trim();
         chemical.lastUpdatedBy = this.loggedInUser;
 
-        return this.http.put(`${environment.backendUrl}/chemical`, chemical) as Observable<Chemical>;
+        const updateChemicalUrl = this.http.put(`${environment.backendUrl}/chemical`, chemical) as Observable<Chemical>;
+
+        return updateChemicalUrl.pipe(catchError((error: HttpErrorResponse) => handleError(error)));
+        
     };
 
 }
