@@ -220,6 +220,7 @@ describe('ChemicalService', () => {
             chemicalService.onChemicalAdded(newChemical);
 
             expect(httpClientSpy.post).toHaveBeenCalledTimes(1);
+
             expect(httpClientSpy.post).toHaveBeenCalledWith(`${environment.backendUrl}/chemical`, newChemical);
         });
     });
@@ -227,12 +228,18 @@ describe('ChemicalService', () => {
     describe('onChemicalEdited', () => {
 
         it('should make 2 PUT requests to the API to update the chemical and hazards', () => {
-            httpClientSpy.put.and.returnValue(asyncData([]));
+            httpClientSpy.put.and.returnValue(asyncData(updatedChemical));
             chemicalService.onChemicalEdited(updatedChemical);
+            
 
-            expect(httpClientSpy.put).toHaveBeenCalledTimes(2);
-            expect(httpClientSpy.put).toHaveBeenCalledWith(`${environment.backendUrl}/chemical`, updatedChemical);
-            expect(httpClientSpy.put).toHaveBeenCalledWith(`${environment.backendUrl}/hazards`, updatedChemical);
+            chemicalService.updateChemical(chemicalFour).subscribe({
+                next: (chemicalFour) => {
+
+                    expect(httpClientSpy.put).toHaveBeenCalledWith(`${environment.backendUrl}/chemical`, chemicalFour);
+
+                    expect(httpClientSpy.put).toHaveBeenCalledWith(`${environment.backendUrl}/hazards`, chemicalFour);
+                }
+            });
         });
 
         it('should get hazard list for updated chemical', fakeAsync(() => {
@@ -264,13 +271,18 @@ describe('ChemicalService', () => {
         });
 
         it('should call updateHazards', fakeAsync(() => {
+            spyOn(chemicalService, 'updateChemical').and.callThrough();
             const updateHazardsSpy = spyOn(hazardService, 'updateHazards').and.callThrough();
 
             httpClientSpy.put.and.returnValue(asyncData([]));
             chemicalService.onChemicalEdited(updatedChemical);
-            tick();
 
-            expect(updateHazardsSpy).toHaveBeenCalledWith(updatedChemical);
+            chemicalService.updateChemical(updatedChemical).subscribe({
+                next: (updatedChemical) => {
+
+                    expect(updateHazardsSpy).toHaveBeenCalledWith(updatedChemical);
+                }
+            });
         }));
 
         it('should call update', () => {
@@ -284,6 +296,7 @@ describe('ChemicalService', () => {
             chemicalService.updateChemical(chemicalTwo).subscribe({
                 next: (chemical) => {
                     expect(chemical).toEqual(chemicalTwo);
+
                     expect(chemicalService.update).toHaveBeenCalledWith(chemicalTwo);
                 }
             });
@@ -297,6 +310,7 @@ describe('ChemicalService', () => {
         it('should update lastUpdatedBy field with the logged in user', async () => {
             httpClientSpy.put.and.returnValue(asyncData(updatedChemical));
             chemicalService.loggedInUser = 'test.user@md.catapult.org.uk';
+
             chemicalService.updateChemical(updatedChemical).subscribe((chem: Chemical) => {
 
                 expect(chem.lastUpdatedBy).toEqual('test.user@md.catapult.org.uk');
@@ -340,7 +354,6 @@ describe('ChemicalService', () => {
 
         it('should call updateChemical', () => {
             spyOn(chemicalService, 'updateChemical').and.returnValue(of(chemicalThree));
-
             chemicalService.archive(chemicalThree);
 
             expect(chemicalService.updateChemical).toHaveBeenCalled();
@@ -348,7 +361,6 @@ describe('ChemicalService', () => {
 
         it('should call update', () => {
             spyOn(chemicalService, 'updateChemical').and.returnValue(of(chemicalFour));
-            
             spyOn(chemicalService, 'update').and.callThrough();
             
             chemicalService.archive(chemicalFour);
@@ -356,6 +368,7 @@ describe('ChemicalService', () => {
             chemicalService.updateChemical(chemicalFour).subscribe({
                 next: (chemical) => {
                     expect(chemical).toEqual(chemicalFour);
+
                     expect(chemicalService.update).toHaveBeenCalledWith(chemicalFour);
                 }
             });

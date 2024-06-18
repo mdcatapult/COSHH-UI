@@ -30,12 +30,16 @@ export class ScanChemicalComponent {
     }
 
     archiveChemical(chemical: Chemical): void {
-        chemical.isArchived = !chemical.isArchived;
+        
         this.http.put(`${environment.backendUrl}/chemical`, chemical)
         .pipe(catchError((error: HttpErrorResponse) => handleError(error)))
         .subscribe(
             {
-                next: (chem) => console.info(`${chemical.name} archived`, chem),
+                next: (chem) => {
+                    chemical.isArchived = !chemical.isArchived,
+                    
+                    console.info(`${chemical.name} archived`, chem);             
+                },
                 error: (err: HttpErrorResponse) => {
                     console.error(`Failed to archive ${chemical.name} due to ${err.message}`);
             }

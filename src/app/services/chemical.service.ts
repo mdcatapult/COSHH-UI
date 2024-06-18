@@ -175,15 +175,14 @@ export class ChemicalService {
      * @param {Chemical} chemical
      */
     archive = (chemical: Chemical): void => {
-        chemical.isArchived = !chemical.isArchived;
         // update the chemical in the database
         this.updateChemical(chemical).subscribe({
             next: (chemical) => {
                // update the chemicals in state
-               this.update(chemical);
+               chemical.isArchived = !chemical.isArchived;
+               this.update(chemical);            
             }
-        });
-        
+        });     
     };
 
 
@@ -311,18 +310,19 @@ export class ChemicalService {
             chemical.backgroundColour = this.expiryService.getExpiryColour(chemical);
 
             // Perform the API call to update the chemical
-            this.updateChemical(chemical).pipe(catchError((error: HttpErrorResponse) => handleError(error))).subscribe({
+            this.updateChemical(chemical)
+            .subscribe({
                 next: (chemical) => {
+                    // If the API call is successful, update the hazards and the chemical in the state
+                    this.hazardService.updateHazards(chemical);
+                    
                     this.update(chemical);
                 },
                 error: (error) => {
                     // Handle the error appropriately
                     console.error('Failed to update chemical:', error.message);
                 }
-            });
-
-            // If the API call is successful, update the hazards and the chemical in the state
-            this.hazardService.updateHazards(chemical);
+            });         
     };
 
 
@@ -384,6 +384,8 @@ export class ChemicalService {
         // Lower case and remove trailing spaces from the cupboard name to make filtering and data integrity better
         chemical.cupboard = chemical.cupboard?.toLowerCase().trim();
         chemical.lastUpdatedBy = this.loggedInUser;
+
+
         const updatedChemicalUrl = this.http.put(`${environment.backendUrl}/chemical`, chemical)
             .pipe(catchError((error: HttpErrorResponse) => handleError(error)));
 
