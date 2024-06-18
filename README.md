@@ -105,6 +105,16 @@ alpha-numeric characters that the barcode represents, ending with 'Enter'.  The 
 the 'Enter' key.  The scan button is automatically disabled when the user clicks on any filters or checkboxes, to avoid
 any scanned numbers appearing in those inputs should focus be on those elements.
 
+### Formatting conventions
+
+#### Cupboard names
+To attempt to maintain consistency as far as possible, when a user adds or edits a chemical, the cupboard name is lower 
+cased prior to being sent to the API.  The `formatString` function in the utilities file is used to 'tidy' cupboard names, 
+also trimming whitespace and removing consecutive duplicate whitespaces.  As the database may already contain cupboard 
+names which have not been formatted, the `formatString` function is also used to format cupboard names when a cupboard name
+filter is applied.
+
+
 ### Attributions
 
 <a href="https://www.flaticon.com/free-icons/flammable" title="flammable icons">Flammable icons created by Freepik - Flaticon</a>
