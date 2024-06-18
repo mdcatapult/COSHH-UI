@@ -115,6 +115,10 @@ names which have not been formatted, the `formatString` function is also used to
 filter is applied.
 
 
+### Known Issues
+- On Safari the chemical count is truncated to 2 characters.  This appears to be an incompatibility between Angular Material
+and Safari and is not an issue in Chrome or Firefox.
+
 ### Attributions
 
 <a href="https://www.flaticon.com/free-icons/flammable" title="flammable icons">Flammable icons created by Freepik - Flaticon</a>
