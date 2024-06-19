@@ -175,14 +175,20 @@ export class ChemicalService {
      * @param {Chemical} chemical
      */
     archive = (chemical: Chemical): void => {
-        // update the chemical in the database
-        this.updateChemical(chemical).subscribe({
+
+       chemical.isArchived = !chemical.isArchived;
+       
+       this.updateChemical(chemical)
+       .pipe(catchError((error: HttpErrorResponse) => {
+            chemical.isArchived = false;
+            
+            return handleError(error);    
+       }))
+       .subscribe({
             next: (chemical) => {
-               // update the chemicals in state
-               chemical.isArchived = !chemical.isArchived;
-               this.update(chemical);            
+                this.update(chemical);
             }
-        });     
+        });
     };
 
 
@@ -385,11 +391,7 @@ export class ChemicalService {
         chemical.cupboard = chemical.cupboard?.toLowerCase().trim();
         chemical.lastUpdatedBy = this.loggedInUser;
 
-
-        const updatedChemicalUrl = this.http.put(`${environment.backendUrl}/chemical`, chemical)
-            .pipe(catchError((error: HttpErrorResponse) => handleError(error)));
-
-        return updatedChemicalUrl as Observable<Chemical>;
+        return this.http.put(`${environment.backendUrl}/chemical`, chemical) as Observable<Chemical>;
 
     };
 

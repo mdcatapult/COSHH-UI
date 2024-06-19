@@ -230,7 +230,6 @@ describe('ChemicalService', () => {
         it('should make 2 PUT requests to the API to update the chemical and hazards', () => {
             httpClientSpy.put.and.returnValue(asyncData(updatedChemical));
             chemicalService.onChemicalEdited(updatedChemical);
-            
 
             chemicalService.updateChemical(chemicalFour).subscribe({
                 next: (chemicalFour) => {
@@ -240,6 +239,8 @@ describe('ChemicalService', () => {
                     expect(httpClientSpy.put).toHaveBeenCalledWith(`${environment.backendUrl}/hazards`, chemicalFour);
                 }
             });
+
+
         });
 
         it('should get hazard list for updated chemical', fakeAsync(() => {
@@ -287,7 +288,6 @@ describe('ChemicalService', () => {
 
         it('should call update', () => {
             spyOn(chemicalService, 'updateChemical').and.returnValue(of(chemicalTwo));
-
             spyOn(chemicalService, 'update').and.callThrough();
             
             httpClientSpy.put.and.returnValue(asyncData(updatedChemical));
@@ -365,13 +365,7 @@ describe('ChemicalService', () => {
             
             chemicalService.archive(chemicalFour);
 
-            chemicalService.updateChemical(chemicalFour).subscribe({
-                next: (chemical) => {
-                    expect(chemical).toEqual(chemicalFour);
-
-                    expect(chemicalService.update).toHaveBeenCalledWith(chemicalFour);
-                }
-            });
+            expect(chemicalService.update).toHaveBeenCalledWith(chemicalFour);
         });
     });
 
