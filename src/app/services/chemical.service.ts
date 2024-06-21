@@ -178,11 +178,13 @@ export class ChemicalService {
 
        chemical.isArchived = !chemical.isArchived;
        
+       // update the chemical in the database  and then update the chemical in state
        this.updateChemical(chemical)
        .pipe(catchError((error: HttpErrorResponse) => {
-            chemical.isArchived = false;
-            
-            return handleError(error);    
+
+            chemical.isArchived = !chemical.isArchived;
+
+            return handleError(error);
        }))
        .subscribe({
             next: (chemical) => {
@@ -317,6 +319,7 @@ export class ChemicalService {
 
             // Perform the API call to update the chemical
             this.updateChemical(chemical)
+            .pipe(catchError((error: HttpErrorResponse) => handleError(error)))
             .subscribe({
                 next: (chemical) => {
                     // If the API call is successful, update the hazards and the chemical in the state
