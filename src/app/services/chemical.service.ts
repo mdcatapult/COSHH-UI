@@ -298,10 +298,6 @@ export class ChemicalService {
                     );
     
                     this.setFilteredChemicals(filteredChemicals);
-                },
-                error: (err: HttpErrorResponse) => {
-                    // use console.error to notify the user of the error
-                    console.error(`'Failed to insert ${chemical.name}:' due to`, err.message);
                 }
             });
 
@@ -326,10 +322,6 @@ export class ChemicalService {
                     this.hazardService.updateHazards(chemical);
                     
                     this.update(chemical);
-                },
-                error: (error) => {
-                    // Handle the error appropriately
-                    console.error('Failed to update chemical:', error.message);
                 }
             });         
     };

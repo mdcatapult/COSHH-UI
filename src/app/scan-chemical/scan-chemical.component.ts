@@ -36,13 +36,10 @@ export class ScanChemicalComponent {
         .subscribe(
             {
                 next: (chem) => {
-                    chemical.isArchived = !chemical.isArchived,
+                    chemical.isArchived = !chemical.isArchived;
                     
                     console.info(`${chemical.name} archived`, chem);             
-                },
-                error: (err: HttpErrorResponse) => {
-                    console.error(`Failed to archive ${chemical.name} due to ${err.message}`);
-            }
+                }
         });
     }
 

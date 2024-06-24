@@ -51,11 +51,7 @@ export class CloneChemicalComponent {
                     dialogRef.afterClosed().subscribe((chemical: Chemical) => {
                         if (chemical) this.onChemicalCloned.emit(chemical);
                     });
-                },
-                error: (error) => {
-                     // use console.error to notify the user of the error
-                    console.error('Error while cloning chemical', error.message);
-                  }
+                }
                });
     }
 

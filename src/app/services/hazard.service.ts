@@ -44,14 +44,10 @@ export class HazardService {
 
     updateHazards = (chemical: Chemical): void => {
         this.http.put(`${environment.backendUrl}/hazards`, chemical)
-        .pipe(catchError((error) => handleError(error)))
+        .pipe(catchError((error: HttpErrorResponse) => handleError(error)))
         .subscribe({
             next: () => {
                 chemical.hazardList = this.getHazardListForChemical(chemical);
-            },
-            error: (err: HttpErrorResponse) => {
-                // use console.error to notify the user of the error
-                console.error(`'Failed to insert hazard ${chemical.name}:' due to`, err.message);
             }
         });
        
