@@ -42,15 +42,26 @@ export function urlValidator(): ValidatorFn {
         return isValidHttpUrl(control.value) ? null : { invalidURL: control.value };
     };
 }
-
+/**
+ * Remove duplicates from an array of strings. Case insensitive.
+ * @param things
+ */
 /**
  * Remove duplicates from an array of strings. Case insensitive.
  * @param things
  */
 export function checkDuplicates(things: string[]): string[] {
-    const duplicatesRemoved: string[] = Array.from(new Set(things.map((e) => e.toLowerCase().trim())));
 
-    return duplicatesRemoved;
+    return Array.from(new Set(things.map((e) => e.toLowerCase().trim())));
+}
+
+/**
+ * Format a string to lowercase, trim whitespace and replace multiple consecutive whitespace characters with a single space
+ * @param text
+ */
+export function formatString(text: string): string {
+
+    return text ? text.toLowerCase().trim().replace(/\s\s+/g, ' ') : '';
 }
 
  // Error handling function for HTTP requests

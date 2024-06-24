@@ -6,7 +6,7 @@ import { map, catchError } from 'rxjs/operators';
 import { UntypedFormControl } from '@angular/forms';
 
 import { allHazards, Chemical, Expiry } from '../coshh/types';
-import { checkDuplicates, handleError } from '../utility/utilities';
+import { checkDuplicates, handleError, formatString } from '../utility/utilities';
 import { DataService } from './data.service';
 import { environment } from 'src/environments/environment';
 import { ExpiryService } from './expiry.service';
@@ -219,7 +219,7 @@ export class ChemicalService {
 
         return this.getAllChemicals()
             .filter((chemical) => includeArchived || !chemical.isArchived)
-            .filter((chemical) => cupboard === 'All' || chemical.cupboard?.toLowerCase().trim() === cupboard) // Note that cupboard is now set to lower case
+            .filter((chemical) => cupboard === 'All' || formatString(chemical.cupboard) === cupboard) // Note that cupboard is now set to lower case
             .filter((chemical) => hazardCategory === 'All' ||
                 chemical.hazards?.map((hazard) => hazard.toString()).includes(hazardCategory))
             .filter((chemical) => lab === 'All' || chemical.location === lab)
@@ -278,7 +278,7 @@ export class ChemicalService {
      * @param {Chemical} chemical
      */
     onChemicalAdded = (chemical: Chemical): void => {
-        chemical.cupboard = chemical.cupboard?.toLowerCase().trim();
+        chemical.cupboard = formatString(chemical.cupboard);
         this.http.post<Chemical>(`${environment.backendUrl}/chemical`, chemical)
         .pipe(catchError((error: HttpErrorResponse) => handleError(error)))
         .subscribe({
@@ -382,8 +382,7 @@ export class ChemicalService {
      * @param {Chemical} chemical
      */
     updateChemical = (chemical: Chemical): Observable<Chemical> => {
-        // Lower case and remove trailing spaces from the cupboard name to make filtering and data integrity better
-        chemical.cupboard = chemical.cupboard?.toLowerCase().trim();
+        chemical.cupboard = formatString(chemical.cupboard);
         chemical.lastUpdatedBy = this.loggedInUser;
 
         return this.http.put(`${environment.backendUrl}/chemical`, chemical) as Observable<Chemical>;
