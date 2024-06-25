@@ -66,7 +66,8 @@ export function formatString(text: string): string {
 
  // Error handling function for HTTP requests
 export const handleError = (error: HttpErrorResponse) => {
-    console.error('An error occurred: ', error.message);
- 
+
+    //TODO: Store the error message in state in order to conditionally render something to the user then.
+
     return EMPTY;
 };
