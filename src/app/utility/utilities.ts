@@ -1,7 +1,6 @@
 import { AbstractControl, UntypedFormControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { EMPTY, map, Observable } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
-import { stderr } from 'process';
 
 
 export function getAutocompleteObservable(formControl: UntypedFormControl, data: string[]): Observable<string[]> {
@@ -74,7 +73,7 @@ export const handleError = (error: HttpErrorResponse) => {
     return EMPTY;
 };
 
-// Error handling function for HTTP requests
+// Error handling class for HTTP requests
 export class HttpError {
     public status: number;
     public message: string;
