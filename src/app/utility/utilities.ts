@@ -67,20 +67,9 @@ export function formatString(text: string): string {
  // Error handling function for HTTP requests
 export const handleError = (error: HttpErrorResponse) => {
 
-    //TODO: Store the error message in state in order to conditionally render something to the user then.
-    HttpError.prototype.message = error.message;
+    // TODO: We should be storing the error message in state in order to conditionally render something to the user then
+
+    console.error(error);
 
     return EMPTY;
 };
-
-// Error handling class for HTTP requests
-export class HttpError {
-    public status: number;
-    public message: string;
-
-    constructor(status: number, message: string) {
-        this.status = status;
-        this.message = message;
-    }
-
-}
