@@ -1,10 +1,10 @@
-import { catchError  } from 'rxjs';
-import { HttpClient , HttpErrorResponse } from '@angular/common/http';
+import { catchError } from 'rxjs';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
-import { allHazards, Chemical, Hazard , HazardListItem } from '../coshh/types';
+import { allHazards, Chemical, Hazard, HazardListItem } from '../coshh/types';
 import { environment } from 'src/environments/environment';
-import { handleError } from '../utility/utilities';
+import { ErrorHandlerService } from './error-handler.service';
 
 
 // This service is used to get the hazard picture for a given hazard and to update the hazards for a given chemical
@@ -12,7 +12,9 @@ import { handleError } from '../utility/utilities';
     providedIn: 'root'
 })
 export class HazardService {
-    constructor(private http: HttpClient) { }
+    constructor(private errorHandlerService: ErrorHandlerService,
+                private http: HttpClient) {
+    }
 
     getHazardPicture = (hazard: Hazard): string => {
         switch (hazard) {
@@ -40,17 +42,17 @@ export class HazardService {
                 return 'assets/unknown.jpg';
         }
     };
-    
+
 
     updateHazards = (chemical: Chemical): void => {
         this.http.put(`${environment.backendUrl}/hazards`, chemical)
-        .pipe(catchError((error: HttpErrorResponse) => handleError(error)))
-        .subscribe({
-            next: () => {
-                chemical.hazardList = this.getHazardListForChemical(chemical);
-            }
-        });
-       
+            .pipe(catchError((error: HttpErrorResponse) => this.errorHandlerService.handleError(error)))
+            .subscribe({
+                next: () => {
+                    chemical.hazardList = this.getHazardListForChemical(chemical);
+                }
+            });
+
     };
 
 

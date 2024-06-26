@@ -6,14 +6,15 @@ import { Observable } from 'rxjs';
 import { Chemical } from '../coshh/types';
 // environment.ts is added at compile time by npm run start command
 import { environment } from '../../environments/environment';
-import { handleError } from '../utility/utilities';
+import { ErrorHandlerService } from './error-handler.service';
 
 @Injectable({
     providedIn: 'root'
 })
 export class DataService {
 
-       constructor(private http: HttpClient) {
+    constructor(private errorHandlerService: ErrorHandlerService,
+                private http: HttpClient) {
     }
 
     API_URL = environment.backendUrl;
@@ -22,14 +23,16 @@ export class DataService {
      * Get all the chemicals from the database
      * @returns {Observable<Chemical[]>}
      */
-    getChemicals = (): Observable<Chemical[]> => this.http.get<Chemical[]>(`${this.API_URL}/chemicals`).pipe(catchError((error) => handleError(error))); 
+    getChemicals = (): Observable<Chemical[]> => this.http.get<Chemical[]>(`${this.API_URL}/chemicals`)
+        .pipe(catchError((error) => this.errorHandlerService.handleError(error)));
 
 
     /**
      * Get all the cupboards for all the labs
      * @returns {Observable<string[]>}
      */
-    getCupboards = (): Observable<string[]> => this.http.get<[string]>(`${this.API_URL}/cupboards`).pipe(catchError((error) => handleError(error))); 
+    getCupboards = (): Observable<string[]> => this.http.get<[string]>(`${this.API_URL}/cupboards`)
+        .pipe(catchError((error) => this.errorHandlerService.handleError(error)));
 
 
     /**
@@ -41,7 +44,8 @@ export class DataService {
         const options = lab ?
             { params: new HttpParams().set('lab', lab) } : {};
 
-        return this.http.get<[string]>(`${this.API_URL}/cupboards`, options).pipe(catchError((error) => handleError(error))); 
+        return this.http.get<[string]>(`${this.API_URL}/cupboards`, options)
+            .pipe(catchError((error) => this.errorHandlerService.handleError(error)));
     };
 
 
@@ -49,7 +53,8 @@ export class DataService {
      * Get all the labs
      * @returns {Observable<string[]>}
      */
-    getLabs = (): Observable<string[]> => this.http.get<string[]>(`${this.API_URL}/labs`).pipe(catchError((error) => handleError(error))); 
+    getLabs = (): Observable<string[]> => this.http.get<string[]>(`${this.API_URL}/labs`)
+        .pipe(catchError((error) => this.errorHandlerService.handleError(error)));
 
     /**
      * Search the passed array of chemicals for chemical names or numbers containing the search string (case-insensitive)
@@ -88,6 +93,7 @@ export class DataService {
      * Get all users from the database
      * @returns {Observable<string[]>}
      */
-    getUsers = (): Observable<string[]> =>  this.http.get<string[]>(`${this.API_URL}/users`).pipe(catchError((error) => handleError(error))); 
+    getUsers = (): Observable<string[]> => this.http.get<string[]>(`${this.API_URL}/users`)
+        .pipe(catchError((error) => this.errorHandlerService.handleError(error)));
 
 }

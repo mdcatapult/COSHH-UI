@@ -63,13 +63,3 @@ export function formatString(text: string): string {
 
     return text ? text.toLowerCase().trim().replace(/\s\s+/g, ' ') : '';
 }
-
- // Error handling function for HTTP requests
-export const handleError = (error: HttpErrorResponse) => {
-
-    // TODO: We should be storing the error message in state in order to conditionally render something to the user then
-
-    console.error(error);
-
-    return EMPTY;
-};
