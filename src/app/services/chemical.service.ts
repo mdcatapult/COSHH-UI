@@ -1,12 +1,12 @@
 import { AuthService } from '@auth0/auth0-angular';
-import { BehaviorSubject, combineLatest, Observable, startWith } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
+import { BehaviorSubject, combineLatest, Observable, startWith  } from 'rxjs';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { map } from 'rxjs/operators';
+import { map, catchError } from 'rxjs/operators';
 import { UntypedFormControl } from '@angular/forms';
 
 import { allHazards, Chemical, Expiry } from '../coshh/types';
-import { checkDuplicates, formatString } from '../utility/utilities';
+import { checkDuplicates, handleError, formatString } from '../utility/utilities';
 import { DataService } from './data.service';
 import { environment } from 'src/environments/environment';
 import { ExpiryService } from './expiry.service';
@@ -175,11 +175,22 @@ export class ChemicalService {
      * @param {Chemical} chemical
      */
     archive = (chemical: Chemical): void => {
-        chemical.isArchived = !chemical.isArchived;
-        // update the chemical in the database
-        this.updateChemical(chemical);
-        // update the chemicals in state
-        this.update(chemical);
+
+       chemical.isArchived = !chemical.isArchived;
+       
+       // update the chemical in the database  and then update the chemical in state
+       this.updateChemical(chemical)
+       .pipe(catchError((error: HttpErrorResponse) => {
+
+            chemical.isArchived = !chemical.isArchived;
+
+            return handleError(error);
+       }))
+       .subscribe({
+            next: (chemical) => {
+                this.update(chemical);
+            }
+        });
     };
 
 
@@ -246,6 +257,7 @@ export class ChemicalService {
         );
     };
 
+
     /**
      * Returns an observable of owners for the owner search box
      * @returns {Observable<string[]>}
@@ -260,41 +272,58 @@ export class ChemicalService {
         );
     };
 
+
     /**
      * Called when a new chemical is added.  Updates the database via an API call and updates the chemicals in state
      * @param {Chemical} chemical
      */
     onChemicalAdded = (chemical: Chemical): void => {
         chemical.cupboard = formatString(chemical.cupboard);
-        this.http.post<Chemical>(`${environment.backendUrl}/chemical`, chemical).subscribe((addedChemical: Chemical) => {
-            addedChemical.hazardList = this.hazardService.getHazardListForChemical(addedChemical);
-            addedChemical.backgroundColour = this.expiryService.getExpiryColour(addedChemical);
-            this.setAllChemicals(this.getAllChemicals().concat(addedChemical));
-            const filteredChemicals = this.filterChemicals(
-                this.toggleArchiveControl.value,
-                this.cupboardFilterControl.value,
-                this.hazardFilterControl.value,
-                this.labFilterControl.value,
-                this.expiryFilterControl.value,
-                this.nameOrNumberSearchControl.value ?? '',
-                this.ownerSearchControl.value ?? ''
-            );
-
-            this.setFilteredChemicals(filteredChemicals);
-        });
+        this.http.post<Chemical>(`${environment.backendUrl}/chemical`, chemical)
+        .pipe(catchError((error: HttpErrorResponse) => handleError(error)))
+        .subscribe({
+                next: (addedChemical: Chemical) => {
+                    addedChemical.hazardList = this.hazardService.getHazardListForChemical(addedChemical);
+                    addedChemical.backgroundColour = this.expiryService.getExpiryColour(addedChemical);
+                    this.setAllChemicals(this.getAllChemicals().concat(addedChemical));
+    
+                    const filteredChemicals = this.filterChemicals(
+                        this.toggleArchiveControl.value,
+                        this.cupboardFilterControl.value,
+                        this.hazardFilterControl.value,
+                        this.labFilterControl.value,
+                        this.expiryFilterControl.value,
+                        this.nameOrNumberSearchControl.value ?? '',
+                        this.ownerSearchControl.value ?? ''
+                    );
+    
+                    this.setFilteredChemicals(filteredChemicals);
+                }
+            });
 
     };
 
+
     /**
-     * Called when a chemical is edited.  Updates the database via an API call and updates the chemicals in state
+     * Called when a chemical is edited. Updates the database via an API call and updates the chemicals in state
      * @param {Chemical} chemical
      */
     onChemicalEdited = (chemical: Chemical): void => {
-        chemical.hazardList = this.hazardService.getHazardListForChemical(chemical);
-        chemical.backgroundColour = this.expiryService.getExpiryColour(chemical);
-        this.updateChemical(chemical);
-        this.hazardService.updateHazards(chemical);
-        this.update(chemical);
+            // Update the chemical properties
+            chemical.hazardList = this.hazardService.getHazardListForChemical(chemical);
+            chemical.backgroundColour = this.expiryService.getExpiryColour(chemical);
+
+            // Perform the API call to update the chemical
+            this.updateChemical(chemical)
+            .pipe(catchError((error: HttpErrorResponse) => handleError(error)))
+            .subscribe({
+                next: (chemical) => {
+                    // If the API call is successful, update the hazards and the chemical in the state
+                    this.hazardService.updateHazards(chemical);
+                    
+                    this.update(chemical);
+                }
+            });         
     };
 
 
@@ -318,6 +347,7 @@ export class ChemicalService {
         }
     };
 
+    
     /**
      * Updates a passed chemical in state and then re-filters the chemicals
      * @param {Chemical} chemical
@@ -356,6 +386,7 @@ export class ChemicalService {
         chemical.lastUpdatedBy = this.loggedInUser;
 
         return this.http.put(`${environment.backendUrl}/chemical`, chemical) as Observable<Chemical>;
+
     };
 
 }
