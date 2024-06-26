@@ -8,7 +8,6 @@ import { chemicalFive, chemicalFour, chemicalOne, chemicalThree, chemicalTwo } f
 import { DataService } from './data.service';
 import { environment } from '../../environments/environment';
 import { ErrorHandlerService } from './error-handler.service';
-import { error } from '@angular/compiler-cli/src/transformers/util';
 
 /**
  * Create async observable that emits-once and completes
@@ -36,7 +35,7 @@ describe('DataService', () => {
             providers: [
                 provideHttpClient(withInterceptorsFromDi()),
                 provideHttpClientTesting(),
-                {provide: ErrorHandlerService, useValue: errorHandlerServiceSpy},]
+                { provide: ErrorHandlerService, useValue: errorHandlerServiceSpy }]
         });
         service = TestBed.inject(DataService);
     });

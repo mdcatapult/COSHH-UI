@@ -33,6 +33,7 @@ export class ScanChemicalComponent {
     archiveChemical(chemical: Chemical): void {
 
         const chemicalCopy = JSON.parse(JSON.stringify(chemical));
+
         chemicalCopy.isArchived = !chemicalCopy.isArchived;
 
         this.http.put(`${environment.backendUrl}/chemical`, chemicalCopy)
@@ -43,7 +44,7 @@ export class ScanChemicalComponent {
                     chemical.isArchived = !chemical.isArchived;
                     
                     console.info(`${chemical.name} archived`, chem);
-                    this.errorHandlerService.setSuccessMessage(`${chemical.name} archived successfully`)
+                    this.errorHandlerService.setSuccessMessage(`${chemical.name} archived successfully`);
                 }
         });
     }

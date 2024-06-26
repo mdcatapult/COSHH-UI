@@ -1,8 +1,8 @@
 import { asyncData } from './data.service.spec';
 import { AuthModule } from '@auth0/auth0-angular';
-import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { MockProvider } from 'ng-mocks';
-import { of } from 'rxjs';
+import { map, of } from 'rxjs';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 
@@ -21,6 +21,7 @@ import { environment } from '../../environments/environment';
 import { Chemical } from '../coshh/types';
 import { HazardService } from './hazard.service';
 import { ExpiryService } from './expiry.service';
+import { ErrorHandlerService } from './error-handler.service';
 
 jasmine.getEnv().configure({ random: false });
 
@@ -29,6 +30,8 @@ describe('ChemicalService', () => {
     let chemicalService: ChemicalService;
 
     let dataService: jasmine.SpyObj<DataService>;
+
+    let errorHandlerService: jasmine.SpyObj<ErrorHandlerService>;
 
     let expiryService: jasmine.SpyObj<ExpiryService>;
 
@@ -65,6 +68,7 @@ describe('ChemicalService', () => {
 
         chemicalService = TestBed.inject(ChemicalService);
         dataService = TestBed.inject(DataService) as jasmine.SpyObj<DataService>;
+        errorHandlerService = TestBed.inject(ErrorHandlerService) as jasmine.SpyObj<ErrorHandlerService>;
         expiryService = TestBed.inject(ExpiryService) as jasmine.SpyObj<ExpiryService>;
         hazardService = TestBed.inject(HazardService) as jasmine.SpyObj<HazardService>;
         httpClientSpy = TestBed.inject(HttpClient) as jasmine.SpyObj<HttpClient>;
@@ -223,6 +227,39 @@ describe('ChemicalService', () => {
 
             expect(httpClientSpy.post).toHaveBeenCalledWith(`${environment.backendUrl}/chemical`, newChemical);
         });
+
+        it('should set success message in state if the request is successful', fakeAsync(() => {
+            httpClientSpy.post.and.returnValue(asyncData(newChemical));
+            chemicalService.onChemicalAdded(newChemical);
+            tick();
+
+            expect(errorHandlerService.successMessage$.getValue()).toEqual(`${newChemical.name} was successfully added`);
+        }));
+
+        it('should update the error message in state if the request fails', fakeAsync(() => {
+            httpClientSpy.post.and.returnValue(
+                of({}).pipe(map(() => {
+                        throw new HttpErrorResponse(
+                            {
+                                status: 500,
+                                error: {
+                                    message: 'Internal Server Error'
+                                },
+                                statusText: 'Oh Dear!'
+                            }
+                        );
+                    }
+                ))
+            );
+
+            const errorMessageSpy = spyOn(errorHandlerService, 'handleError').and.callThrough();
+
+            chemicalService.onChemicalAdded(newChemical);
+            tick();
+
+            expect(errorMessageSpy).toHaveBeenCalled();
+            expect(errorHandlerService.errorMessage$.getValue()).toEqual('Http failure response for (unknown url): 500 Oh Dear!');
+        }));
     });
 
     describe('onChemicalEdited', () => {
@@ -231,9 +268,9 @@ describe('ChemicalService', () => {
             spyOn(chemicalService, 'updateChemical').and.returnValue(of(updatedChemical));
             spyOn(hazardService, 'updateHazards').and.callThrough();
             httpClientSpy.put.and.returnValue(asyncData([]));
-            
+
             chemicalService.onChemicalEdited(updatedChemical);
-            
+
             expect(chemicalService.updateChemical).toHaveBeenCalledWith(updatedChemical);
             expect(hazardService.updateHazards).toHaveBeenCalledWith(updatedChemical);
         });
@@ -281,10 +318,41 @@ describe('ChemicalService', () => {
             });
         }));
 
+        it('should success message in state if the request is successful', fakeAsync(() => {
+            httpClientSpy.put.and.returnValue(asyncData(updatedChemical));
+            chemicalService.onChemicalEdited(updatedChemical);
+            tick();
+
+            expect(errorHandlerService.successMessage$.getValue()).toEqual(`${updatedChemical.name} was successfully updated`);
+        }));
+
+        it('should update the error message in state if the request fails', fakeAsync(() => {
+            httpClientSpy.put.and.returnValue(
+                of({}).pipe(map(() => {
+                    throw new HttpErrorResponse(
+                        {
+                            status: 500,
+                            error: {
+                                message: 'Internal Server Error'
+                            },
+                            statusText: 'Oh Dear!'
+                        }
+                    );
+                })));
+
+            const errorMessageSpy = spyOn(errorHandlerService, 'handleError').and.callThrough();
+
+            chemicalService.onChemicalEdited(updatedChemical);
+            tick();
+
+            expect(errorMessageSpy).toHaveBeenCalled();
+            expect(errorHandlerService.errorMessage$.getValue()).toEqual('Http failure response for (unknown url): 500 Oh Dear!');
+        }));
+
         it('should call update', () => {
             spyOn(chemicalService, 'updateChemical').and.returnValue(of(chemicalTwo));
             spyOn(chemicalService, 'update').and.callThrough();
-            
+
             httpClientSpy.put.and.returnValue(asyncData(updatedChemical));
             chemicalService.onChemicalEdited(updatedChemical);
 
@@ -355,11 +423,43 @@ describe('ChemicalService', () => {
         it('should call update', () => {
             spyOn(chemicalService, 'updateChemical').and.returnValue(of(chemicalFour));
             spyOn(chemicalService, 'update').and.callThrough();
-            
+
             chemicalService.archive(chemicalFour);
 
             expect(chemicalService.update).toHaveBeenCalledWith(chemicalFour);
         });
+
+        it('should set success message in state if the request is successful', fakeAsync(() => {
+            spyOn(chemicalService, 'updateChemical').and.returnValue(of(newChemical));
+            chemicalService.archive(newChemical);
+            tick();
+
+            expect(errorHandlerService.successMessage$.getValue()).toEqual(`${newChemical.name} was successfully archived`);
+        }));
+
+        it('should update the error message in state if the request fails', fakeAsync(() => {
+            spyOn(chemicalService, 'updateChemical').and.returnValue(
+                of({}).pipe(map(() => {
+                        throw new HttpErrorResponse(
+                            {
+                                status: 500,
+                                error: {
+                                    message: 'Internal Server Error'
+                                },
+                                statusText: 'Oh Dear!'
+                            }
+                        );
+                    }
+                ))
+            );
+            const errorMessageSpy = spyOn(errorHandlerService, 'handleError').and.callThrough();
+
+            chemicalService.archive(newChemical);
+            tick();
+
+            expect(errorMessageSpy).toHaveBeenCalled();
+            expect(errorHandlerService.errorMessage$.getValue()).toEqual('Http failure response for (unknown url): 500 Oh Dear!');
+        }));
     });
 
     describe('refreshCupboardFilterList', () => {

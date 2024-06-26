@@ -1,7 +1,5 @@
 import { AbstractControl, UntypedFormControl, ValidationErrors, ValidatorFn } from '@angular/forms';
-import { EMPTY, map, Observable } from 'rxjs';
-import { HttpErrorResponse } from '@angular/common/http';
-
+import { map, Observable } from 'rxjs';
 
 export function getAutocompleteObservable(formControl: UntypedFormControl, data: string[]): Observable<string[]> {
     return formControl.valueChanges.pipe(

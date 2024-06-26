@@ -191,7 +191,7 @@ export class ChemicalService {
        .subscribe({
             next: (chemical) => {
                 this.update(chemical);
-                this.errorHandlerService.setSuccessMessage(`${chemical.name} was successfully ${chemical.isArchived ? 'archived' : 'unarchived'}`)
+                this.errorHandlerService.setSuccessMessage(`${chemical.name} was successfully ${chemical.isArchived ? 'archived' : 'unarchived'}`);
             }
         });
     };
@@ -281,6 +281,7 @@ export class ChemicalService {
      * @param {Chemical} chemical
      */
     onChemicalAdded = (chemical: Chemical): void => {
+        console.log('on chemical added called!');
         chemical.cupboard = formatString(chemical.cupboard);
         this.http.post<Chemical>(`${environment.backendUrl}/chemical`, chemical)
         .pipe(catchError((error: HttpErrorResponse) => this.errorHandlerService.handleError(error)))
@@ -301,7 +302,7 @@ export class ChemicalService {
                     );
     
                     this.setFilteredChemicals(filteredChemicals);
-                    this.errorHandlerService.setSuccessMessage(`${addedChemical.name} was successfully added`)
+                    this.errorHandlerService.setSuccessMessage(`${addedChemical.name} was successfully added`);
                 }
             });
 
@@ -326,7 +327,7 @@ export class ChemicalService {
                     this.hazardService.updateHazards(chemical);
                     
                     this.update(chemical);
-                    this.errorHandlerService.setSuccessMessage(`${chemical.name} was successfully updated`)
+                    this.errorHandlerService.setSuccessMessage(`${chemical.name} was successfully updated`);
                 }
             });         
     };
