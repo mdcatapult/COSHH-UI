@@ -42,7 +42,6 @@ export class CloneChemicalComponent {
                     newChemical.added = moment(new Date(), 'DD-MM-YYY');
                     newChemical.expiry = moment(new Date(), 'DD-MM-YYY').add(5, 'y');
                     const dialogRef = this.dialog.open(ChemicalDialogComponent, {
-                        width: '50vw',
                         data: {
                             labs: this.labs,
                             users: this.users,

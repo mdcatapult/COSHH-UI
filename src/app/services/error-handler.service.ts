@@ -10,7 +10,7 @@ export class ErrorHandlerService {
   constructor() {
   }
 
-  private readonly errorMessage$: BehaviorSubject<string> = new BehaviorSubject<string>('')
+  readonly errorMessage$: BehaviorSubject<string> = new BehaviorSubject<string>('')
 
   setErrorMessage = (message: string) => {
     this.errorMessage$.next(message)
