@@ -31,15 +31,19 @@ export class ScanChemicalComponent {
     }
 
     archiveChemical(chemical: Chemical): void {
-        
-        this.http.put(`${environment.backendUrl}/chemical`, chemical)
+
+        const chemicalCopy = JSON.parse(JSON.stringify(chemical));
+        chemicalCopy.isArchived = !chemicalCopy.isArchived;
+
+        this.http.put(`${environment.backendUrl}/chemical`, chemicalCopy)
         .pipe(catchError((error: HttpErrorResponse) => this.errorHandlerService.handleError(error)))
         .subscribe(
             {
                 next: (chem) => {
                     chemical.isArchived = !chemical.isArchived;
                     
-                    console.info(`${chemical.name} archived`, chem);             
+                    console.info(`${chemical.name} archived`, chem);
+                    this.errorHandlerService.setSuccessMessage(`${chemical.name} archived successfully`)
                 }
         });
     }

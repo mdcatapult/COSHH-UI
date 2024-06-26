@@ -92,6 +92,24 @@ export class CoshhComponent implements OnInit {
                 });
             }
         });
+
+        this.errorHandlerService.successMessage$.subscribe((message) => {
+            if (message) {
+                this._snackBar.open(
+                    message,
+                    'OK',
+                    {
+                        duration: 5000,
+                        verticalPosition: 'top',
+                        horizontalPosition: 'center',
+                        panelClass: 'success-snackbar'
+                    }
+                )
+                    .onAction().subscribe(() => {
+                    this.errorHandlerService.setSuccessMessage('');
+                });
+            }
+        });
     }
 
 

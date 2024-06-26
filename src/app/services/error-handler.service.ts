@@ -12,9 +12,15 @@ export class ErrorHandlerService {
 
   readonly errorMessage$: BehaviorSubject<string> = new BehaviorSubject<string>('')
 
+  readonly successMessage$: BehaviorSubject<string> = new BehaviorSubject<string>('')
+
   setErrorMessage = (message: string) => {
     this.errorMessage$.next(message)
 };
+
+  setSuccessMessage = (message: string) => {
+    this.successMessage$.next(message)
+  }
 
   handleError = (error: HttpErrorResponse) => {
     console.error(error);
