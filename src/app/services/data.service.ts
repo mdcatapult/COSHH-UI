@@ -1,5 +1,5 @@
 import { catchError } from 'rxjs/operators';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
@@ -24,7 +24,7 @@ export class DataService {
      * @returns {Observable<Chemical[]>}
      */
     getChemicals = (): Observable<Chemical[]> => this.http.get<Chemical[]>(`${this.API_URL}/chemicals`)
-        .pipe(catchError((error) => this.errorHandlerService.handleError(error)));
+        .pipe(catchError((error: HttpErrorResponse) => this.errorHandlerService.handleError(error)));
 
 
     /**
@@ -32,7 +32,7 @@ export class DataService {
      * @returns {Observable<string[]>}
      */
     getCupboards = (): Observable<string[]> => this.http.get<[string]>(`${this.API_URL}/cupboards`)
-        .pipe(catchError((error) => this.errorHandlerService.handleError(error)));
+        .pipe(catchError((error: HttpErrorResponse) => this.errorHandlerService.handleError(error)));
 
 
     /**
@@ -45,7 +45,7 @@ export class DataService {
             { params: new HttpParams().set('lab', lab) } : {};
 
         return this.http.get<[string]>(`${this.API_URL}/cupboards`, options)
-            .pipe(catchError((error) => this.errorHandlerService.handleError(error)));
+            .pipe(catchError((error: HttpErrorResponse) => this.errorHandlerService.handleError(error)));
     };
 
 
@@ -54,7 +54,7 @@ export class DataService {
      * @returns {Observable<string[]>}
      */
     getLabs = (): Observable<string[]> => this.http.get<string[]>(`${this.API_URL}/labs`)
-        .pipe(catchError((error) => this.errorHandlerService.handleError(error)));
+        .pipe(catchError((error: HttpErrorResponse) => this.errorHandlerService.handleError(error)));
 
     /**
      * Search the passed array of chemicals for chemical names or numbers containing the search string (case-insensitive)
@@ -94,6 +94,6 @@ export class DataService {
      * @returns {Observable<string[]>}
      */
     getUsers = (): Observable<string[]> => this.http.get<string[]>(`${this.API_URL}/users`)
-        .pipe(catchError((error) => this.errorHandlerService.handleError(error)));
+        .pipe(catchError((error: HttpErrorResponse) => this.errorHandlerService.handleError(error)));
 
 }

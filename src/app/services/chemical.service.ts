@@ -281,7 +281,6 @@ export class ChemicalService {
      * @param {Chemical} chemical
      */
     onChemicalAdded = (chemical: Chemical): void => {
-        console.log('on chemical added called!');
         chemical.cupboard = formatString(chemical.cupboard);
         this.http.post<Chemical>(`${environment.backendUrl}/chemical`, chemical)
         .pipe(catchError((error: HttpErrorResponse) => this.errorHandlerService.handleError(error)))

@@ -42,8 +42,6 @@ export class ScanChemicalComponent {
             {
                 next: (chem) => {
                     chemical.isArchived = !chemical.isArchived;
-                    
-                    console.info(`${chemical.name} archived`, chem);
                     this.errorHandlerService.setSuccessMessage(`${chemical.name} archived successfully`);
                 }
         });
