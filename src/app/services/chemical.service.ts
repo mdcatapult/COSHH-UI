@@ -6,9 +6,10 @@ import { map, catchError } from 'rxjs/operators';
 import { UntypedFormControl } from '@angular/forms';
 
 import { allHazards, Chemical, Expiry } from '../coshh/types';
-import { checkDuplicates, handleError, formatString } from '../utility/utilities';
+import { checkDuplicates, formatString } from '../utility/utilities';
 import { DataService } from './data.service';
 import { environment } from 'src/environments/environment';
+import { ErrorHandlerService } from './error-handler.service';
 import { ExpiryService } from './expiry.service';
 import { HazardService } from './hazard.service';
 
@@ -53,6 +54,7 @@ export class ChemicalService {
     constructor(private http: HttpClient,
                 private authService: AuthService,
                 private dataService: DataService,
+                private errorHandlerService: ErrorHandlerService,
                 private hazardService: HazardService,
                 private expiryService: ExpiryService) {
 
@@ -184,11 +186,12 @@ export class ChemicalService {
 
             chemical.isArchived = !chemical.isArchived;
 
-            return handleError(error);
+            return this.errorHandlerService.handleError(error);
        }))
        .subscribe({
             next: (chemical) => {
                 this.update(chemical);
+                this.errorHandlerService.setSuccessMessage(`${chemical.name} was successfully ${chemical.isArchived ? 'archived' : 'unarchived'}`);
             }
         });
     };
@@ -280,7 +283,7 @@ export class ChemicalService {
     onChemicalAdded = (chemical: Chemical): void => {
         chemical.cupboard = formatString(chemical.cupboard);
         this.http.post<Chemical>(`${environment.backendUrl}/chemical`, chemical)
-        .pipe(catchError((error: HttpErrorResponse) => handleError(error)))
+        .pipe(catchError((error: HttpErrorResponse) => this.errorHandlerService.handleError(error)))
         .subscribe({
                 next: (addedChemical: Chemical) => {
                     addedChemical.hazardList = this.hazardService.getHazardListForChemical(addedChemical);
@@ -298,6 +301,7 @@ export class ChemicalService {
                     );
     
                     this.setFilteredChemicals(filteredChemicals);
+                    this.errorHandlerService.setSuccessMessage(`${addedChemical.name} was successfully added`);
                 }
             });
 
@@ -315,13 +319,14 @@ export class ChemicalService {
 
             // Perform the API call to update the chemical
             this.updateChemical(chemical)
-            .pipe(catchError((error: HttpErrorResponse) => handleError(error)))
+            .pipe(catchError((error: HttpErrorResponse) => this.errorHandlerService.handleError(error)))
             .subscribe({
                 next: (chemical) => {
                     // If the API call is successful, update the hazards and the chemical in the state
                     this.hazardService.updateHazards(chemical);
                     
                     this.update(chemical);
+                    this.errorHandlerService.setSuccessMessage(`${chemical.name} was successfully updated`);
                 }
             });         
     };

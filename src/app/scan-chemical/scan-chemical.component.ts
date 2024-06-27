@@ -5,7 +5,7 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 import { Chemical } from '../coshh/types';
 import { environment } from '../../environments/environment';
-import { handleError } from '../utility/utilities';
+import { ErrorHandlerService } from '../services/error-handler.service';
 
 @Component({
     selector: 'app-scan-chemical',
@@ -18,11 +18,12 @@ export class ScanChemicalComponent {
     errorMessage: string = '';
 
     constructor(
-        private http: HttpClient,
+       private errorHandlerService: ErrorHandlerService,
         @Inject(MAT_DIALOG_DATA) public data: {
             chemicalNumber: string,
             chemical: Chemical
-        }
+        },
+        private http: HttpClient
     ) {
         this.chemical = data.chemical;
         if (!this.chemical) this.errorMessage = `No chemical number ${this.data.chemicalNumber} found`;
@@ -30,15 +31,18 @@ export class ScanChemicalComponent {
     }
 
     archiveChemical(chemical: Chemical): void {
-        
-        this.http.put(`${environment.backendUrl}/chemical`, chemical)
-        .pipe(catchError((error: HttpErrorResponse) => handleError(error)))
+
+        const chemicalCopy = JSON.parse(JSON.stringify(chemical));
+
+        chemicalCopy.isArchived = !chemicalCopy.isArchived;
+
+        this.http.put(`${environment.backendUrl}/chemical`, chemicalCopy)
+        .pipe(catchError((error: HttpErrorResponse) => this.errorHandlerService.handleError(error)))
         .subscribe(
             {
-                next: (chem) => {
+                next: () => {
                     chemical.isArchived = !chemical.isArchived;
-                    
-                    console.info(`${chemical.name} archived`, chem);             
+                    this.errorHandlerService.setSuccessMessage(`${chemical.name} archived successfully`);
                 }
         });
     }

@@ -7,6 +7,7 @@ import { Chemical } from '../coshh/types';
 import { chemicalFive, chemicalFour, chemicalOne, chemicalThree, chemicalTwo } from '../../test-data/test-data';
 import { DataService } from './data.service';
 import { environment } from '../../environments/environment';
+import { ErrorHandlerService } from './error-handler.service';
 
 /**
  * Create async observable that emits-once and completes
@@ -19,14 +20,22 @@ export function asyncData<T>(data: T) {
 describe('DataService', () => {
     let service: DataService;
 
+    let errorHandlerServiceSpy: jasmine.SpyObj<ErrorHandlerService>;
+
     let httpClientSpy: jasmine.SpyObj<HttpClient>;
 
     let filterService: DataService;
 
     beforeEach(() => {
+
+        errorHandlerServiceSpy = jasmine.createSpyObj('ErrorHandlerService', ['handleError']);
+
         TestBed.configureTestingModule({
             imports: [],
-            providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+            providers: [
+                provideHttpClient(withInterceptorsFromDi()),
+                provideHttpClientTesting(),
+                { provide: ErrorHandlerService, useValue: errorHandlerServiceSpy }]
         });
         service = TestBed.inject(DataService);
     });
@@ -40,7 +49,7 @@ describe('DataService', () => {
 
         it('can return cupboards for a lab', (done: DoneFn) => {
             httpClientSpy = jasmine.createSpyObj('HttpClient', ['get']);
-            filterService = new DataService(httpClientSpy);
+            filterService = new DataService(errorHandlerServiceSpy, httpClientSpy);
             const expectedCupboards = ['1', '2', '3'];
 
             httpClientSpy.get.and.returnValue(asyncData(expectedCupboards));
@@ -57,7 +66,7 @@ describe('DataService', () => {
 
         it('makes http request with the correct params', (done: DoneFn) => {
             httpClientSpy = jasmine.createSpyObj('HttpClient', ['get']);
-            filterService = new DataService(httpClientSpy);
+            filterService = new DataService(errorHandlerServiceSpy, httpClientSpy);
             const options =
                 { params: new HttpParams().set('lab', 'Lab 1') };
 
@@ -74,7 +83,7 @@ describe('DataService', () => {
 
     it('can return an empty list if no results', (done: DoneFn) => {
         httpClientSpy = jasmine.createSpyObj('HttpClient', ['get']);
-        filterService = new DataService(httpClientSpy);
+        filterService = new DataService(errorHandlerServiceSpy, httpClientSpy);
         const expectedCupboards: string[] = [];
 
         httpClientSpy.get.and.returnValue(asyncData(expectedCupboards));
@@ -94,7 +103,7 @@ describe('DataService', () => {
 
         it('can return cupboards', (done: DoneFn) => {
             httpClientSpy = jasmine.createSpyObj('HttpClient', ['get']);
-            filterService = new DataService(httpClientSpy);
+            filterService = new DataService(errorHandlerServiceSpy, httpClientSpy);
             const expectedCupboards = ['1', '2', '3'];
 
             httpClientSpy.get.and.returnValue(asyncData(expectedCupboards));
@@ -111,7 +120,7 @@ describe('DataService', () => {
 
         it('can return an empty list if no results', (done: DoneFn) => {
             httpClientSpy = jasmine.createSpyObj('HttpClient', ['get']);
-            filterService = new DataService(httpClientSpy);
+            filterService = new DataService(errorHandlerServiceSpy, httpClientSpy);
             const expectedCupboards: string[] = [];
 
             httpClientSpy.get.and.returnValue(asyncData(expectedCupboards));
@@ -132,7 +141,7 @@ describe('DataService', () => {
 
         it('can return labs', (done: DoneFn) => {
             httpClientSpy = jasmine.createSpyObj('HttpClient', ['get']);
-            filterService = new DataService(httpClientSpy);
+            filterService = new DataService(errorHandlerServiceSpy, httpClientSpy);
             const expectedLabs = ['Lab 1', 'Lab 2', 'Lab 3'];
 
             httpClientSpy.get.and.returnValue(asyncData(expectedLabs));
@@ -149,7 +158,7 @@ describe('DataService', () => {
 
         it('can return an empty list if no results', (done: DoneFn) => {
             httpClientSpy = jasmine.createSpyObj('HttpClient', ['get']);
-            filterService = new DataService(httpClientSpy);
+            filterService = new DataService(errorHandlerServiceSpy, httpClientSpy);
             const expectedLabs: string[] = [];
 
             httpClientSpy.get.and.returnValue(asyncData(expectedLabs));
@@ -170,7 +179,7 @@ describe('DataService', () => {
 
         it('can return chemicals', (done: DoneFn) => {
             httpClientSpy = jasmine.createSpyObj('HttpClient', ['get']);
-            filterService = new DataService(httpClientSpy);
+            filterService = new DataService(errorHandlerServiceSpy, httpClientSpy);
             const expectedChemicals: Chemical[] = [chemicalOne];
 
             httpClientSpy.get.and.returnValue(asyncData(expectedChemicals));
@@ -187,7 +196,7 @@ describe('DataService', () => {
 
         it('can return an empty list if no results', (done: DoneFn) => {
             httpClientSpy = jasmine.createSpyObj('HttpClient', ['get']);
-            filterService = new DataService(httpClientSpy);
+            filterService = new DataService(errorHandlerServiceSpy, httpClientSpy);
             const expectedChemicals: Chemical[] = [];
 
             httpClientSpy.get.and.returnValue(asyncData(expectedChemicals));

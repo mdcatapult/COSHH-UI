@@ -1,13 +1,13 @@
 import { catchError } from 'rxjs';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { MatDialog } from '@angular/material/dialog';
 import moment from 'moment';
 
 import { Chemical } from '../coshh/types';
 import { ChemicalDialogComponent } from '../chemical-dialog/chemical-dialog.component';
 import { environment } from '../../environments/environment';
-import { handleError } from '../utility/utilities';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { ErrorHandlerService } from '../services/error-handler.service';
 
 
 @Component({
@@ -17,7 +17,10 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 })
 export class AddChemicalComponent {
 
-  constructor(public dialog: MatDialog, private http: HttpClient) {
+  constructor(
+      private errorHandlerService: ErrorHandlerService,
+      private http: HttpClient,
+      public dialog: MatDialog) {
   }
 
   @Input() labs: string[] = [];
@@ -29,7 +32,7 @@ export class AddChemicalComponent {
   addChemical(): void {
     this.onDialogOpen.emit(true);
     this.http.get<string>(`${environment.backendUrl}/chemical/maxchemicalnumber`)
-    .pipe(catchError((error: HttpErrorResponse) => handleError(error)))
+    .pipe(catchError((error: HttpErrorResponse) => this.errorHandlerService.handleError(error)))
     .subscribe({
         next: (maxChemNo) => {
           const formattedChemicalNumber = (parseInt(maxChemNo) + 1).toString().padStart(5, '0');

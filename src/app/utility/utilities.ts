@@ -1,7 +1,5 @@
 import { AbstractControl, UntypedFormControl, ValidationErrors, ValidatorFn } from '@angular/forms';
-import { EMPTY, map, Observable } from 'rxjs';
-import { HttpErrorResponse } from '@angular/common/http';
-
+import { map, Observable } from 'rxjs';
 
 export function getAutocompleteObservable(formControl: UntypedFormControl, data: string[]): Observable<string[]> {
     return formControl.valueChanges.pipe(
@@ -63,13 +61,3 @@ export function formatString(text: string): string {
 
     return text ? text.toLowerCase().trim().replace(/\s\s+/g, ' ') : '';
 }
-
- // Error handling function for HTTP requests
-export const handleError = (error: HttpErrorResponse) => {
-
-    // TODO: We should be storing the error message in state in order to conditionally render something to the user then
-
-    console.error(error);
-
-    return EMPTY;
-};

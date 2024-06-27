@@ -7,7 +7,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Chemical } from '../coshh/types';
 import { ChemicalDialogComponent } from '../chemical-dialog/chemical-dialog.component';
 import { environment } from '../../environments/environment';
-import { handleError } from '../utility/utilities';
+import { ErrorHandlerService } from '../services/error-handler.service';
 import moment from 'moment';
 
 
@@ -18,7 +18,9 @@ import moment from 'moment';
 })
 export class CloneChemicalComponent {
 
-    constructor(public dialog: MatDialog, private http: HttpClient) {
+    constructor(private errorHandlerService: ErrorHandlerService,
+                public dialog: MatDialog,
+                private http: HttpClient) {
     }
 
     @Input() labs: string[] = [];
@@ -28,31 +30,30 @@ export class CloneChemicalComponent {
 
     cloneChemical(): void {
         this.http.get<string>(`${environment.backendUrl}/chemical/maxchemicalnumber`).pipe(
-            catchError((error: HttpErrorResponse) => handleError(error)))
+            catchError((error: HttpErrorResponse) => this.errorHandlerService.handleError(error)))
             .subscribe({
-                next:  (maxChemNo) => {
+                next: (maxChemNo) => {
                     // clone chemical
                     const newChemical = JSON.parse(JSON.stringify(this.chemical));
-    
+
                     // update chemical number
                     newChemical.chemicalNumber = (parseInt(maxChemNo) + 1).toString().padStart(5, '0');
                     // update added and expiry dates
                     newChemical.added = moment(new Date(), 'DD-MM-YYY');
                     newChemical.expiry = moment(new Date(), 'DD-MM-YYY').add(5, 'y');
                     const dialogRef = this.dialog.open(ChemicalDialogComponent, {
-                        width: '50vw',
                         data: {
                             labs: this.labs,
                             users: this.users,
                             chemical: newChemical
                         }
                     });
-    
+
                     dialogRef.afterClosed().subscribe((chemical: Chemical) => {
                         if (chemical) this.onChemicalCloned.emit(chemical);
                     });
                 }
-               });
+            });
     }
 
 }

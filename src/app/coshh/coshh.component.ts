@@ -1,12 +1,14 @@
 import { AuthService } from '@auth0/auth0-angular';
 import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
 import { Observable } from 'rxjs';
 
 import { Chemical } from './types';
 import { ChemicalService } from '../services/chemical.service';
 import { DataService } from '../services/data.service';
+import { ErrorHandlerService } from '../services/error-handler.service';
 import { HazardService } from '../services/hazard.service';
 import { isValidHttpUrl } from '../utility/utilities';
 import { SaveService } from '../services/save.service';
@@ -24,10 +26,12 @@ export class CoshhComponent implements OnInit {
 
     constructor(private authService: AuthService,
                 public chemicalService: ChemicalService,
+                private errorHandlerService: ErrorHandlerService,
                 private filterService: DataService,
                 public hazardService: HazardService,
                 public saveService: SaveService,
-                public scanningService: ScanningService) {
+                public scanningService: ScanningService,
+                private _snackBar: MatSnackBar) {
 
         this.isAuthenticated$ = this.authService.isAuthenticated$;
 
@@ -70,6 +74,41 @@ export class CoshhComponent implements OnInit {
 
         this.filterService.getUsers().subscribe((users) => {
             this.users = users;
+        });
+
+        this.errorHandlerService.errorMessage$.subscribe((message) => {
+            if (message) {
+                this._snackBar.open(
+                    message,
+                    'OK',
+                    {
+                        verticalPosition: 'top',
+                        horizontalPosition: 'center',
+                        panelClass: 'error-snackbar'
+                    }
+                )
+                    .onAction().subscribe(() => {
+                    this.errorHandlerService.setErrorMessage('');
+                });
+            }
+        });
+
+        this.errorHandlerService.successMessage$.subscribe((message) => {
+            if (message) {
+                this._snackBar.open(
+                    message,
+                    'OK',
+                    {
+                        duration: 5000,
+                        verticalPosition: 'top',
+                        horizontalPosition: 'center',
+                        panelClass: 'success-snackbar'
+                    }
+                )
+                    .onAction().subscribe(() => {
+                    this.errorHandlerService.setSuccessMessage('');
+                });
+            }
         });
     }
 
