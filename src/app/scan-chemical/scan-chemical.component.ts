@@ -40,7 +40,7 @@ export class ScanChemicalComponent {
         .pipe(catchError((error: HttpErrorResponse) => this.errorHandlerService.handleError(error)))
         .subscribe(
             {
-                next: (chem) => {
+                next: () => {
                     chemical.isArchived = !chemical.isArchived;
                     this.errorHandlerService.setSuccessMessage(`${chemical.name} archived successfully`);
                 }
