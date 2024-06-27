@@ -12,14 +12,19 @@
  *
  */
 
-import { Pipe, PipeTransform } from '@angular/core';
+import { TestBed } from '@angular/core/testing';
 
-@Pipe({ name: 'NA' })
-export class NAPipe implements PipeTransform {
-    transform(value: string): string {
-        if (!value) return '';
-        if (value.toUpperCase() === 'N/A' || value.toUpperCase() === 'NA') {
-            return 'N/A';
-        } else return value;
-    }
-}
+import { ErrorHandlerService } from './error-handler.service';
+
+describe('ErrorHandlerService', () => {
+  let service: ErrorHandlerService;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({});
+    service = TestBed.inject(ErrorHandlerService);
+  });
+
+  it('should be created', () => {
+    expect(service).toBeTruthy();
+  });
+});

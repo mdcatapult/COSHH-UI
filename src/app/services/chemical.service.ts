@@ -1,15 +1,30 @@
+/*
+ * Copyright 2024 Medicines Discovery Catapult
+ * Licensed under the Apache License, Version 2.0 (the "Licence");
+ * you may not use this file except in compliance with the Licence.
+ * You may obtain a copy of the Licence at
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the Licence is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the Licence for the specific language governing permissions and
+ * limitations under the Licence.
+ *
+ */
+
 import { AuthService } from '@auth0/auth0-angular';
-import { BehaviorSubject, combineLatest, Observable, startWith } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { HttpClient } from '@angular/common/http';
+import { BehaviorSubject, combineLatest, Observable, startWith  } from 'rxjs';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { map, catchError } from 'rxjs/operators';
 import { UntypedFormControl } from '@angular/forms';
 
 import { allHazards, Chemical, Expiry } from '../coshh/types';
-import { checkDuplicates } from '../utility/utilities';
-import { environment } from 'src/environments/environment';
-import { ExpiryService } from './expiry.service';
+import { checkDuplicates, formatString } from '../utility/utilities';
 import { DataService } from './data.service';
+import { environment } from 'src/environments/environment';
+import { ErrorHandlerService } from './error-handler.service';
+import { ExpiryService } from './expiry.service';
 import { HazardService } from './hazard.service';
 
 
@@ -53,6 +68,7 @@ export class ChemicalService {
     constructor(private http: HttpClient,
                 private authService: AuthService,
                 private dataService: DataService,
+                private errorHandlerService: ErrorHandlerService,
                 private hazardService: HazardService,
                 private expiryService: ExpiryService) {
 
@@ -175,11 +191,23 @@ export class ChemicalService {
      * @param {Chemical} chemical
      */
     archive = (chemical: Chemical): void => {
-        chemical.isArchived = !chemical.isArchived;
-        // update the chemical in the database
-        this.updateChemical(chemical);
-        // update the chemicals in state
-        this.update(chemical);
+
+       chemical.isArchived = !chemical.isArchived;
+       
+       // update the chemical in the database  and then update the chemical in state
+       this.updateChemical(chemical)
+       .pipe(catchError((error: HttpErrorResponse) => {
+
+            chemical.isArchived = !chemical.isArchived;
+
+            return this.errorHandlerService.handleError(error);
+       }))
+       .subscribe({
+            next: (chemical) => {
+                this.update(chemical);
+                this.errorHandlerService.setSuccessMessage(`${chemical.name} was successfully ${chemical.isArchived ? 'archived' : 'unarchived'}`);
+            }
+        });
     };
 
 
@@ -208,7 +236,7 @@ export class ChemicalService {
 
         return this.getAllChemicals()
             .filter((chemical) => includeArchived || !chemical.isArchived)
-            .filter((chemical) => cupboard === 'All' || chemical.cupboard?.toLowerCase().trim() === cupboard) // Note that cupboard is now set to lower case
+            .filter((chemical) => cupboard === 'All' || formatString(chemical.cupboard) === cupboard) // Note that cupboard is now set to lower case
             .filter((chemical) => hazardCategory === 'All' ||
                 chemical.hazards?.map((hazard) => hazard.toString()).includes(hazardCategory))
             .filter((chemical) => lab === 'All' || chemical.location === lab)
@@ -239,12 +267,13 @@ export class ChemicalService {
     getNameOrNumberSearchObservable = (): Observable<string[]> => {
 
         return this.nameOrNumberSearchControl.valueChanges.pipe(
-            map((search) => this.dataService.getNames(
+            map((search) => this.dataService.getNamesAndNumbers(
                 this.getFilteredChemicals(),
                 search)
             )
         );
     };
+
 
     /**
      * Returns an observable of owners for the owner search box
@@ -260,32 +289,60 @@ export class ChemicalService {
         );
     };
 
+
     /**
      * Called when a new chemical is added.  Updates the database via an API call and updates the chemicals in state
      * @param {Chemical} chemical
      */
     onChemicalAdded = (chemical: Chemical): void => {
-        chemical.cupboard = chemical.cupboard?.toLowerCase().trim();
-        this.http.post<Chemical>(`${environment.backendUrl}/chemical`, chemical).subscribe((addedChemical: Chemical) => {
-            addedChemical.hazardList = this.hazardService.getHazardListForChemical(addedChemical);
-            addedChemical.backgroundColour = this.expiryService.getExpiryColour(addedChemical);
-            this.setAllChemicals(this.getAllChemicals().concat(addedChemical));
-            this.setFilteredChemicals(this.getFilteredChemicals().concat(addedChemical));
-        });
+        chemical.cupboard = formatString(chemical.cupboard);
+        this.http.post<Chemical>(`${environment.backendUrl}/chemical`, chemical)
+        .pipe(catchError((error: HttpErrorResponse) => this.errorHandlerService.handleError(error)))
+        .subscribe({
+                next: (addedChemical: Chemical) => {
+                    addedChemical.hazardList = this.hazardService.getHazardListForChemical(addedChemical);
+                    addedChemical.backgroundColour = this.expiryService.getExpiryColour(addedChemical);
+                    this.setAllChemicals(this.getAllChemicals().concat(addedChemical));
+    
+                    const filteredChemicals = this.filterChemicals(
+                        this.toggleArchiveControl.value,
+                        this.cupboardFilterControl.value,
+                        this.hazardFilterControl.value,
+                        this.labFilterControl.value,
+                        this.expiryFilterControl.value,
+                        this.nameOrNumberSearchControl.value ?? '',
+                        this.ownerSearchControl.value ?? ''
+                    );
+    
+                    this.setFilteredChemicals(filteredChemicals);
+                    this.errorHandlerService.setSuccessMessage(`${addedChemical.name} was successfully added`);
+                }
+            });
 
     };
 
+
     /**
-     * Called when a chemical is edited.  Updates the database via an API call and updates the chemicals in state
+     * Called when a chemical is edited. Updates the database via an API call and updates the chemicals in state
      * @param {Chemical} chemical
      */
     onChemicalEdited = (chemical: Chemical): void => {
-        chemical.hazardList = this.hazardService.getHazardListForChemical(chemical);
-        chemical.backgroundColour = this.expiryService.getExpiryColour(chemical);
-        chemical.lastUpdatedBy = this.loggedInUser;
-        this.updateChemical(chemical);
-        this.hazardService.updateHazards(chemical);
-        this.update(chemical);
+            // Update the chemical properties
+            chemical.hazardList = this.hazardService.getHazardListForChemical(chemical);
+            chemical.backgroundColour = this.expiryService.getExpiryColour(chemical);
+
+            // Perform the API call to update the chemical
+            this.updateChemical(chemical)
+            .pipe(catchError((error: HttpErrorResponse) => this.errorHandlerService.handleError(error)))
+            .subscribe({
+                next: (chemical) => {
+                    // If the API call is successful, update the hazards and the chemical in the state
+                    this.hazardService.updateHazards(chemical);
+                    
+                    this.update(chemical);
+                    this.errorHandlerService.setSuccessMessage(`${chemical.name} was successfully updated`);
+                }
+            });         
     };
 
 
@@ -309,6 +366,7 @@ export class ChemicalService {
         }
     };
 
+    
     /**
      * Updates a passed chemical in state and then re-filters the chemicals
      * @param {Chemical} chemical
@@ -342,14 +400,12 @@ export class ChemicalService {
      * the newly added chemical in state based on the expiry date
      * @param {Chemical} chemical
      */
-    updateChemical = (chemical: Chemical): void => {
-        // Lower case and remove trailing spaces from the cupboard name to make filtering and data integrity better
-        chemical.cupboard = chemical.cupboard?.toLowerCase().trim();
+    updateChemical = (chemical: Chemical): Observable<Chemical> => {
+        chemical.cupboard = formatString(chemical.cupboard);
         chemical.lastUpdatedBy = this.loggedInUser;
-        this.http.put(`${environment.backendUrl}/chemical`, chemical)
-            .subscribe(() => {
-                chemical.backgroundColour = this.expiryService.getExpiryColour(chemical);
-            });
+
+        return this.http.put(`${environment.backendUrl}/chemical`, chemical) as Observable<Chemical>;
+
     };
 
 }

@@ -4,7 +4,7 @@ table {
   border-radius: 4px !important;
 }
 
-.mat-header-cell {
+.mat-mdc-header-cell {
   font-size: 20px;
 }
 
@@ -76,8 +76,8 @@ ul {
   max-width: 5vw;
 }
 
-.mat-cell,
-.mat-header-cell {
+.mat-mdc-cell,
+.mat-mdc-header-cell {
   word-wrap: initial;
   display: table-cell;
   line-break: unset;
@@ -85,15 +85,18 @@ ul {
   padding-right: 0.5vw;
 }
 
-.mat-row,
-.mat-header-row {
+.mat-mdc-row,
+.mat-mdc-header-row {
   display: table-row;
 }
 
 
 .toolbar-controls-container {
   display: flex;
+  overflow: hidden;
+  margin-left: 3vw;
 }
+
 
 .filter-control {
   margin-left: 0.25vw;
@@ -142,7 +145,8 @@ header {
 }
 
 .filter-select {
-  font-size: larger;
+  max-width: 14vw;
+  max-height: 9vh;
 }
 
 th.mat-sort-header-sorted {
@@ -157,7 +161,7 @@ th.mat-sort-header-sorted {
   color: white;
 }
 
-::ng-deep .mat-menu-content{
+::ng-deep .mat-mdc-menu-content{
   background: lightgrey;
   height: 75%;
 }
@@ -192,9 +196,8 @@ th.mat-sort-header-sorted {
   margin-top: 0.4vh;
 }
 
-#save-button,
 #scan-button{
-  //margin-right: 1vw;
+  margin-top: 1vh;
 }
 
 #add-scan-container{
@@ -202,6 +205,5 @@ th.mat-sort-header-sorted {
   flex-direction: column;
   justify-content: space-evenly;
   align-items: center;
-  margin: 2.5% 0.5% 0 0;
-  min-height: 200%
+  margin: 5vh 0.5vw 0 0;
 }

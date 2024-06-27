@@ -1,3 +1,4 @@
+<mat-dialog-content>
 <form class="add-chemical-form" [formGroup]="form">
 
     <div class="column">
@@ -125,7 +126,7 @@
                                matInput
                                [formControl]="convertToFormControl('owner')"
                                [matAutocomplete]="dialogOwners">
-                        <mat-autocomplete requireSelection #dialogOwners="matAutocomplete">
+                        <mat-autocomplete #dialogOwners="matAutocomplete">
                             <mat-option *ngFor="let option of ownerOptions | async | slice : 0 : 10" [value]="option">
                                 {{option}}
                             </mat-option>
@@ -133,25 +134,27 @@
                     </mat-form-field>
                 </div>
 
+        <div class="submit-button-container">
+            <span class="spacer"></span>
+            <div *ngIf="form.get('safetyDataSheet')?.errors?.['invalidURL'] || form.get('coshhLink')?.errors?.['invalidURL']"
+                 id="invalid-url-feedback">
+                {{urlFeedback()}}
+            </div>
+
+            <button
+                    [disabled]="!form.valid"
+                    mat-raised-button
+                    color="primary"
+                    style="margin-right: 0.5vw"
+                    (click)="onClose()">Submit</button>
+            <button
+                    mat-raised-button
+                    color="warn"
+                    (click)="onCancel()">Cancel</button>
+        </div>
+
     </div>
 
 </form>
 
-<div class="submit-button-container">
-    <span class="spacer"></span>
-    <div *ngIf="form.get('safetyDataSheet')?.errors?.['invalidURL'] || form.get('coshhLink')?.errors?.['invalidURL']"
-         id="invalid-url-feedback">
-        {{urlFeedback()}}
-    </div>
-
-    <button
-            [disabled]="!form.valid"
-            mat-raised-button
-            color="primary"
-            style="margin-right: 0.5vw"
-            (click)="onClose()">Submit</button>
-    <button
-            mat-raised-button
-            color="warn"
-            (click)="onCancel()">Cancel</button>
-</div>
+</mat-dialog-content>

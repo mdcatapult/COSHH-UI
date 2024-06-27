@@ -1,7 +1,23 @@
 /* You can add global styles to this file, and also import other style files */
+@use '@angular/material' as mat
+@include mat.checkbox-density(-3)
 
 .mat-tooltip
   font-size: 15px
 
 .spacer
   flex: 1 1 auto
+
+.error-snackbar
+  --mdc-snackbar-container-color: red
+  --mdc-snackbar-supporting-text-color: pink
+  button
+    background-color: #542683
+    margin: 7px 0 7px 0
+
+.success-snackbar
+  --mdc-snackbar-container-color: green
+  --mdc-snackbar-supporting-text-color: yellow
+  button
+    background-color: #542683
+    margin: 7px 0 7px 0

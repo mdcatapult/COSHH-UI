@@ -67,7 +67,7 @@
                 <span class="spacer"></span>
                 <div class="toolbar-controls-container">
                     <div class="filter-control">
-                        <mat-form-field className="filter-select">
+                        <mat-form-field class="filter-select">
                             <mat-label>Filter by lab</mat-label>
                             <mat-select (focus)="scanningService.scanningMode = false" required [formControl]="chemicalService.labFilterControl">
                                 <mat-option *ngFor="let lab of chemicalService.labFilterValues" [value]="lab">{{lab}}</mat-option>
@@ -76,7 +76,7 @@
                     </div>
 
                     <div class="filter-control">
-                        <mat-form-field className="filter-select">
+                        <mat-form-field class="filter-select">
                             <mat-label>Filter by cupboard</mat-label>
                             <mat-select (focus)="scanningService.scanningMode = false" required [formControl]="chemicalService.cupboardFilterControl">
                                 <mat-option *ngFor="let cupboard of chemicalService.cupboardFilterValues"
@@ -86,7 +86,7 @@
                     </div>
 
                     <div class="filter-control">
-                        <mat-form-field>
+                        <mat-form-field class="filter-select">
                             <mat-label>Filter by expiry</mat-label>
                             <mat-select (focus)="scanningService.scanningMode = false" required [formControl]="chemicalService.expiryFilterControl">
                                 <mat-option *ngFor="let expiry of chemicalService.expiryFilterValues"
@@ -96,7 +96,7 @@
                     </div>
 
                     <div class="filter-control">
-                        <mat-form-field>
+                        <mat-form-field class="filter-select">
                             <mat-label>Filter by hazard</mat-label>
                             <mat-select (focus)="scanningService.scanningMode = false" required [formControl]="chemicalService.hazardFilterControl">
                                 <mat-option *ngFor="let hazard of chemicalService.hazardFilterValues"
@@ -106,7 +106,7 @@
                     </div>
 
                     <div class="filter-control">
-                        <mat-form-field>
+                        <mat-form-field class="filter-select">
                             <mat-label>Name / Chem no</mat-label>
                             <input type="text"
                                    placeholder="Type to search..."
@@ -126,7 +126,7 @@
                     </div>
 
                     <div class="filter-control">
-                        <mat-form-field>
+                        <mat-form-field class="filter-select">
                             <mat-label>Owner</mat-label>
                             <input type="text"
                                    (focus)="scanningService.scanningMode = false"

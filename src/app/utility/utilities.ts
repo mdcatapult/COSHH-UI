@@ -1,6 +1,19 @@
+/*
+ * Copyright 2024 Medicines Discovery Catapult
+ * Licensed under the Apache License, Version 2.0 (the "Licence");
+ * you may not use this file except in compliance with the Licence.
+ * You may obtain a copy of the Licence at
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the Licence is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the Licence for the specific language governing permissions and
+ * limitations under the Licence.
+ *
+ */
+
 import { AbstractControl, UntypedFormControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { map, Observable } from 'rxjs';
-
 
 export function getAutocompleteObservable(formControl: UntypedFormControl, data: string[]): Observable<string[]> {
     return formControl.valueChanges.pipe(
@@ -41,13 +54,24 @@ export function urlValidator(): ValidatorFn {
         return isValidHttpUrl(control.value) ? null : { invalidURL: control.value };
     };
 }
-
+/**
+ * Remove duplicates from an array of strings. Case insensitive.
+ * @param things
+ */
 /**
  * Remove duplicates from an array of strings. Case insensitive.
  * @param things
  */
 export function checkDuplicates(things: string[]): string[] {
-    const duplicatesRemoved: string[] = Array.from(new Set(things.map((e) => e.toLowerCase().trim())));
 
-    return duplicatesRemoved;
+    return Array.from(new Set(things.map((e) => e.toLowerCase().trim())));
+}
+
+/**
+ * Format a string to lowercase, trim whitespace and replace multiple consecutive whitespace characters with a single space
+ * @param text
+ */
+export function formatString(text: string): string {
+
+    return text ? text.toLowerCase().trim().replace(/\s\s+/g, ' ') : '';
 }

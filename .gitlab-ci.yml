@@ -9,7 +9,7 @@ stages:
   - deploy
 
 default:
-  image: registry.gitlab.com/medicines-discovery-catapult/informatics/docker-images/ci/node
+  image: registry.gitlab.com/medicines-discovery-catapult/informatics/docker-images/ci/node:lts-20
 
 variables:
   FF_NETWORK_PER_BUILD: "true" # enable network per build so all services can communicate on the same network
@@ -26,7 +26,7 @@ test-lint-build-ui:
   before_script:
     - apt-get -yqq update && apt-get upgrade -yqq chromium libxss1 xvfb
     - export CHROME_BIN=/usr/bin/chromium
-    - npm install
+    - npm ci
   script:
     - npx eslint .
     - npm run test:ci
@@ -138,6 +138,19 @@ deploy:
     - kubectl rollout restart deployment -n coshh-prod coshh-ui
   only:
     - main
+  inherit:
+    default: false
+
+deploy-dev:
+  stage: deploy
+  image:
+    name: bitnami/kubectl:latest
+    entrypoint: ['']
+  script:
+    - kubectl config use-context medicines-discovery-catapult/informatics/coshh/coshh-api:coshh-gitlab-agent
+    - kubectl rollout restart deployment -n coshh-dev coshh-dev-ui
+  only:
+    - develop
   inherit:
     default: false
 
