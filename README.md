@@ -122,3 +122,7 @@ and Safari and is not an issue in Chrome or Firefox.
 ### Attributions
 
 <a href="https://www.flaticon.com/free-icons/flammable" title="flammable icons">Flammable icons created by Freepik - Flaticon</a>
+
+### Licence
+
+This project is licensed under the terms of the Apache 2 licence, which can be found in the repository as `LICENCE.txt`
