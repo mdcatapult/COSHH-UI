@@ -32,6 +32,6 @@ FROM nginx:1.27-alpine
 
 USER $SERVICE_NAME
 
-COPY --from=build app/dist/coshh /usr/share/nginx/html
+COPY --from=build app/dist/coshh/browser /usr/share/nginx/html
 
 EXPOSE 80
