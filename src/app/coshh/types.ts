@@ -75,15 +75,20 @@ export type HazardCategory = {
 }
 
 export const columnsForExport = [
-    'Name',
-    'Quantity',
     'CAS No.',
-    'State',
+    'Name',
+    'Hazards',
     'Location',
     'Cupboard',
-    'Safety data sheet',
+    'Chemical No.',
+    'State',
+    'Quantity',
     'Added',
     'Expiry',
+    'Safety data sheet',
+    'Qualio link',
+    'Storage temp',
+    'Owner',
     'Comments'
 ];
 
