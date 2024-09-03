@@ -61,6 +61,7 @@ publish-ui-azure:
     refs:
       - main
       - tags
+      - develop
     variables:
       - $CI_COMMIT_MESSAGE =~ /^Setting version to.*/
 
