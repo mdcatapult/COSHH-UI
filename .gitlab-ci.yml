@@ -36,6 +36,35 @@ test-lint-build-ui:
     variables:
       - $CI_COMMIT_MESSAGE =~ /^Setting version to.*/
 
+publish-ui-azure:
+  stage: publish
+  image:
+    name: gcr.io/kaniko-project/executor:debug
+    entrypoint:
+      - ''
+  before_script:
+    - echo "{\"auths\":{\"$CI_REGISTRY\":{\"username\":\"$CI_REGISTRY_USER\",\"password\":\"$CI_REGISTRY_PASSWORD\"}}}" > /kaniko/.docker/config.json
+  script:
+    - >
+      /kaniko/executor
+      --context $CI_PROJECT_DIR
+      --build-arg VERSION_HASH=$CI_COMMIT_SHORT_SHA
+      --build-arg CLIENT_ORIGIN_URL=$AZURE_CLIENT_ORIGIN_URL
+      --build-arg AUTH0_DOMAIN=$AZURE_AUTH0_DOMAIN
+      --build-arg AUTH0_AUDIENCE=$AZURE_AUTH0_AUDIENCE
+      --build-arg AUTH0_CLIENT_ID=$AZURE_AUTH0_CLIENT_ID
+      --build-arg DEPLOYMENT_ENV=prod
+      --build-arg BACKEND_URL=$AZURE_BACKEND_URL
+      --destination $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
+      --dockerfile $CI_PROJECT_DIR/Dockerfile
+  except:
+    refs:
+      - main
+      - tags
+      - develop
+    variables:
+      - $CI_COMMIT_MESSAGE =~ /^Setting version to.*/
+
 publish-ui:
   stage: publish
   image:

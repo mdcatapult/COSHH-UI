@@ -113,13 +113,14 @@ export class SaveService {
 
         const chemicalsToSave: SheetData = chemicals.map((chemical) => {
             const row: SheetData = [[
-                { type: String, value: chemical.name || '', wrap: true },
-                { type: String, value: chemical.quantity || '' },
                 { type: String, value: chemical.casNumber || '' },
-                { type: String, value: chemical.matterState || '' },
+                { type: String, value: chemical.name || '', wrap: true },
+                { type: String, value: chemical.hazards?.join(':') || '' },
                 { type: String, value: chemical.location || '' },
                 { type: String, value: chemical.cupboard || '' },
-                { type: String, value: chemical.safetyDataSheet || '', wrap: true },
+                { type: Number, value: chemical.id || '' },
+                { type: String, value: chemical.matterState || '' },
+                { type: String, value: chemical.quantity || '' },
                 chemical.added ? {
                     type: Date,
                     value: new Date(chemical.added.toString()),
@@ -130,6 +131,10 @@ export class SaveService {
                     value: new Date(chemical.expiry.toString()),
                     format: 'dd/mm/yyyy'
                 } : { type: String, value: '' },
+                { type: String, value: chemical.safetyDataSheet || '', wrap: true },
+                { type: String, value: chemical.coshhLink || '', wrap: true },
+                { type: String, value: chemical.storageTemp || '', wrap: true },
+                { type: String, value: chemical.owner || '', wrap: true },
                 { type: String, wrap: true }
             ]];
 
